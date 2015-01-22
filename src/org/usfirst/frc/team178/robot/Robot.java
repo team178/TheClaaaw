@@ -3,6 +3,7 @@ package org.usfirst.frc.team178.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,7 +22,7 @@ public class Robot extends IterativeRobot {
 	
     public void robotInit() {
     	drivetrain = new DriveTrain();
-    	joystick = new Joystick(1);
+    	joystick = new Joystick(0);
     }
 
     /**
@@ -35,10 +36,9 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        drivetrain.drive(joystick.getY(), joystick.getX(), joystick.getTwist());
-        
+    	drivetrain.drive(joystick);
     }
-    
+ 
     /**
      * This function is called periodically during test mode
      */
