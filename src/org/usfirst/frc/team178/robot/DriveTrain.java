@@ -59,8 +59,6 @@ public class DriveTrain implements RunningComponent {
 		// Logitech Extreme 3D Pro joysticks seem to have a huge 0.3 Z axis
 		// deadzone. - Aneesh & Brandon
 		
-		double oldTwist = twistValue;
-		
 		if (twistValue > -0.4 && twistValue < 0.35) {
 			twistValue = 0;
 		} else if (twistValue >= 0.35) {
