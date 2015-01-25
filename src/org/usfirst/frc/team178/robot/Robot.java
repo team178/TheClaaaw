@@ -15,7 +15,9 @@ public class Robot extends IterativeRobot {
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
-	
+	private RunningComponent[] components = {
+			
+	};
     public void robotInit() {
     	
     }
@@ -24,21 +26,27 @@ public class Robot extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-
+    	for (int i = 0; i < components.length; i++) {
+			components[i].auto();
+		}
     }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-    	
+    	for (int i = 0; i < components.length; i++) {
+			components[i].teleop();
+		}
     }
     
     /**
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-    
+    	for (int i = 0; i < components.length; i++) {
+			components[i].test();
+		}
     }
     
 }
