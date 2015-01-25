@@ -3,24 +3,45 @@ package org.usfirst.frc.team178.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 
-public class DriveTrain {
-	Talon frontLeft;
-	Talon frontRight;
-	Talon backLeft;
-	Talon backRight;
+public class DriveTrain implements RunningComponent {
+	private Talon frontLeft;
+	private Talon frontRight;
+	private Talon backLeft;
+	private Talon backRight;
 	
-	DriveTrain() {
-		frontLeft = new Talon(0);
-		frontRight= new Talon(1);
-		backLeft= new Talon(2);
-		backRight= new Talon(3);
-	}
+	private Joystick joystick;
 
-	public void drive(Joystick joystick) {
+	public DriveTrain(Talon frontLeft, Talon frontRight, Talon backLeft,
+			Talon backRight, Joystick joystick) {
+		super();
+		this.frontLeft = frontLeft;
+		this.frontRight = frontRight;
+		this.backLeft = backLeft;
+		this.backRight = backRight;
+		this.joystick = joystick;
+	}
+	
+	@Override
+	public void teleop() {
 		double yValue = joystick.getY();
 		double xValue = joystick.getX();
 		double twistValue = joystick.getTwist();
+		drive(xValue,yValue,twistValue);
+	}
+
+	@Override
+	public void auto() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void test() {
+		// TODO Auto-generated method stub
+		
+	}
 	
+	public void drive(double xValue, double yValue, double twistValue) {
 		if (joystick.getRawButton(3) || joystick.getRawButton(11)) {
 			strafeLeft();
 			return;
@@ -63,6 +84,7 @@ public class DriveTrain {
 		backRight.set( -(yValue - xValue - twistValue));
 	}
 	
+
 	public void strafeLeft() {
 		frontLeft.set(       0.6);
 		frontRight.set( -1* -0.6); 
@@ -85,4 +107,6 @@ public class DriveTrain {
 		backLeft.set(0);
 		backRight.set(0);
 	}
+
+	
 }
