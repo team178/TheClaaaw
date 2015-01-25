@@ -5,22 +5,22 @@ import edu.wpi.first.wpilibj.Talon;
 
 public class DriveTrain implements RunningComponent {
 	private Talon frontLeft;
-	private Talon frontRight;
 	private Talon backLeft;
+	private Talon frontRight;
 	private Talon backRight;
 	
 	private Joystick joystick;
-
-	public DriveTrain(Talon frontLeft, Talon frontRight, Talon backLeft,
+	
+	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
 			Talon backRight, Joystick joystick) {
 		super();
 		this.frontLeft = frontLeft;
-		this.frontRight = frontRight;
 		this.backLeft = backLeft;
+		this.frontRight = frontRight;
 		this.backRight = backRight;
 		this.joystick = joystick;
 	}
-	
+
 	@Override
 	public void teleop() {
 		double yValue = joystick.getY();
