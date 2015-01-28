@@ -19,12 +19,12 @@ public class Robot extends IterativeRobot {
      */
 	DriveTrain drivetrain;
 	Joystick joystick;
-	Encoders encoder;
+	//Encoders encoder;
 	double value;
     public void robotInit() {
-    	drivetrain = new DriveTrain();
+    drivetrain = new DriveTrain();
     	joystick = new Joystick(1);
-    	encoder = new Encoders(1,2);
+    	//encoder = new Encoders(1,2);
     }
 
     /**
@@ -39,14 +39,15 @@ public class Robot extends IterativeRobot {
      */
     public void teleopPeriodic() {
     	drivetrain.drive(joystick);
+    	//System.out.println("Amount of Pulses:"/*+ encoder.GetPulse()*/);
     	}
  
     /**
      * This function is called periodically during test mode
      */
     public void testPeriodic() {
-    	value = encoder.GetDistance();
-        System.out.println("Amount of Pulses:"+ encoder.GetPulse());
+    	//value = encoder.GetDistance();
+        
     }
     
 }

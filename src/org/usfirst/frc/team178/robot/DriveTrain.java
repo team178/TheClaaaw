@@ -29,7 +29,7 @@ public class DriveTrain {
 			return;
 		}
 		
-		if(joystick.getRawButton(2)){  //cut the input values in half for greater precision (Brandon Bald)
+		if(joystick.getRawButton(1)){  //cut the input values in half for greater precision (Brandon Bald)
 			xValue=xValue/2.0;
 			yValue=yValue/2.0;
 			twistValue= twistValue/2.0;
@@ -40,7 +40,7 @@ public class DriveTrain {
 		
 		double oldTwist = twistValue;
 		
-		if (twistValue > -0.4 && twistValue < 0.35) {
+		/*if (twistValue > -0.4 && twistValue < 0.35) {
 			twistValue = 0;
 		} else if (twistValue >= 0.35) {
 			twistValue = twistValue - 0.35;
@@ -51,7 +51,7 @@ public class DriveTrain {
 			// Apply an expansion factor. So all the way right becomes 1.0 again.
 			twistValue = twistValue * (1/0.6);	
 		}
-	
+	*/
 		// Slowdown twisting
 		twistValue = twistValue * 0.7;
 		
