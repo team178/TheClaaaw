@@ -26,6 +26,31 @@ public class DriveTrain implements RunningComponent {
 		double yValue = joystick.getY();
 		double xValue = joystick.getX();
 		double twistValue = joystick.getTwist();
+		
+		double speed = 1-joystick.getRawAxis(3);
+
+		
+		if (joystick.getRawButton(2)) {
+			speed*=0.5;
+		}
+		
+		xValue*=speed;
+		yValue*=speed;
+		twistValue*=speed;
+		
+		if (joystick.getRawButton(11)) {
+			yValue*=0;
+			twistValue*=0;
+		}
+		else if (joystick.getRawButton(12))
+		{
+			xValue*=0;
+			twistValue*=0;
+		}
+		
+		// Slowdown twisting --Bald
+		twistValue = twistValue * 0.7;
+		
 		drive(xValue,yValue,twistValue);
 	}
 
@@ -42,68 +67,10 @@ public class DriveTrain implements RunningComponent {
 	}
 	
 	public void drive(double xValue, double yValue, double twistValue) {
-		if (joystick.getRawButton(3) || joystick.getRawButton(11)) {
-			strafeLeft();
-			return;
-		} else if (joystick.getRawButton(4) || joystick.getRawButton(12)) {
-			strafeRight();
-			return;
-		}
-		
-		if(joystick.getRawButton(2)){  //cut the input values in half for greater precision (Brandon Bald)
-			xValue=xValue/2.0;
-			yValue=yValue/2.0;
-			twistValue= twistValue/2.0;
-		}
-		
-		// Logitech Extreme 3D Pro joysticks seem to have a huge 0.3 Z axis
-		// deadzone. - Aneesh & Brandon
-		
-		if (twistValue > -0.4 && twistValue < 0.35) {
-			twistValue = 0;
-		} else if (twistValue >= 0.35) {
-			twistValue = twistValue - 0.35;
-			// Apply an expansion factor. So all the way right becomes 1.0 again.
-			twistValue = twistValue * (1/0.65);
-		} else if (twistValue <= -0.4) {
-			twistValue= twistValue + 0.4;
-			// Apply an expansion factor. So all the way right becomes 1.0 again.
-			twistValue = twistValue * (1/0.6);	
-		}
-	
-		// Slowdown twisting
-		twistValue = twistValue * 0.7;
-		
-		//System.out.println("Original: " + oldTwist +  "\tNew: " + twistValue);
-
 		frontLeft.set(   yValue - xValue + twistValue);
 		frontRight.set(-(yValue + xValue - twistValue));
 		backLeft.set(    yValue + xValue + twistValue);
 		backRight.set( -(yValue - xValue - twistValue));
-	}
-	
-
-	public void strafeLeft() {
-		frontLeft.set(       0.6);
-		frontRight.set( -1* -0.6); 
-		backLeft.set(       -0.6); 
-		backRight.set(  -1*  0.6);
-	}
-
-	public void strafeRight() {
-		frontLeft.set(      -0.6);
-		frontRight.set( -1*  0.6);
-		backLeft.set(        0.6);
-		backRight.set(  -1* -0.6);
-	}
-	
-
-
-	public void resetToZero() {
-		frontLeft.set(0);
-		frontRight.set(0);
-		backLeft.set(0);
-		backRight.set(0);
 	}
 
 	
