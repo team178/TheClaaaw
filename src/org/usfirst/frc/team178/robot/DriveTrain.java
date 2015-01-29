@@ -1,7 +1,5 @@
 package org.usfirst.frc.team178.robot;
 
-import java.util.HashMap;
-
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
@@ -17,14 +15,17 @@ public class DriveTrain implements RunningComponent {
 	
 	private Joystick joystick;
 	
+	private Gyro gyroDevice;
+	
 	private double angleCorrection = 0d;
 	
+
+	
 	private PIDSource gyro = new PIDSource() {
-		private Gyro gyro = new Gyro(0);
 		@Override
 		public double pidGet() {
 			double joyAngle = joystick.getTwist() * 360;
-			return gyro.getAngle() - joyAngle;
+			return gyroDevice.getAngle() - joyAngle;
 		}
 	};
 	
@@ -36,16 +37,18 @@ public class DriveTrain implements RunningComponent {
 		}
 	};
 	
+	@SuppressWarnings("unused")
 	private PIDController pid = new PIDController(0.1, 0.001, 0, gyro, gyroCorr);
 	
 	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
-			Talon backRight, Joystick joystick) {
+			Talon backRight, Joystick joystick, Gyro gyroDevice) {
 		super();
 		this.frontLeft = frontLeft;
 		this.backLeft = backLeft;
 		this.frontRight = frontRight;
 		this.backRight = backRight;
 		this.joystick = joystick;
+		this.gyroDevice = gyroDevice;
 	}
 
 	@Override
