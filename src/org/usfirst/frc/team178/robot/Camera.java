@@ -1,6 +1,5 @@
 package org.usfirst.frc.team178.robot;
 
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.ButtonType;
 import edu.wpi.first.wpilibj.vision.USBCamera;
@@ -8,7 +7,6 @@ import edu.wpi.first.wpilibj.vision.USBCamera;
 public class Camera implements RunningComponent {
 	
 	private Joystick joystick;
-	private CameraServer camserv;
 	private USBCamera cam0;
 	private USBCamera cam1;
 	
