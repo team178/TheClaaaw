@@ -1,6 +1,12 @@
 package org.usfirst.frc.team178.robot;
 
+import java.util.HashMap;
+
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Talon;
 
 public class DriveTrain implements RunningComponent {
@@ -10,6 +16,27 @@ public class DriveTrain implements RunningComponent {
 	private Talon backRight;
 	
 	private Joystick joystick;
+	
+	private double angleCorrection = 0d;
+	
+	private PIDSource gyro = new PIDSource() {
+		private Gyro gyro = new Gyro(0);
+		@Override
+		public double pidGet() {
+			double joyAngle = joystick.getTwist() * 360;
+			return gyro.getAngle() - joyAngle;
+		}
+	};
+	
+	private PIDOutput gyroCorr = new PIDOutput() {
+		
+		@Override
+		public void pidWrite(double output) {
+			angleCorrection = output;
+		}
+	};
+	
+	private PIDController pid = new PIDController(0.1, 0.001, 0, gyro, gyroCorr);
 	
 	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
 			Talon backRight, Joystick joystick) {
@@ -23,6 +50,7 @@ public class DriveTrain implements RunningComponent {
 
 	@Override
 	public void teleop() {
+		
 		double yValue = joystick.getY();
 		double xValue = joystick.getX();
 		double twistValue = joystick.getTwist();
@@ -67,6 +95,8 @@ public class DriveTrain implements RunningComponent {
 	}
 	
 	public void drive(double xValue, double yValue, double twistValue) {
+		twistValue += angleCorrection;
+		
 		frontLeft.set(   yValue - xValue + twistValue);
 		frontRight.set(-(yValue + xValue - twistValue));
 		backLeft.set(    yValue + xValue + twistValue);
