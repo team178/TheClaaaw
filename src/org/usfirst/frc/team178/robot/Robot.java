@@ -19,7 +19,7 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
 	private RunningComponent[] components = {
-			new DriveTrain(new Talon(3),new Talon(2),new Talon(1),new Talon(0),new Joystick(0),new Gyro(0))
+			new DriveTrain(new Talon(0),new Talon(1),new Talon(2),new Talon(3),new Joystick(0),new Gyro(0))
 	};
     public void robotInit() {
     	

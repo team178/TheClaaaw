@@ -24,8 +24,10 @@ public class DriveTrain implements RunningComponent {
 	private PIDSource gyro = new PIDSource() {
 		@Override
 		public double pidGet() {
-			double joyAngle = joystick.getTwist() * 360;
-			return gyroDevice.getAngle() - joyAngle;
+//			double joyAngle = joystick.getTwist() * 360;
+//			return gyroDevice.getAngle() - joyAngle;
+			System.out.println("Gyro angle: "+gyroDevice.getAngle());
+			return gyroDevice.getAngle();
 		}
 	};
 	
@@ -37,8 +39,7 @@ public class DriveTrain implements RunningComponent {
 		}
 	};
 	
-	@SuppressWarnings("unused")
-	private PIDController pid = new PIDController(0.1, 0.001, 0, gyro, gyroCorr);
+	private PIDController pid = new PIDController(.02, 0.00001, 0, gyro, gyroCorr);
 	
 	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
 			Talon backRight, Joystick joystick, Gyro gyroDevice) {
@@ -49,6 +50,8 @@ public class DriveTrain implements RunningComponent {
 		this.backRight = backRight;
 		this.joystick = joystick;
 		this.gyroDevice = gyroDevice;
+		
+		pid.enable();
 	}
 
 	@Override
@@ -99,6 +102,7 @@ public class DriveTrain implements RunningComponent {
 	
 	public void drive(double xValue, double yValue, double twistValue) {
 		twistValue += angleCorrection;
+		System.out.println("Correction: "+angleCorrection);
 		
 		frontLeft.set(   yValue - xValue + twistValue);
 		frontRight.set(-(yValue + xValue - twistValue));
