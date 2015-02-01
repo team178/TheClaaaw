@@ -17,7 +17,7 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
 	private RunningComponent[] components = {
-			new Camera(new Joystick(1))
+			new Camera(new Joystick(0))
 	};
 	
     public void robotInit() {
