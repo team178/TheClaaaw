@@ -7,12 +7,7 @@ public class Camera implements RunningComponent {
 	
 	private Joystick joystick;
 	private CameraServerer camserv;
-	
-	@Override
-	public void teleop() {
-		// TODO Auto-generated method stub
-		
-	}
+
 
 	public Camera(Joystick joystick) {
 		super();
@@ -29,6 +24,11 @@ public class Camera implements RunningComponent {
 
 	@Override
 	public void test() {
+		
+	}
+
+	@Override
+	public void teleop() {
 		if (joystick.getRawButton(3)) {
 			System.out.println("Button 3");
 			this.camserv.stopAutomaticCapture();
