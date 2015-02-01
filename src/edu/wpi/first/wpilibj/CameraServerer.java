@@ -285,6 +285,7 @@ public class CameraServerer {
      */
     protected void serve() throws IOException, InterruptedException {
 
+		@SuppressWarnings("resource")
 		ServerSocket socket = new ServerSocket();
         socket.setReuseAddress(true);
         InetSocketAddress address = new InetSocketAddress(kPort);
