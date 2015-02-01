@@ -24,10 +24,9 @@ public class DriveTrain implements RunningComponent {
 	private PIDSource gyro = new PIDSource() {
 		@Override
 		public double pidGet() {
-//			double joyAngle = joystick.getTwist() * 360;
-//			return gyroDevice.getAngle() - joyAngle;
+			double joyAngle = joystick.getTwist() * 360;
 			System.out.println("Gyro angle: "+gyroDevice.getAngle());
-			return gyroDevice.getAngle();
+			return gyroDevice.getAngle() - joyAngle;
 		}
 	};
 	
@@ -101,13 +100,34 @@ public class DriveTrain implements RunningComponent {
 	}
 	
 	public void drive(double xValue, double yValue, double twistValue) {
+
 		twistValue += angleCorrection;
+		
+		double joyAngle = twistValue 
+				* 2 * Math.PI //radians
+				+ Math.PI / 4; //holonomic rotation
+		
+		
 		System.out.println("Correction: "+angleCorrection);
 		
-		frontLeft.set(   yValue - xValue + twistValue);
-		frontRight.set(-(yValue + xValue - twistValue));
-		backLeft.set(    yValue + xValue + twistValue);
-		backRight.set( -(yValue - xValue - twistValue));
+		double xPrime = xValue * Math.cos(joyAngle) - yValue * Math.sin(joyAngle);
+		double yPrime = xValue * Math.sin(joyAngle) + yValue * Math.cos(joyAngle);
+		
+		if(Math.max(Math.abs(xPrime), Math.abs(yPrime)) > 1 ){
+			double normalFactor;
+			if(Math.abs(xPrime)>1)
+				normalFactor = 1/Math.abs(xPrime);
+			else //don't double check, you're already here
+				normalFactor = 1/Math.abs(yPrime);
+			
+			xPrime *= normalFactor;
+			yPrime *= normalFactor;
+		}
+		
+		frontLeft.set(   yPrime);
+		frontRight.set(-(xPrime));
+		backLeft.set(    xPrime);
+		backRight.set( -(yPrime));
 	}
 
 	
