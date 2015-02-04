@@ -25,6 +25,7 @@ public class DriveTrain implements RunningComponent {
 		@Override
 		public double pidGet() {
 			double joyAngle = joystick.getTwist() * 360;
+			System.out.println("Gyro angle: "+gyroDevice.getAngle());
 			return gyroDevice.getAngle() - joyAngle;
 		}
 	};
@@ -37,8 +38,7 @@ public class DriveTrain implements RunningComponent {
 		}
 	};
 	
-	@SuppressWarnings("unused")
-	private PIDController pid = new PIDController(0.1, 0.001, 0, gyro, gyroCorr);
+	private PIDController pid = new PIDController(.02, 0.00001, 0, gyro, gyroCorr);
 	
 	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
 			Talon backRight, Joystick joystick, Gyro gyroDevice) {
@@ -49,6 +49,8 @@ public class DriveTrain implements RunningComponent {
 		this.backRight = backRight;
 		this.joystick = joystick;
 		this.gyroDevice = gyroDevice;
+		
+		pid.enable();
 	}
 
 	@Override
@@ -97,18 +99,24 @@ public class DriveTrain implements RunningComponent {
 		
 	}
 	
-	public void drive(double x, double y, double twistValue) {
+
+	public void drive(double xValue, double yValue, double twistValue) {
+
 		twistValue += angleCorrection;
 		double theta = gyroDevice.getAngle() * 2 * Math.PI;
-		double xPrime = x * Math.cos(theta) - y * Math.sin(theta);
-		double yPrime = x * Math.cos(theta) + y * Math.cos(theta);
+		double xPrime = xValue * Math.cos(theta) - yValue * Math.sin(theta);
+		double yPrime = xValue * Math.cos(theta) + yValue * Math.cos(theta);
 		
+
 		//double largest = Math.abs(xPrime)+Math.abs(yPrime);
 		
 		frontLeft.set(   yPrime - xPrime );
 		frontRight.set(-(yPrime + xPrime ));
 		backLeft.set(    yPrime + xPrime );
 		backRight.set( -(yPrime - xPrime ));
+		
+		
+		
 	}
 
 	
