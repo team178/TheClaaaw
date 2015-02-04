@@ -97,13 +97,18 @@ public class DriveTrain implements RunningComponent {
 		
 	}
 	
-	public void drive(double xValue, double yValue, double twistValue) {
+	public void drive(double x, double y, double twistValue) {
 		twistValue += angleCorrection;
+		double theta = gyroDevice.getAngle() * 2 * Math.PI;
+		double xPrime = x * Math.cos(theta) - y * Math.sin(theta);
+		double yPrime = x * Math.cos(theta) + y * Math.cos(theta);
 		
-		frontLeft.set(   yValue - xValue + twistValue);
-		frontRight.set(-(yValue + xValue - twistValue));
-		backLeft.set(    yValue + xValue + twistValue);
-		backRight.set( -(yValue - xValue - twistValue));
+		//double largest = Math.abs(a)+Math.abs(a);
+		
+		frontLeft.set(   yPrime - xPrime );
+		frontRight.set(-(yPrime + xPrime ));
+		backLeft.set(    yPrime + xPrime );
+		backRight.set( -(yPrime - xPrime ));
 	}
 
 	
