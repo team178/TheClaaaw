@@ -103,7 +103,7 @@ public class DriveTrain implements RunningComponent {
 		double xPrime = x * Math.cos(theta) - y * Math.sin(theta);
 		double yPrime = x * Math.cos(theta) + y * Math.cos(theta);
 		
-		//double largest = Math.abs(a)+Math.abs(a);
+		//double largest = Math.abs(xPrime)+Math.abs(yPrime);
 		
 		frontLeft.set(   yPrime - xPrime );
 		frontRight.set(-(yPrime + xPrime ));
