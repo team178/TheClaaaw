@@ -98,8 +98,12 @@ public class DriveTrain implements RunningComponent {
 	}
 	
 	public void drive(double xValue, double yValue, double twistValue) {
-		twistValue += angleCorrection;
-		
+		if (joystick.getRawButton(3)){
+				twistValue += angleCorrection;
+		}
+		if (joystick.getRawButton(4)){
+			gyroDevice.reset();
+		}
 		frontLeft.set(   yValue - xValue + twistValue);
 		frontRight.set(-(yValue + xValue - twistValue));
 		backLeft.set(    yValue + xValue + twistValue);
