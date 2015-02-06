@@ -107,13 +107,19 @@ public class DriveTrain implements RunningComponent {
 		double xPrime = xValue * Math.cos(theta) - yValue * Math.sin(theta);
 		double yPrime = xValue * Math.cos(theta) + yValue * Math.cos(theta);
 		
+		// alternate scheme
+		//double xPrime = Math.cos(theta+2*Math.PI/4);
+		//double yPrime = Math.sin(theta);
+	
 
-		//double largest = Math.abs(xPrime)+Math.abs(yPrime);
+		double normal = Math.abs(xPrime)+Math.abs(yPrime); // get maximum possible value
+		normal = 1/normal;  // get normal ratio so maximum value*ratio is equal to, 1
 		
-		frontLeft.set(   yPrime - xPrime );
-		frontRight.set(-(yPrime + xPrime ));
-		backLeft.set(    yPrime + xPrime );
-		backRight.set( -(yPrime - xPrime ));
+		// multiply all sets by ratio
+		frontLeft.set(   (yPrime - xPrime)*normal );
+		frontRight.set(-(yPrime + xPrime )*normal);
+		backLeft.set(    (yPrime + xPrime )*normal);
+		backRight.set( -(yPrime - xPrime )*normal);
 		
 		
 		
