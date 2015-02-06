@@ -1,7 +1,10 @@
 
 package org.usfirst.frc.team178.robot;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -16,7 +19,7 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
 	private RunningComponent[] components = {
-			
+			new Deck(new Joystick(0), new DigitalInput(0), new DigitalInput(1), new Talon(4))
 	};
     public void robotInit() {
     	
