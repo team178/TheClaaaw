@@ -273,7 +273,15 @@ public class CameraServerer {
     public synchronized int getQuality() {
         return m_quality;
     }
-
+    
+    public void mockServe() {
+    	try {
+    		serve();
+    	} catch (Exception ignore) {
+    		
+    	}
+    }
+    
     /**
      * Run the M-JPEG server.
      *
