@@ -1,0 +1,70 @@
+package org.usfirst.frc.team178.robot;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class Claw implements RunningComponent {
+
+	private Talon leftClaw;
+	private Talon rightClaw;
+	private DigitalInput detectItem;
+	private DigitalInput leftFrontRightBack;
+	private DigitalInput rightFrontLeftBack;
+	private Joystick joystick;
+	
+	private int lastPosition = -1;
+	private int goPosition = 1;
+	
+	public Claw(Talon leftClaw, Talon rightClaw, DigitalInput detectItem,
+			DigitalInput leftFrontRightBack, DigitalInput rightFrontLeftBack,
+			Joystick joystick) {
+		super();
+		this.leftClaw = leftClaw;
+		this.rightClaw = rightClaw;
+		this.detectItem = detectItem;
+		this.leftFrontRightBack = leftFrontRightBack;
+		this.rightFrontLeftBack = rightFrontLeftBack;
+		this.joystick = joystick;
+	}
+
+	@Override
+	public void teleop() {
+		if(joystick.getRawButton(5))
+			goPosition = -1;
+		else if(joystick.getRawButton(6))
+			goPosition = 1;
+		moveClaw();
+	}
+
+	private boolean moveClaw() {
+		boolean isSafe = false;
+//				(d>0 && !this.outerLimit.get()) || //if we're moving out but not too far OR
+//				(d<0 && !this.innerLimit.get()) || //if we're moving in but not too close OR
+//				(d == 0); //if the motor shouldn't move...
+		
+//		if(!isSafe){
+//			direction = 0; //we're not safe; prevent the motor from moving
+//		}
+//		
+//		leftClaw.set(direction); //move the motors (or don't if unsafe)
+//		rightClaw.set(direction); //TODO be more negative
+//		
+//		SmartDashboard.putBoolean("Claw is safe?", isSafe); //notify users of safety
+		return isSafe;
+		
+	}
+
+	@Override
+	public void auto() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void test() {
+		// TODO Auto-generated method stub
+
+	}
+}
