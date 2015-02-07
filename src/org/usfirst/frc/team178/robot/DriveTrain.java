@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain implements RunningComponent {
 	private Talon frontLeft;
@@ -111,9 +112,10 @@ public class DriveTrain implements RunningComponent {
 		//double xPrime = Math.cos(theta+2*Math.PI/4);
 		//double yPrime = Math.sin(theta);
 	
-
 		double normal = Math.abs(xPrime)+Math.abs(yPrime); // get maximum possible value
 		normal = 1/normal;  // get normal ratio so maximum value*ratio is equal to, 1
+		
+		normal = Math.min(1, normal); //limit normal to 1 so magnitude is not crazy
 		
 		// multiply all sets by ratio
 		frontLeft.set(   (yPrime - xPrime)*normal );
