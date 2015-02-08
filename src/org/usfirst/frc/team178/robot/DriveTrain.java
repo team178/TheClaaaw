@@ -111,7 +111,7 @@ public class DriveTrain implements RunningComponent {
 		double theta = gyroDevice.getAngle() * 2 * Math.PI;
 		theta = 0;
 		double xPrime = xValue * Math.cos(theta) - yValue * Math.sin(theta);
-		double yPrime = xValue * Math.cos(theta) + yValue * Math.cos(theta);
+		double yPrime = xValue * Math.sin(theta) + yValue * Math.cos(theta);
 		
 		//xPrime = 0;
 		
