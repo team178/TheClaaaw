@@ -3,7 +3,6 @@ package org.usfirst.frc.team178.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Claw implements RunningComponent {
 
@@ -14,7 +13,7 @@ public class Claw implements RunningComponent {
 	private DigitalInput rightFrontLeftBack;
 	private Joystick joystick;
 	
-	private int lastPosition = -1;
+	private int lastDirection = -1;
 	private int goPosition = 1;
 	
 	public Claw(Talon leftClaw, Talon rightClaw, DigitalInput detectItem,
@@ -38,8 +37,15 @@ public class Claw implements RunningComponent {
 		moveClaw();
 	}
 
-	private boolean moveClaw() {
-		boolean isSafe = false;
+	private boolean[] moveClaw() {
+		boolean isRightSafe = !( //we are not safe if
+					leftFrontRightBack.get() && lastDirection == -1 || //rightback is triggered OR
+					rightFrontLeftBack.get() && lastDirection == 1     //rightfront is triggered
+				);
+		boolean isLeftSafe = !( //we are not safe if
+				leftFrontRightBack.get() && lastDirection == 1 || //leftfront is triggered OR
+				rightFrontLeftBack.get() && lastDirection == -1   //leftback is triggered
+			);
 //				(d>0 && !this.outerLimit.get()) || //if we're moving out but not too far OR
 //				(d<0 && !this.innerLimit.get()) || //if we're moving in but not too close OR
 //				(d == 0); //if the motor shouldn't move...
@@ -52,7 +58,7 @@ public class Claw implements RunningComponent {
 //		rightClaw.set(direction); //TODO be more negative
 //		
 //		SmartDashboard.putBoolean("Claw is safe?", isSafe); //notify users of safety
-		return isSafe;
+		return new boolean[] {isLeftSafe,isRightSafe};
 		
 	}
 
