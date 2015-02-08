@@ -85,6 +85,10 @@ public class DriveTrain implements RunningComponent {
 		// Slowdown twisting --Bald
 		twistValue = twistValue * 0.7;
 		
+		if (joystick.getRawButton(8)) {
+			gyroDevice.reset();
+		}
+		
 		drive(xValue,yValue,twistValue);
 	}
 
@@ -105,8 +109,11 @@ public class DriveTrain implements RunningComponent {
 
 		twistValue += angleCorrection;
 		double theta = gyroDevice.getAngle() * 2 * Math.PI;
+		theta = 0;
 		double xPrime = xValue * Math.cos(theta) - yValue * Math.sin(theta);
 		double yPrime = xValue * Math.cos(theta) + yValue * Math.cos(theta);
+		
+		//xPrime = 0;
 		
 		// alternate scheme
 		//double xPrime = Math.cos(theta+2*Math.PI/4);
@@ -123,6 +130,17 @@ public class DriveTrain implements RunningComponent {
 		); 
 		
 		normal = Math.min(1, normal); //limit normal to 1 so magnitude is not crazy
+		
+		SmartDashboard.putNumber("normal", normal);
+		
+		SmartDashboard.putNumber("frontLeft", (yPrime - xPrime) * normal);
+		SmartDashboard.putNumber("frontRight", -(yPrime + xPrime) * normal);
+		SmartDashboard.putNumber("backLeft", (yPrime + xPrime) * normal);
+		SmartDashboard.putNumber("backRight", -(yPrime - xPrime) * normal);
+		
+		SmartDashboard.putNumber("gyro", gyroDevice.getAngle());
+		SmartDashboard.putNumber("theta", theta);
+		
 		
 		// multiply all sets by ratio
 		frontLeft.set(   (yPrime - xPrime)*normal );
