@@ -111,9 +111,16 @@ public class DriveTrain implements RunningComponent {
 		// alternate scheme
 		//double xPrime = Math.cos(theta+2*Math.PI/4);
 		//double yPrime = Math.sin(theta);
-	
-		double normal = Math.abs(xPrime)+Math.abs(yPrime); // get maximum possible value
-		normal = 1/normal;  // get normal ratio so maximum value*ratio is equal to, 1
+		double normal = 1 / Math.max( // get maximum possible value
+			Math.max( 
+					Math.abs(yPrime - xPrime),
+					Math.abs(-(yPrime + xPrime))
+			),
+			Math.max(
+					Math.abs(yPrime + xPrime),
+					Math.abs(-(yPrime - xPrime))
+			)
+		); 
 		
 		normal = Math.min(1, normal); //limit normal to 1 so magnitude is not crazy
 		
