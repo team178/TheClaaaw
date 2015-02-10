@@ -25,9 +25,9 @@ public class DriveTrain implements RunningComponent {
 	private PIDSource gyro = new PIDSource() {
 		@Override
 		public double pidGet() {
-			double joyAngle = joystick.getTwist() * 360;
+			double joyAngle = joystick.getTwist() * 180;
 			System.out.println("Gyro angle: "+gyroDevice.getAngle());
-			return gyroDevice.getAngle() - joyAngle;
+			return (gyroDevice.getAngle() - joyAngle) / 360;
 		}
 	};
 	
@@ -94,11 +94,10 @@ public class DriveTrain implements RunningComponent {
 			frontRight.set(1);
 			backRight.set(1);
 			backLeft.set(1);
+		} else {
+			drive(xValue,yValue,twistValue);
 		}
-					else{
-drive(xValue,yValue,twistValue);
-											}
-		}
+	}
 
 	@Override
 	public void auto() {
@@ -114,8 +113,8 @@ drive(xValue,yValue,twistValue);
 	
 
 	public void drive(double xValue, double yValue, double twistValue) {
-
-		twistValue += angleCorrection;
+		twistValue = -twistValue;
+		twistValue -= angleCorrection;
 		double theta = -(gyroDevice.getAngle() ) * Math.PI / 180;
 		double xPrime = xValue * Math.cos(theta) - yValue * Math.sin(theta);
 		double yPrime = xValue * Math.sin(theta) + yValue * Math.cos(theta);
@@ -125,17 +124,17 @@ drive(xValue,yValue,twistValue);
 		// alternate scheme
 		//double xPrime = Math.cos(theta+2*Math.PI/4);
 		//double yPrime = Math.sin(theta);
-//		double normal = 1 / Math.max( // get maximum possible value
-//			Math.max( 
-//					Math.abs(yPrime - xPrime),
-//					Math.abs(-(yPrime + xPrime))
-//			),
-//			Math.max(
-//					Math.abs(yPrime + xPrime),
-//					Math.abs(-(yPrime - xPrime))
-//			)
-//		); 
-		double normal = 1 / Math.max(Math.abs(yPrime), Math.abs(xPrime));
+		double normal = 1 / Math.max( // get maximum possible value
+			Math.max( 
+					Math.abs(-(yPrime - xPrime + twistValue)),
+					Math.abs((yPrime + xPrime - twistValue))
+			),
+			Math.max(
+					Math.abs(-(yPrime + xPrime + twistValue)),
+					Math.abs((yPrime - xPrime - twistValue))
+			)
+		); 
+//		double normal = 1 / Math.max(Math.abs(yPrime), Math.abs(xPrime));
 		normal = Math.min(1, normal); //limit normal to 1 so magnitude is not crazy
 		
 		SmartDashboard.putNumber("normal", normal);
@@ -150,10 +149,10 @@ drive(xValue,yValue,twistValue);
 		
 		
 		// multiply all sets by ratio
-		frontLeft.set(  -(yPrime - xPrime) * normal);  
-		frontRight.set(  (yPrime + xPrime) * normal);
-		backLeft.set(   -(yPrime + xPrime) * normal);  
-		backRight.set(   (yPrime - xPrime) * normal); 
+		frontLeft.set(  -(yPrime - xPrime + twistValue) * normal);  
+		frontRight.set(  (yPrime + xPrime - twistValue) * normal);
+		backLeft.set(   -(yPrime + xPrime + twistValue) * normal);  
+		backRight.set(   (yPrime - xPrime - twistValue) * normal); 
 		
 		
 		
