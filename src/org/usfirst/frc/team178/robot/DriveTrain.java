@@ -89,8 +89,16 @@ public class DriveTrain implements RunningComponent {
 			gyroDevice.reset();
 		}
 		
-		drive(xValue,yValue,twistValue);
-	}
+		if (joystick.getRawButton(9)){
+			frontLeft.set(1);
+			frontRight.set(1);
+			backRight.set(1);
+			backLeft.set(1);
+		}
+					else{
+drive(xValue,yValue,twistValue);
+											}
+		}
 
 	@Override
 	public void auto() {
@@ -108,7 +116,7 @@ public class DriveTrain implements RunningComponent {
 	public void drive(double xValue, double yValue, double twistValue) {
 
 		twistValue += angleCorrection;
-		double theta = gyroDevice.getAngle() * 2 * Math.PI;
+		double theta = -(gyroDevice.getAngle() ) * Math.PI / 180;
 		double xPrime = xValue * Math.cos(theta) - yValue * Math.sin(theta);
 		double yPrime = xValue * Math.sin(theta) + yValue * Math.cos(theta);
 		
@@ -117,24 +125,24 @@ public class DriveTrain implements RunningComponent {
 		// alternate scheme
 		//double xPrime = Math.cos(theta+2*Math.PI/4);
 		//double yPrime = Math.sin(theta);
-		double normal = 1 / Math.max( // get maximum possible value
-			Math.max( 
-					Math.abs(yPrime - xPrime),
-					Math.abs(-(yPrime + xPrime))
-			),
-			Math.max(
-					Math.abs(yPrime + xPrime),
-					Math.abs(-(yPrime - xPrime))
-			)
-		); 
-		
+//		double normal = 1 / Math.max( // get maximum possible value
+//			Math.max( 
+//					Math.abs(yPrime - xPrime),
+//					Math.abs(-(yPrime + xPrime))
+//			),
+//			Math.max(
+//					Math.abs(yPrime + xPrime),
+//					Math.abs(-(yPrime - xPrime))
+//			)
+//		); 
+		double normal = 1 / Math.max(Math.abs(yPrime), Math.abs(xPrime));
 		normal = Math.min(1, normal); //limit normal to 1 so magnitude is not crazy
 		
 		SmartDashboard.putNumber("normal", normal);
 		
 		SmartDashboard.putNumber("frontLeft", (yPrime - xPrime) * normal);
 		SmartDashboard.putNumber("frontRight", -(yPrime + xPrime) * normal);
-		SmartDashboard.putNumber("backLeft", (yPrime + xPrime) * normal);
+		SmartDashboard.putNumber("backLeft",  (yPrime + xPrime) * normal);
 		SmartDashboard.putNumber("backRight", -(yPrime - xPrime) * normal);
 		
 		SmartDashboard.putNumber("gyro", gyroDevice.getAngle());
@@ -142,10 +150,10 @@ public class DriveTrain implements RunningComponent {
 		
 		
 		// multiply all sets by ratio
-		frontLeft.set(   (yPrime - xPrime)*normal );
-		frontRight.set(-(yPrime + xPrime )*normal);
-		backLeft.set(    (yPrime + xPrime )*normal);
-		backRight.set( -(yPrime - xPrime )*normal);
+		frontLeft.set(  -(yPrime - xPrime) * normal);  
+		frontRight.set(  (yPrime + xPrime) * normal);
+		backLeft.set(   -(yPrime + xPrime) * normal);  
+		backRight.set(   (yPrime - xPrime) * normal); 
 		
 		
 		
