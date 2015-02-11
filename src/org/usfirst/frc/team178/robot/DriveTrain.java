@@ -104,10 +104,10 @@ public class DriveTrain implements RunningComponent {
 		if (joystick.getRawButton(4)){
 			gyroDevice.reset();
 		}
-		frontLeft.set(   yValue - xValue + twistValue);
-		frontRight.set(-(yValue + xValue - twistValue));
-		backLeft.set(    yValue + xValue + twistValue);
-		backRight.set( -(yValue - xValue - twistValue));
+		frontLeft.set(  - (yValue - xValue - twistValue));
+		frontRight.set((yValue + xValue + twistValue));
+		backLeft.set(   -( yValue + xValue - twistValue));
+		backRight.set( (yValue - xValue + twistValue));
 	}
 
 	
