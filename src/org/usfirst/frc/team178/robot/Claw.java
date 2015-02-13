@@ -13,7 +13,8 @@ public class Claw implements RunningComponent {
 	private DigitalInput rightFrontLeftBack;
 	private Joystick joystick;
 	
-	private int lastDirection = -1;
+	private int lastRightDirection = -1;
+	private int lastLeftDirection = -1;
 	private int goPosition = 1;
 	
 	public Claw(Talon leftClaw, Talon rightClaw, DigitalInput detectItem,
@@ -39,16 +40,29 @@ public class Claw implements RunningComponent {
 
 	private boolean[] moveClaw() {
 		boolean isRightSafe = !( //we are not safe if
-					leftFrontRightBack.get() && lastDirection == -1 || //rightback is triggered OR
-					rightFrontLeftBack.get() && lastDirection == 1     //rightfront is triggered
+					leftFrontRightBack.get() && lastRightDirection == -1 || //rightback is triggered OR
+					rightFrontLeftBack.get() && lastRightDirection == 1     //rightfront is triggered
 				);
 		boolean isLeftSafe = !( //we are not safe if
-				leftFrontRightBack.get() && lastDirection == 1 || //leftfront is triggered OR
-				rightFrontLeftBack.get() && lastDirection == -1   //leftback is triggered
+				leftFrontRightBack.get() && lastLeftDirection == 1 || //leftfront is triggered OR
+				rightFrontLeftBack.get() && lastLeftDirection == -1   //leftback is triggered
 			);
 //				(d>0 && !this.outerLimit.get()) || //if we're moving out but not too far OR
 //				(d<0 && !this.innerLimit.get()) || //if we're moving in but not too close OR
 //				(d == 0); //if the motor shouldn't move...
+		
+		if(isRightSafe){
+			rightClaw.set(goPosition);
+		} else {
+			lastRightDirection = goPosition;
+		}
+		
+		if(isLeftSafe){
+			leftClaw.set(goPosition);
+		} else {
+			lastLeftDirection = goPosition;
+		}
+		
 		
 //		if(!isSafe){
 //			direction = 0; //we're not safe; prevent the motor from moving
