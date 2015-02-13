@@ -33,9 +33,9 @@ public class Claw implements RunningComponent {
 	
 	@Override
 	public void teleop() {
-		if(joystick.getRawButton(5))
+		if(joystick.getRawButton(1))
 			goPosition = -1;
-		else if(joystick.getRawButton(6))
+		else if(joystick.getRawButton(2))
 			goPosition = 1;
 		moveClaw();
 	}
