@@ -33,7 +33,7 @@ public class Deck implements RunningComponent {
 		boolean isSafe = 
 				(d>0 && !this.outerLimit.get()) || //if we're moving out but not too far OR
 				(d<0 && !this.innerLimit.get()) || //if we're moving in but not too close OR
-				(d == 0); //if the motor shouldn't move...
+				(d<0.001 && d >-0.001); //if the motor shouldn't move...
 		
 		if(!isSafe){
 			d = 0; //we're not safe; prevent the motor from moving
