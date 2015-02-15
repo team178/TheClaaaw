@@ -8,73 +8,95 @@ public class Claw implements RunningComponent {
 
 	private Talon leftClaw;
 	private Talon rightClaw;
-	private DigitalInput detectItem;
+	private DigitalInput noItem;
 	private DigitalInput leftFrontRightBack;
 	private DigitalInput rightFrontLeftBack;
+	private boolean leftFrontSafe;
+	private boolean leftBackSafe;
+	private boolean rightFrontSafe;
+	private boolean rightBackSafe;
 	private Joystick joystick;
 
 	private int lastRightDirection = -1;
 	private int lastLeftDirection = -1;
 	private int goPosition = 1;
 
-
-
-	public Claw(Talon leftClaw, Talon rightClaw, DigitalInput detectItem,
-			DigitalInput leftFrontRightBack, DigitalInput rightFrontLeftBack,
+	
+	public Claw(Talon leftClaw, Talon rightClaw, DigitalInput noItem,
+			DigitalInput leftFrontSafeRightBack, DigitalInput rightFrontLeftBack,
 			Joystick joystick) {
 		super();
 		this.leftClaw = leftClaw;
 		this.rightClaw = rightClaw;
-		this.detectItem = detectItem;
+		this.noItem = noItem;
 		this.leftFrontRightBack = leftFrontRightBack;
 		this.rightFrontLeftBack = rightFrontLeftBack;
 		this.joystick = joystick;
 	}
-	
+		
 	@Override
 	public void teleop() {
-		if(joystick.getRawButton(1))
-			goPosition = -1;
-		else if(joystick.getRawButton(2))
+		setLimitSwitches();
+		if(joystick.getRawButton(1)){ // close gripper
 			goPosition = 1;
-		moveClaw();
+			if(noItem.get()){
+				moveClaw(rightFrontSafe, rightClaw, lastRightDirection);
+				moveClaw(leftFrontSafe, leftClaw, lastLeftDirection);
+			}
+			if (rightBackSafe){
+				lastRightDirection=goPosition;
+			}
+			if (leftBackSafe){
+				lastLeftDirection=goPosition;
+			}
+		}
+		else if(joystick.getRawButton(2)){ // open gripper
+			goPosition = -1;
+			moveClaw(rightBackSafe, rightClaw, lastRightDirection);
+			moveClaw(leftBackSafe, leftClaw, lastLeftDirection);
+			if (rightFrontSafe){
+				lastRightDirection=goPosition;
+			}
+			if (leftFrontSafe){
+				lastLeftDirection=goPosition;
+			}
+		}
+
 	}
 
-	private boolean[] moveClaw() {
-		boolean isRightSafe = !( //we are not safe if
-				leftFrontRightBack.get() && lastRightDirection == -1 || //rightback is triggered OR
-				rightFrontLeftBack.get() && lastRightDirection == 1     //rightfront is triggered
-				);
-		boolean isLeftSafe = !( //we are not safe if
-				leftFrontRightBack.get() && lastLeftDirection == 1 || //leftfront is triggered OR
-				rightFrontLeftBack.get() && lastLeftDirection == -1   //leftback is triggered
-				);
-		if(isRightSafe){
-			rightClaw.set(goPosition);
+	
+	private void moveClaw(boolean limitSwitch, Talon claw, int lastDirection) {
+		if(limitSwitch) {
+			claw.set(goPosition);
 		} else {
-			lastRightDirection = goPosition;
+			claw.set(0);
 		}
-		
-		if(isLeftSafe){
-			leftClaw.set(goPosition);
-		} else {
-			lastLeftDirection = goPosition;
+	}
+
+	/*
+	 * We only need this because the limit switches are being wired in parallel :)
+	 */
+	public void setLimitSwitches(){
+		if(!leftFrontRightBack.get() && lastRightDirection == -1){ //if the right back is triggered and the last right direction is backwards
+			rightBackSafe = false; //it's false
+		} else { // if right back is not triggered, or if right back is triggered AND we are opening the claw
+			rightBackSafe = true;
 		}
-
-		//				(d>0 && !this.outerLimit.get()) || //if we're moving out but not too far OR
-		//				(d<0 && !this.innerLimit.get()) || //if we're moving in but not too close OR
-		//				(d == 0); //if the motor shouldn't move...
-
-		//		if(!isSafe){
-		//			direction = 0; //we're not safe; prevent the motor from moving
-		//		}
-		//		
-		//		leftClaw.set(direction); //move the motors (or don't if unsafe)
-		//		rightClaw.set(direction); //TODO be more negative
-		//		
-		//		SmartDashboard.putBoolean("Claw is safe?", isSafe); //notify users of safety
-		return new boolean[] {isLeftSafe,isRightSafe};
-
+		if(!rightFrontLeftBack.get() && lastRightDirection == 1){ //if the right front is triggered and the last right direction is forwards
+			rightFrontSafe= false; //it's false
+		}else{
+			rightFrontSafe= true;
+		}
+		if(!leftFrontRightBack.get() && lastLeftDirection == 1){ //if the left front is triggered and the last left direction is forwards
+			leftFrontSafe= false; //it's false
+		}else{ 
+			leftFrontSafe= true;
+		}
+		if(!rightFrontLeftBack.get() && lastLeftDirection == -1){ //if the left back is triggered and the last left direction is backwards
+			leftBackSafe=false; //it's false
+		}else{
+			leftBackSafe=true;
+		}
 	}
 
 	@Override
