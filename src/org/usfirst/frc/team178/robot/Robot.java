@@ -26,7 +26,11 @@ public class Robot extends IterativeRobot {
 				  new DigitalInput(6), 
 				  new DigitalInput(7),
 				  new DigitalInput(8),
-				  new Joystick(0))
+				  new Joystick(0)),
+
+		new Lift(new Joystick(0), 
+				new Talon(4) , 
+				new DigitalInput(3))
 		};
     public void robotInit() {
     	
