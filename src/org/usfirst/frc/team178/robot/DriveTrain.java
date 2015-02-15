@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain implements RunningComponent {
@@ -14,20 +15,17 @@ public class DriveTrain implements RunningComponent {
 	private Talon frontRight;
 	private Talon backRight;
 	
-	private Joystick joystick;
-	
 	private Gyro gyroDevice;
-	
-	private double angleCorrection = 0d;
-	
 
-	
+	private double gyroPin;
+
+	private double controlAngle;
 	private PIDSource gyro = new PIDSource() {
+
 		@Override
 		public double pidGet() {
-			double joyAngle = joystick.getTwist() * 180;
-			System.out.println("Gyro angle: "+gyroDevice.getAngle());
-			return (gyroDevice.getAngle() - joyAngle) / 360;
+			SmartDashboard.putNumber("joyAngle", controlAngle);
+			return (gyroDevice.getAngle() - controlAngle - gyroPin) / 360;
 		}
 	};
 	
@@ -38,71 +36,68 @@ public class DriveTrain implements RunningComponent {
 			angleCorrection = output;
 		}
 	};
-	
-	private PIDController pid = new PIDController(.02, 0.00001, 0, gyro, gyroCorr);
+
+	private double angleCorrection = 0d;
+	private PIDController pid = new PIDController(Math.PI, .01, 0, gyro, gyroCorr);
 	
 	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
-			Talon backRight, Joystick joystick, Gyro gyroDevice) {
+			Talon backRight, Gyro gyroDevice) {
 		super();
 		this.frontLeft = frontLeft;
 		this.backLeft = backLeft;
 		this.frontRight = frontRight;
 		this.backRight = backRight;
-		this.joystick = joystick;
 		this.gyroDevice = gyroDevice;
 		
 		pid.enable();
+		//accPID.enable();
 	}
-
+//x = 3, y = 4
 	@Override
-	public void teleop() {
+	public void teleop(Joystick driver, Joystick aux) {
 		
-		double yValue = joystick.getY();
-		double xValue = joystick.getX();
-		double twistValue = joystick.getTwist();
-		
-		double speed = 1-joystick.getRawAxis(3);
+		double yValue = driver.getY();
+		double xValue = driver.getX();
+		if(aux.getRawButton(4))
+			controlAngle = 0;
+		else
+			controlAngle = Math.atan2(aux.getRawAxis(5), aux.getRawAxis(4)) * 180/Math.PI;
+		double speed = 1-driver.getRawAxis(3);
 
 		
-		if (joystick.getRawButton(2)) {
+		if (driver.getRawButton(2)) {
 			speed*=0.5;
 		}
 		
 		xValue*=speed;
 		yValue*=speed;
-		twistValue*=speed;
 		
-		if (joystick.getRawButton(11)) {
+		if (driver.getRawButton(11)) {
 			yValue*=0;
-			twistValue*=0;
 		}
-		else if (joystick.getRawButton(12))
+		else if (driver.getRawButton(12))
 		{
 			xValue*=0;
-			twistValue*=0;
 		}
 		
-		// Slowdown twisting --Bald
-		twistValue = twistValue * 0.7;
-		
-		if (joystick.getRawButton(8)) {
-			gyroDevice.reset();
+		if (driver.getRawButton(8)) {
+			gyroPin = gyro.pidGet() * 360;
 		}
 		
-		if (joystick.getRawButton(9)){
+		if (driver.getRawButton(9)){
 			frontLeft.set(1);
 			frontRight.set(1);
 			backRight.set(1);
 			backLeft.set(1);
 		} else {
-			drive(xValue,yValue,twistValue);
+			drive(xValue,yValue);
 		}
 	}
 
 	@Override
-	public void auto() {
-		// TODO Auto-generated method stub
-		
+	public void auto(Timer autoTime) {
+		controlAngle = ((autoTime.get() * 360 * .25)%360)-180;
+		drive(0, 0);
 	}
 
 	@Override
@@ -111,13 +106,38 @@ public class DriveTrain implements RunningComponent {
 		
 	}
 	
+	private double lastMag;
+	private PIDSource accPIDsrc = new PIDSource() {
+		@Override
+		public double pidGet() {
+			// TODO Auto-generated method stub
+			return lastMag;
+		}
+	};
+	
+	private double nowScale = 1;
+	private PIDOutput accPIDout = new PIDOutput() {
+		
+		@Override
+		public void pidWrite(double output) {
+			nowScale = output;
+		}
+	};
+	
+	@SuppressWarnings("unused")
+	private PIDController accPID = new PIDController(.5, 0, 0, accPIDsrc, accPIDout);
 
-	public void drive(double xValue, double yValue, double twistValue) {
-		twistValue = -twistValue;
-		twistValue -= angleCorrection;
-		double theta = -(gyroDevice.getAngle() ) * Math.PI / 180;
+	public void drive(double xValue, double yValue) {
+		double twistValue = -angleCorrection;
+		double theta = -(gyroDevice.getAngle() % 360 ) * Math.PI / 180;
 		double xPrime = xValue * Math.cos(theta) - yValue * Math.sin(theta);
 		double yPrime = xValue * Math.sin(theta) + yValue * Math.cos(theta);
+		
+		lastMag = Math.sqrt(Math.abs(xPrime) + Math.abs(yPrime)); //lastMag -> nowScale
+		xPrime *= nowScale;
+		yPrime *= nowScale;
+		
+		SmartDashboard.putNumber("Magnitude", lastMag);
 		
 		//xPrime = 0;
 		
@@ -135,7 +155,10 @@ public class DriveTrain implements RunningComponent {
 			)
 		); 
 //		double normal = 1 / Math.max(Math.abs(yPrime), Math.abs(xPrime));
+		if(normal == Double.NaN) normal = 1;
 		normal = Math.min(1, normal); //limit normal to 1 so magnitude is not crazy
+		
+		normal = 1;
 		
 		SmartDashboard.putNumber("normal", normal);
 		

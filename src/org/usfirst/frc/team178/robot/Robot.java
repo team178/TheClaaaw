@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -19,7 +20,7 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
 	private RunningComponent[] components = {
-			new DriveTrain(new Talon(0),new Talon(1),new Talon(2),new Talon(3),new Joystick(0),new Gyro(0))
+			new DriveTrain(new Talon(0),new Talon(1),new Talon(2),new Talon(3),new Gyro(0))
 	};
     public void robotInit() {
     	
@@ -28,18 +29,28 @@ public class Robot extends IterativeRobot {
     /**
      * This function is called periodically during autonomous
      */
+    
+    public void autonomousInit() {
+    	autoTimer.reset();
+    	autoTimer.start();
+    };
+    
+    private Timer autoTimer = new Timer();
     public void autonomousPeriodic() {
     	for (int i = 0; i < components.length; i++) {
-			components[i].auto();
+			components[i].auto(autoTimer);
 		}
     }
 
     /**
      * This function is called periodically during operator control
      */
+    
+    private Joystick driver = new Joystick(0);
+    private Joystick aux = new Joystick(1);
     public void teleopPeriodic() {
     	for (int i = 0; i < components.length; i++) {
-			components[i].teleop();
+			components[i].teleop(driver,aux);
 		}
     }
     
