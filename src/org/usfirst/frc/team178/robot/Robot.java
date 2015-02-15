@@ -3,6 +3,7 @@ package org.usfirst.frc.team178.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.vision.AxisCamera;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -17,7 +18,8 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
 	private RunningComponent[] components = {
-			new Camera(new Joystick(0))
+			new Camera(new Joystick(0)),
+			new VisionProcessing(new Joystick(0), new AxisCamera ("10.1.78.11"))
 	};
 	
     public void robotInit() {
