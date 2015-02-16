@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -19,13 +20,12 @@ public class Robot extends IterativeRobot {
 	 */
 	private RunningComponent[] components = {
 			new Deck(new Joystick(0), new DigitalInput(0), new DigitalInput(1),
-					new Talon(5)),
+					null, new Talon(5)),
 
 			new Claw(new Talon(6), new Talon(7), new DigitalInput(4),
 					new DigitalInput(5), new DigitalInput(6), new DigitalInput(
 							7), new DigitalInput(8), new Joystick(0)),
-
-			new Lift(new Joystick(0), new Talon(4), new DigitalInput(3)) };
+			new Lift(new Joystick(0), new Talon(4), new DigitalInput(3), null) };
 
 	public void robotInit() {
 
