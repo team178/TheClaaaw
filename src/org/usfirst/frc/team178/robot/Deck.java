@@ -24,9 +24,9 @@ public class Deck implements RunningComponent {
 	@Override
 	public void teleop() {
 		double direction;
-		if(joystick.getRawButton(3))
+		if(joystick.getRawButton(3)) // towards the front
 			direction= -1;
-		else if(joystick.getRawButton(4))
+		else if(joystick.getRawButton(4)) // towards the back
 			direction = 1;
 		else
 			direction=0;
