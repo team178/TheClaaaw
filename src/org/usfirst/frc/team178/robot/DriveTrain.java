@@ -72,11 +72,13 @@ public class DriveTrain implements RunningComponent {
 		if (joystick.getRawButton(11)) {
 			yValue*=0;
 			twistValue*=0;
+			xValue = -1;
 		}
 		else if (joystick.getRawButton(12))
 		{
-			xValue*=0;
+			yValue*=0;
 			twistValue*=0;
+			xValue = 1;
 		}
 		
 		// Slowdown twisting --Bald
