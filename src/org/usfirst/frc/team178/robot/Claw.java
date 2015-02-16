@@ -3,7 +3,6 @@ package org.usfirst.frc.team178.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Claw implements RunningComponent {
 
@@ -41,16 +40,20 @@ public class Claw implements RunningComponent {
 
 		boolean isTouchingTote = !toteTouchingLS.get();
 		
-		if(joystick.getRawButton(1)){
+		if(joystick.getRawButton(1)){ //opening
 			leftClaw.set(opening);
 			rightClaw.set(opening);
 			direction = opening;
 			
 		}
-		else if(joystick.getRawButton(2)){
+		else if(joystick.getRawButton(2)){ //closing
 			leftClaw.set(closing);
 			rightClaw.set(closing);
 			direction = closing;
+		}
+		else{
+			leftClaw.set(0);
+			rightClaw.set(0);
 		}
 		
 		if(!leftFrontLS.get() && direction == opening ){

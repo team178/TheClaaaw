@@ -20,9 +20,9 @@ public class Lift implements RunningComponent{
 		
 		boolean bottomLSPressed = bottomLimit.get();
 		
-		if (joystick.getRawButton(11)) {
+		if (joystick.getRawButton(11)) { //going up
 			motor.set(1);
-		} else if (joystick.getRawButton(12)) {
+		} else if (joystick.getRawButton(12)) { //going down
 			if (bottomLSPressed){
 				motor.set(0);
 			} else{
