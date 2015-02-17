@@ -3,6 +3,7 @@ package org.usfirst.frc.team178.robot;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
@@ -55,7 +56,8 @@ public class Robot extends IterativeRobot {
 		};
 
 	public void robotInit() {
-			
+		
+			new UltraSonics(new AnalogInput(0));
 	};
 	
 
