@@ -1,7 +1,6 @@
 package org.usfirst.frc.team178.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,7 +11,6 @@ public class Deck implements RunningComponent {
 	private Joystick joystick;
 	private DigitalInput frontLimit;
 	private DigitalInput backLimit;
-	private Encoder deckDistanceEncoder;
 	private Talon motor;
 
 	public Deck(Joystick joystick, DigitalInput frontLimit,
@@ -28,9 +26,6 @@ public class Deck implements RunningComponent {
 			@Override
 			public void run() {
 				while(true){
-					if (frontLimit.get()) {
-						deckDistanceEncoder.reset();
-					}
 					Message.isDeckSafe = frontLimit.get();
 					if (Message.isDeckSafe) {
 						Message.makeDeckSafe = false;
@@ -42,8 +37,6 @@ public class Deck implements RunningComponent {
 
 	@Override
 	public void teleop() {
-		//for testing purposes
-		SmartDashboard.putNumber("DeckValue: " , deckDistanceEncoder.get());
 		
 		int direction;
 		
