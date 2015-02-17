@@ -1,5 +1,6 @@
 package org.usfirst.frc.team178.robot;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -14,10 +15,17 @@ import edu.wpi.first.wpilibj.Talon;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	public static Robot instance;
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
+	
+	public Robot() {
+		Robot.instance = this;
+	}
+	
 	private RunningComponent[] components = {
 			new DriveTrain(
 					new Talon(0), //frontLeft
@@ -41,7 +49,7 @@ public class Robot extends IterativeRobot {
 					new Joystick(0), //joystick
 					new Talon(4) ,  //motor
 					new DigitalInput(3), //bottomLimit
-					new Encoder(null)), //Encoder 
+					new Encoder(null, null)), //Encoder 
 			
 			new Deck(
 					new Joystick(0), //joystick
@@ -52,11 +60,6 @@ public class Robot extends IterativeRobot {
 			new Camera(
 					new Joystick(0)) //joystick
 		};
-
-	public void robotInit() {
-			
-	};
-	
 
 	/**
 	 * This function is called periodically during autonomous
