@@ -72,6 +72,10 @@ public class Robot extends IterativeRobot {
 			table= NetworkTable.getTable("AxisComms");
 	};
 	
+	@Override
+	public void autonomousInit() {
+		ActionHelper.clearActionCompletion();
+	}
 
 	/**
 	 * This function is called periodically during autonomous
