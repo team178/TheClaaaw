@@ -31,8 +31,14 @@ public abstract class ActionHelper {
 		}).start();
 	}
 	
+	/**Contains boolean expr. Condition for start*/
 	public abstract boolean shouldRun();
+	/** loopable things to run
+	 * return true when the actions have finished 
+	 * interruptions increase by one if shouldRun switches to false*/
 	public abstract boolean toRun(int interruptions);
+	/**final message, this sets off the next lines
+	 * automatically called when true is returned from {@link}shouldRun() */
 	public abstract void whenDone();
 	
 	

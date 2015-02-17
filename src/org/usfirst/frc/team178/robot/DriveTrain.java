@@ -49,6 +49,26 @@ public class DriveTrain implements RunningComponent {
 		this.backRight = backRight;
 		this.joystick = joystick;
 		this.gyroDevice = gyroDevice;
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		};
 	}
 
 	@Override
