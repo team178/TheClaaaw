@@ -69,7 +69,7 @@ public class Robot extends IterativeRobot {
 
 
 	public void robotInit() {
-			table= NetworkTable.getTable("AxisComms");
+			table= NetworkTable.getTable("Vision");
 	};
 	
 	@Override
