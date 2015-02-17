@@ -2,6 +2,7 @@
 package org.usfirst.frc.team178.robot;
 
 import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
@@ -19,8 +20,29 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
 	private RunningComponent[] components = {
-			new DriveTrain(new Talon(0),new Talon(1),new Talon(2),new Talon(3),new Joystick(0),new Gyro(0))
-	};
+			new DriveTrain(
+					new Talon(0), //frontLeft
+					new Talon(1), //backLeft
+					new Talon(2), //frontRight
+					new Talon(3), //backRight
+					new Joystick(1), //joystick
+					new Gyro(0)), //gyro
+					
+			new Claw (
+					new Talon(6), //leftClaw
+					new Talon(7), //rightClaw
+					new DigitalInput(4), //toteTouchingLS
+					new DigitalInput(5), //leftFrontLS
+					new DigitalInput(6), //rightFrontLS
+					new DigitalInput(7), //leftBackLS
+					new DigitalInput(8), //rightBackLS
+					new Joystick(0)), //joystick
+
+			new Lift(
+					new Joystick(0), //joystick
+					new Talon(4) ,  //motor
+					new DigitalInput(3)) //bottomLimit
+		};
     public void robotInit() {
     	
     }
