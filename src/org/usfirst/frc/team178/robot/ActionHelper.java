@@ -28,7 +28,7 @@ public abstract class ActionHelper {
 					}
 				}
 			}
-		});
+		}).start();
 	}
 	
 	public abstract boolean shouldRun();
