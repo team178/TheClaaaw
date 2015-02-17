@@ -1,5 +1,6 @@
 package org.usfirst.frc.team178.robot;
 
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -41,7 +42,7 @@ public class Robot extends IterativeRobot {
 					new Joystick(0), //joystick
 					new Talon(4) ,  //motor
 					new DigitalInput(3), //bottomLimit
-					new Encoder(null)), //Encoder 
+					new Encoder(null,null)), //Encoder 
 			
 			new Deck(
 					new Joystick(0), //joystick
