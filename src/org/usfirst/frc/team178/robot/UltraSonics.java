@@ -12,7 +12,7 @@ public class UltraSonics implements RunningComponent{
 	}
 	
 	public static double getDistanceFromWall(){
-		return ultrasonic.getAverageVoltage() * 1 / 0.813;
+		return ultrasonic.getAverageVoltage() * 1 / 0.813;  //need to replace the Stolarz with another value
 	}
 
 	@Override
