@@ -1,4 +1,3 @@
-
 package org.usfirst.frc.team178.robot;
 
 import edu.wpi.first.wpilibj.Gyro;
@@ -15,10 +14,10 @@ import edu.wpi.first.wpilibj.Talon;
  * directory.
  */
 public class Robot extends IterativeRobot {
-    /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     */
+	/**
+	 * This function is run when the robot is first started up and should be
+	 * used for any initialization code.
+	 */
 	private RunningComponent[] components = {
 			new DriveTrain(
 					new Talon(0), //frontLeft
@@ -41,37 +40,45 @@ public class Robot extends IterativeRobot {
 			new Lift(
 					new Joystick(0), //joystick
 					new Talon(4) ,  //motor
-					new DigitalInput(3)) //bottomLimit
+					new DigitalInput(3), //bottomLimit
+					new Encoder(null)), //Encoder 
+			
+			new Deck(
+					new Joystick(0), //joystick
+					new DigitalInput(0), //frontLimit
+					new DigitalInput(1), //backLimit
+					new Talon(5)), //motor
 		};
-    public void robotInit() {
-    	
-    }
 
-    /**
-     * This function is called periodically during autonomous
-     */
-    public void autonomousPeriodic() {
-    	for (int i = 0; i < components.length; i++) {
+	public void robotInit() {
+
+	}
+
+	/**
+	 * This function is called periodically during autonomous
+	 */
+	public void autonomousPeriodic() {
+		for (int i = 0; i < components.length; i++) {
 			components[i].auto();
 		}
-    }
+	}
 
-    /**
-     * This function is called periodically during operator control
-     */
-    public void teleopPeriodic() {
-    	for (int i = 0; i < components.length; i++) {
+	/**
+	 * This function is called periodically during operator control
+	 */
+	public void teleopPeriodic() {
+		for (int i = 0; i < components.length; i++) {
 			components[i].teleop();
 		}
-    }
-    
-    /**
-     * This function is called periodically during test mode
-     */
-    public void testPeriodic() {
-    	for (int i = 0; i < components.length; i++) {
+	}
+
+	/**
+	 * This function is called periodically during test mode
+	 */
+	public void testPeriodic() {
+		for (int i = 0; i < components.length; i++) {
 			components[i].test();
 		}
-    }
-    
+	}
+
 }

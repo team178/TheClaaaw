@@ -34,11 +34,8 @@ public class Claw implements RunningComponent {
 		this.joystick = joystick;
 	}
 
-
 	@Override
 	public void teleop() {
-		
-		
 		
 		if(joystick.getRawButton(1)){ //opening
 			moveClaw(1);
@@ -48,14 +45,9 @@ public class Claw implements RunningComponent {
 			moveClaw(-1);
 		}
 		else{
-			leftClaw.set(0);
 			rightClaw.set(0);
+			leftClaw.set(0);
 		}
-		
-		
-
-//		SmartDashboard.putBoolean("RBLF", leftFrontRightBack.get());
-
 	}
 	
 	public void moveClaw(int Direction){
@@ -82,8 +74,8 @@ public class Claw implements RunningComponent {
 			rightClaw.set(0);
 			leftClaw.set(0);
 		}
-
 	}
+		
 
 	
 	/*
