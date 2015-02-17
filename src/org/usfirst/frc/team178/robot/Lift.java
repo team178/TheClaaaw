@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Lift implements RunningComponent{
 	
@@ -47,16 +48,10 @@ public class Lift implements RunningComponent{
 	
 	@Override
 	public void teleop() {
+		//for testing purposes
+		SmartDashboard.putNumber("LiftValue: " , liftDistanceEncoder.get());
 		
-		if (joystick.getRawButton(11)) { //going up
-			motor.set(1);
-		} else if (joystick.getRawButton(12)) { //going down
-			motor.set(-1);
-		} else 
-			motor.set(0);
-//		SmartDashboard.putNumber("LiftValue: " , liftDistanceEncoder.get());
 		
-		/*
 		
 		int direction;
 		
@@ -68,19 +63,21 @@ public class Lift implements RunningComponent{
 			direction = 0;
 		
 		moveMotor(direction);
-		*/
+		
 		
 	}
 	
 	public void AutoRetrieve(){
-		moveMotor(1);     // move to bottom
+		if(Message.isDown!= true){
+			motor.set(1);
+		}
 		
 	}
 
 	private void moveMotor(int direction) {
 		if (Message.makeLiftSafe)                                // fix lift to allow deck movement
 			direction = 1;
-		if(!(whereAreWe() >= SAFE_DIST) || !Message.isDeckSafe){ // not safe deck OR not safe lift
+		if((whereAreWe() < SAFE_DIST) && !Message.isDeckSafe){ // not safe deck OR not safe lift
 			direction = 0;                                       
 			Message.makeDeckSafe = true;                         // fix deck to allow Lift Access
 		}else{

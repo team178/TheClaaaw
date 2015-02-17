@@ -5,4 +5,6 @@ public class Message {
 	public static boolean makeDeckSafe;
 	public static boolean isLiftSafe;
 	public static boolean isDeckSafe;
+	
+	public static boolean isDown;
 }

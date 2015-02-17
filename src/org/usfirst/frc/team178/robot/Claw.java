@@ -34,27 +34,21 @@ public class Claw implements RunningComponent {
 		this.joystick = joystick;
 	}
 
-
-	@Override
-	public void teleop() {
-
-		boolean isTouchingTote = !toteTouchingLS.get();
+	public void moveClaw(boolean isClose){
 		
-		if(joystick.getRawButton(1)){ //opening
-			leftClaw.set(opening);
-			rightClaw.set(opening);
-			direction = opening;
-			
-		}
-		else if(joystick.getRawButton(2)){ //closing
+		boolean isTouchingTote = !toteTouchingLS.get();
+	
+		if(isClose == true){
 			leftClaw.set(closing);
 			rightClaw.set(closing);
 			direction = closing;
 		}
-		else{
-			leftClaw.set(0);
-			rightClaw.set(0);
-		}
+		else if (isClose ==false){
+			leftClaw.set(opening);
+			rightClaw.set(opening);
+			direction = opening;
+		} 
+		
 		
 		if(!leftFrontLS.get() && direction == opening ){
 			leftClaw.set(0);
@@ -74,6 +68,25 @@ public class Claw implements RunningComponent {
 			rightClaw.set(0);
 			leftClaw.set(0);
 		}
+	}
+	@Override
+	public void teleop() {
+
+		
+		
+		if(joystick.getRawButton(1)){ //opening
+			
+			moveClaw(false);
+		}
+		else if(joystick.getRawButton(2)){ //closing
+			moveClaw(true);
+		}
+		else{
+			leftClaw.set(0);
+			rightClaw.set(0);
+		}
+		
+		
 
 //		SmartDashboard.putBoolean("RBLF", leftFrontRightBack.get());
 

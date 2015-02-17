@@ -11,6 +11,8 @@ public class Deck implements RunningComponent {
 	private final static double ENCODER_RATE = 30d; //ticks per meter
 	private final static double SAFE_DIST = 1d; //meters
 	
+	private final static double bottomLimit = 1d;
+	
 	private Joystick joystick;
 	private DigitalInput frontLimit;
 	private DigitalInput backLimit;
@@ -45,8 +47,8 @@ public class Deck implements RunningComponent {
 
 	@Override
 	public void teleop() {
-		
-	//	SmartDashboard.putNumber("DeckValue: " , deckDistanceEncoder.get());
+		//for testing purposes
+		SmartDashboard.putNumber("DeckValue: " , deckDistanceEncoder.get());
 		
 		int direction;
 		
@@ -57,6 +59,8 @@ public class Deck implements RunningComponent {
 		else
 			direction=0;
 		
+		setDirection(direction);
+		
 		//this.motor.set(joystick.getY()*.25);
 		
 		SmartDashboard.putBoolean("Front Limit", this.frontLimit.get());
@@ -65,42 +69,29 @@ public class Deck implements RunningComponent {
 		 
 	}
 
-	private boolean setDirection(int direction) {
+	private void setDirection(int direction) {
+		
 		
 		if (Message.makeDeckSafe)
 			direction = 1;
-		if (whereAreWe() < SAFE_DIST && !Message.makeDeckSafe  )  // Deck is in danger limit
+		if (whereAreWe() < SAFE_DIST && !Message.isLiftSafe  )  // Deck is in danger limit
 		{
 			direction = 0;                                       
-			Message.makeLiftSafe = true;							// fix lift to open Deck Access
+			Message.makeLiftSafe = true;
+			// fix lift to open Deck Access
 		}
 		else
 		{
 			Message.makeLiftSafe = false;                        // no changes required
 		}
-		                    
-		boolean isNotSafe = 
-				(direction<0 && !this.frontLimit.get()) || //if we're moving out but not too far OR
-				(direction>0 && !this.backLimit.get()); //if we're moving in but not too close OR
-		
-		if(isNotSafe){
-			direction = 0; //we're not safe; prevent the motor from moving
+		if(whereAreWe() < bottomLimit){
+			Message.isDown = true;
+			direction = 0;
 		}
 		
-		
-		//move the motor (or don't if unsafe)
-		SmartDashboard.putBoolean("Motor is not safe?", isNotSafe); //notify users of safety
 		SmartDashboard.putNumber("Direction",direction);// for testing purposes
 		
-		if(!(whereAreWe() >= SAFE_DIST || Message.isLiftSafe)){
-			direction = 0;
-			Message.makeLiftSafe = true;
-		}
-		
-		this.motor.set(direction);
-		
-		return isNotSafe;
-		
+		motor.set(direction);
 	}
 	
 	public double whereAreWe(){
