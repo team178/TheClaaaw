@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team178.robot;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /**
@@ -16,7 +17,7 @@ public class Robot extends IterativeRobot {
      * used for any initialization code.
      */
 	private RunningComponent[] components = {
-			new UltraSonics()
+			new UltraSonics(new AnalogInput(0))
 	};
     public void robotInit() {
     	

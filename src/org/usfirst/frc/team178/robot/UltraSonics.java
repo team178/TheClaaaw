@@ -5,14 +5,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class UltraSonics implements RunningComponent{
 	
-	private static final AnalogInput ultrasonic = new AnalogInput(0);
+	private static AnalogInput ultrasonic;
+	private static double scaler;
 	
-	public UltraSonics(){
+	public UltraSonics(AnalogInput ultrasonic) {
+		super();
+		UltraSonics.ultrasonic = ultrasonic;
 		ultrasonic.setAverageBits(4);
+		scaler = ultrasonic.getAverageVoltage();
 	}
 	
 	public static double getDistanceFromWall(){
-		return ultrasonic.getAverageVoltage() * 1 / 0.813;  //need to replace the Stolarz with another value
+		return ultrasonic.getAverageVoltage() * 1 / scaler;  //need to replace the Stolarz with another value
 	}
 
 	@Override
