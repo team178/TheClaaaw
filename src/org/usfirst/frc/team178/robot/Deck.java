@@ -12,7 +12,6 @@ public class Deck implements RunningComponent {
 	private Joystick joystick;
 	private DigitalInput frontLimit;
 	private DigitalInput backLimit;
-	private Encoder deckDistanceEncoder;
 	private Talon motor;
 
 	public Deck(Joystick joystick, DigitalInput frontLimit,
@@ -28,9 +27,6 @@ public class Deck implements RunningComponent {
 			@Override
 			public void run() {
 				while(true){
-					if (frontLimit.get()) {
-						deckDistanceEncoder.reset();
-					}
 					Message.isDeckSafe = frontLimit.get();
 					if (Message.isDeckSafe) {
 						Message.makeDeckSafe = false;
@@ -42,8 +38,6 @@ public class Deck implements RunningComponent {
 
 	@Override
 	public void teleop() {
-		//for testing purposes
-		SmartDashboard.putNumber("DeckValue: " , deckDistanceEncoder.get());
 		
 		int direction;
 		
