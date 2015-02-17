@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -15,6 +16,9 @@ import edu.wpi.first.wpilibj.Talon;
  * directory.
  */
 public class Robot extends IterativeRobot {
+	
+	//Get the NeworkTable for the Robot
+	NetworkTable table;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -55,7 +59,7 @@ public class Robot extends IterativeRobot {
 		};
 
 	public void robotInit() {
-			
+			table= NetworkTable.getTable("AxisComms");
 	};
 	
 
@@ -75,6 +79,7 @@ public class Robot extends IterativeRobot {
 		for (int i = 0; i < components.length; i++) {
 			components[i].teleop();
 		}
+		
 	}
 
 	/**
