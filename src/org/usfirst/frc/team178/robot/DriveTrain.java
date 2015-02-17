@@ -1,88 +1,135 @@
 package org.usfirst.frc.team178.robot;
 
+import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDOutput;
+import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Talon;
 
-public class DriveTrain {
-	Talon frontLeft;
-	Talon frontRight;
-	Talon backLeft;
-	Talon backRight;
+public class DriveTrain implements RunningComponent {
+	private Talon frontLeft;
+	private Talon backLeft;
+	private Talon frontRight;
+	private Talon backRight;
 	
-	DriveTrain() {
-		frontLeft = new Talon(0);
-		frontRight= new Talon(1);
-		backLeft= new Talon(2);
-		backRight= new Talon(3);
+	private Joystick joystick;
+	
+	private Gyro gyroDevice;
+	
+	private double angleCorrection = 0d;
+	
+
+	
+	private PIDSource gyro = new PIDSource() {
+		@Override
+		public double pidGet() {
+			double joyAngle = joystick.getTwist() * 360;
+			return gyroDevice.getAngle() - joyAngle;
+		}
+	};
+	
+	private PIDOutput gyroCorr = new PIDOutput() {
+		
+		@Override
+		public void pidWrite(double output) {
+			angleCorrection = output;
+		}
+	};
+	
+	@SuppressWarnings("unused")
+	private PIDController pid = new PIDController(0.1, 0.001, 0, gyro, gyroCorr);
+	
+	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
+			Talon backRight, Joystick joystick, Gyro gyroDevice) {
+		super();
+		this.frontLeft = frontLeft;
+		this.backLeft = backLeft;
+		this.frontRight = frontRight;
+		this.backRight = backRight;
+		this.joystick = joystick;
+		this.gyroDevice = gyroDevice;
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		};
 	}
 
-	public void drive(Joystick joystick) {
+	@Override
+	public void teleop() {
+		
 		double yValue = joystick.getY();
 		double xValue = joystick.getX();
 		double twistValue = joystick.getTwist();
-	
-		if (joystick.getRawButton(3) || joystick.getRawButton(11)) {
-			strafeLeft();
-			return;
-		} else if (joystick.getRawButton(4) || joystick.getRawButton(12)) {
-			strafeRight();
-			return;
+		
+		double speed = 1-joystick.getRawAxis(3);
+
+		
+		if (joystick.getRawButton(2)) {
+			speed*=0.5;
 		}
 		
-		if(joystick.getRawButton(2)){  //cut the input values in half for greater precision (Brandon Bald)
-			xValue=xValue/2.0;
-			yValue=yValue/2.0;
-			twistValue= twistValue/2.0;
+		
+		if (joystick.getRawButton(11)) {
+			yValue*=0;
+			twistValue*=0;
+			xValue = -1;
+		}
+		else if (joystick.getRawButton(12))
+		{
+			yValue*=0;
+			twistValue*=0;
+			xValue = 1;
 		}
 		
-		// Logitech Extreme 3D Pro joysticks seem to have a huge 0.3 Z axis
-		// deadzone. - Aneesh & Brandon
+
+		xValue*=speed;
+		yValue*=speed;
+		twistValue*=speed;
 		
-		double oldTwist = twistValue;
+		drive(xValue,yValue,twistValue);
+	}
+
+	@Override
+	public void auto() {
+		// TODO Auto-generated method stub
 		
-		if (twistValue > -0.4 && twistValue < 0.35) {
-			twistValue = 0;
-		} else if (twistValue >= 0.35) {
-			twistValue = twistValue - 0.35;
-			// Apply an expansion factor. So all the way right becomes 1.0 again.
-			twistValue = twistValue * (1/0.65);
-		} else if (twistValue <= -0.4) {
-			twistValue= twistValue + 0.4;
-			// Apply an expansion factor. So all the way right becomes 1.0 again.
-			twistValue = twistValue * (1/0.6);	
+	}
+
+	@Override
+	public void test() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void drive(double xValue, double yValue, double twistValue) {
+		if (joystick.getRawButton(3)){
+				twistValue += angleCorrection;
 		}
+		if (joystick.getRawButton(4)){
+			gyroDevice.reset();
+		}
+		frontLeft.set(  - (yValue - xValue - twistValue));
+		frontRight.set((yValue + xValue + twistValue));
+		backLeft.set(   -( yValue + xValue - twistValue));
+		backRight.set( (yValue - xValue + twistValue));
+	}
+
 	
-		// Slowdown twisting
-		twistValue = twistValue * 0.7;
-		
-		//System.out.println("Original: " + oldTwist +  "\tNew: " + twistValue);
-
-		frontLeft.set(   yValue - xValue + twistValue);
-		frontRight.set(-(yValue + xValue - twistValue));
-		backLeft.set(    yValue + xValue + twistValue);
-		backRight.set( -(yValue - xValue - twistValue));
-	}
-	
-	public void strafeLeft() {
-		frontLeft.set(       0.6);
-		frontRight.set( -1* -0.6); 
-		backLeft.set(       -0.6); 
-		backRight.set(  -1*  0.6);
-	}
-
-	public void strafeRight() {
-		frontLeft.set(      -0.6);
-		frontRight.set( -1*  0.6);
-		backLeft.set(        0.6);
-		backRight.set(  -1* -0.6);
-	}
-	
-
-
-	public void resetToZero() {
-		frontLeft.set(0);
-		frontRight.set(0);
-		backLeft.set(0);
-		backRight.set(0);
-	}
 }
