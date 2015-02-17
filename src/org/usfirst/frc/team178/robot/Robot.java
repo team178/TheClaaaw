@@ -48,11 +48,15 @@ public class Robot extends IterativeRobot {
 					new DigitalInput(0), //frontLimit
 					new DigitalInput(1), //backLimit
 					new Talon(5)), //motor
+					
+			new Camera(
+					new Joystick(0)) //joystick
 		};
 
 	public void robotInit() {
-
-	}
+			
+	};
+	
 
 	/**
 	 * This function is called periodically during autonomous
@@ -81,4 +85,5 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
+  
 }
