@@ -7,4 +7,9 @@ public class Message {
 	public static boolean isDeckSafe;
 	
 	public static boolean isDown;
+	
+	public static int[] CommandLists;
+	public static int index;
+	
+	
 }
