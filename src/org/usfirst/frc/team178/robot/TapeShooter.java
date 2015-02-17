@@ -8,16 +8,7 @@ public class TapeShooter {
 	Joystick joystick = new Joystick(2);
 	
 	public void shoot(){
-		if(joystick.getRawButton(3)){
-			tapeMotor.set(1);
-		}
+		tapeMotor.set(joystick.getRawAxis(3));
 		
-		else if(joystick.getRawButton(4)){
-			tapeMotor.set(-1);
-		}
-		
-		else{
-			tapeMotor.set(0);
-		}
 	}
 }
