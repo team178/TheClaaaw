@@ -28,9 +28,8 @@ public class Camera implements RunningComponent {
 	}
 
 	@Override
-	public void teleop() {
-		if (joystick.getRawButton(3)) {
-			System.out.println("Button 3");
+	public void teleop() {/*
+		if (joystick.getRawButton(7)) {
 			this.camserv.stopAutomaticCapture();
 	  		this.camserv.startAutomaticCapture("cam0");
 		}
@@ -39,7 +38,7 @@ public class Camera implements RunningComponent {
 			
 			this.camserv.stopAutomaticCapture();
 	  		this.camserv.startAutomaticCapture("cam1");
-		}
+		}*/
 	}
 
 }
