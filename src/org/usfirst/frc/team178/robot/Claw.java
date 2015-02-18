@@ -51,7 +51,7 @@ public class Claw implements RunningComponent {
 
 			@Override
 			public void whenDone() {
-				
+				Message.isToteinAZ = false;
 			}
 			
 		};
