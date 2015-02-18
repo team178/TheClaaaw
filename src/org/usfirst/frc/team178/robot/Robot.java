@@ -43,7 +43,7 @@ public class Robot extends IterativeRobot {
 					new Joystick(0), //joystick
 					new Talon(4) ,  //motor
 					new DigitalInput(3), //bottomLimit
-					new Encoder(null, null)), //Encoder 
+					new Encoder(14, 15)), //Encoder 
 			
 			new Deck(
 					new Joystick(0), //joystick
@@ -52,12 +52,13 @@ public class Robot extends IterativeRobot {
 					new Talon(5)), //motor
 					
 			new Camera(
-					new Joystick(0)) //joystick
+					new Joystick(0)), //joystick
+			
+			new UltraSonics(
+					new AnalogInput(1)) //ultrasonics
 		};
 
 	public void robotInit() {
-		
-			new UltraSonics(new AnalogInput(0));
 	};
 	
 

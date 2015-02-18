@@ -1,18 +1,18 @@
 package org.usfirst.frc.team178.robot;
 
-import edu.wpi.first.wpilibj.CameraServerer;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Camera implements RunningComponent {
 	
 	private Joystick joystick;
-	private CameraServerer camserv;
+	private CameraServer camserv;
 
 
 	public Camera(Joystick joystick) {
 		super();
 		this.joystick = joystick;
-    	this.camserv = CameraServerer.getInstance();
+    	this.camserv = CameraServer.getInstance();
   		this.camserv.startAutomaticCapture("cam0");
 	}
 

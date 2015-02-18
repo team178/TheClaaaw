@@ -40,9 +40,9 @@ public class Deck implements RunningComponent {
 		
 		int direction;
 		
-		if(joystick.getRawButton(3)) // towards the front
+		if(joystick.getRawButton(5)) // towards the front
 			direction= -1;
-		else if(joystick.getRawButton(4)) // towards the back
+		else if(joystick.getRawButton(6)) // towards the back
 			direction = 1;
 		else
 			direction=0;

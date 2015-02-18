@@ -55,9 +55,9 @@ public class Lift implements RunningComponent{
 		
 		int direction;
 		
-		if (joystick.getRawButton(11)) { //going up
+		if (joystick.getRawButton(4)) { //going up
 			direction = 1;
-		} else if (joystick.getRawButton(12)) { //going down
+		} else if (joystick.getRawButton(3)) { //going down
 			direction = -1;
 		} else 
 			direction = 0;
