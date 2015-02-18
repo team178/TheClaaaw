@@ -86,6 +86,25 @@ public class DriveTrain implements RunningComponent {
 				else return false;
 			}
 		};
+		
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				//do nothing; we're waiting for isCanHeld anyway
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				drive(0, .2, 0);
+				return Message.isCanHeld;
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				return Robot.instance.isAutonomous() && !this.finishedRunning;
+			}
+		};
 	}
 
 	@Override

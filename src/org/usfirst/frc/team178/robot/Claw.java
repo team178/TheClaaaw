@@ -55,6 +55,25 @@ public class Claw implements RunningComponent {
 			}
 			
 		};
+		
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				Message.isCanHeld = true;
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				moveClaw(closing);
+				return leftFrontLS.get() && rightFrontLS.get();
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				return Robot.instance.isAutonomous() && !this.finishedRunning;
+			}
+		};
 	}
 
 	@Override
