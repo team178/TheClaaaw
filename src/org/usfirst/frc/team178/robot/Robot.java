@@ -69,6 +69,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 			networktable= NetworkTable.getTable("Vision");
+			networktable.putInt("TO_RUN_OR_NOT_TO_RUN", 1);
 	}
 	
 	@Override
@@ -78,7 +79,21 @@ public class Robot extends IterativeRobot {
 		ActionHelper.resetAllActionCompletions();
 	}
 	
-
+	@Override
+	public void teleopInit(){
+		networktable.putInt("TO_RUN_OR_NOT_TO_RUN", 0);
+		Message.inAuto=false;
+		Message.isCanHeld=false;
+		Message.isCaninAZB=false;
+		Message.isCaninAZA=false;
+		Message.isBotClearofAZ=false;
+		Message.isBotAlligned=false;
+		Message.isBotReadyToGrab=false;
+		Message.isToteHeld=false;
+		Message.isToteinAZ=false;
+		Message.isCanReleased=false;
+		Message.isBotMovedBack=false;
+	}
 	/**
 	 * This function is called periodically during autonomous
 	 */
