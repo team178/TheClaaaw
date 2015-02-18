@@ -32,6 +32,29 @@ public class Claw implements RunningComponent {
 		this.leftBackLS = leftBackLS;
 		this.rightBackLS = rightBackLS;
 		this.joystick = joystick;
+		new ActionHelper() {
+
+			@Override
+			public boolean shouldRun() {
+				if (Message.isToteinAZ)
+					return true;
+				else return false;
+			}
+
+			@Override
+			public boolean toRun(int interruptions) {
+				moveClaw(opening);
+				if (!leftBackLS.get() && !rightBackLS.get())
+					return true;
+				else return false;
+			}
+
+			@Override
+			public void whenDone() {
+				
+			}
+			
+		};
 	}
 
 	@Override

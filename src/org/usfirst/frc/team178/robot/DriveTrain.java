@@ -7,6 +7,8 @@ import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.Timer;
+
 
 public class DriveTrain implements RunningComponent {
 	private Talon frontLeft;
@@ -31,7 +33,6 @@ public class DriveTrain implements RunningComponent {
 	};
 	
 	private PIDOutput gyroCorr = new PIDOutput() {
-		
 		@Override
 		public void pidWrite(double output) {
 			angleCorrection = output;
@@ -50,8 +51,9 @@ public class DriveTrain implements RunningComponent {
 		this.backRight = backRight;
 		this.joystick = joystick;
 		this.gyroDevice = gyroDevice;
+		
 		new ActionHelper() {
-			
+
 			@Override
 			public void whenDone() {
 				// TODO Auto-generated method stub
@@ -78,6 +80,40 @@ public class DriveTrain implements RunningComponent {
 			public boolean shouldRun() {
 				// TODO Auto-generated method stub
 				return Message.isBotClearofAZ;
+			}
+		};
+		
+		new ActionHelper() {
+			private Timer timer = new Timer(); 
+			
+			{
+				timer.start();
+			}
+			
+			
+			private boolean Blah = false; 
+			@Override
+			public void whenDone() {
+				// When done, send message, isToteinA2
+				Message.isToteinAZ = true; 
+			}
+			@Override
+			public boolean toRun(int interruptions) {
+				//Move backwards, check if in Auto zone, if true, return true, if false, return false
+				drive(0, -1, 0);
+				if (timer.get() >= 3)
+					return true; 
+				else return false;
+			}
+			@Override
+			public boolean shouldRun() {
+				if (!Blah && Message.isToteHeld) {
+					Blah = Message.isToteHeld;
+					timer.reset();
+				}
+				if (Message.isToteHeld)
+					return true;
+				else return false;
 			}
 		};
 	}
