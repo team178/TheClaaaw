@@ -51,10 +51,11 @@ public class Claw implements RunningComponent {
 
 			@Override
 			public void whenDone() {
-				
+				Message.isToteinAZ = false;
 			}
 			
 		};
+
 		new ActionHelper() {
 			
 			@Override
@@ -74,6 +75,27 @@ public class Claw implements RunningComponent {
 			public boolean shouldRun() {
 				// TODO Auto-generated method stub
 				return Message.isBotReadyToGrab;
+			}
+		};
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				Message.isCanHeld = true;
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				moveClaw(closing);
+				return leftFrontLS.get() && rightFrontLS.get();
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Robot.instance.isAutonomous() && !this.finishedRunning;
 			}
 		};
 	}

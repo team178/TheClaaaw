@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 
 public class DriveTrain implements RunningComponent {
+	protected static final double BACK_DRIVE_TIME = 3; //seconds
 	private Talon frontLeft;
 	private Talon backLeft;
 	private Talon frontRight;
@@ -127,34 +128,28 @@ public class DriveTrain implements RunningComponent {
 			}
 		};
 		new ActionHelper() {
-			private Timer timer = new Timer(); 
-			
-			{
-				timer.start();
-			}
-			
-			
-			private boolean Blah = false; 
 			@Override
 			public void whenDone() {
 				// When done, send message, isToteinA2
-				Message.isToteinAZ = true; 
+
+				if (Message.isToteHeld) {
+					Message.isToteHeld = false;
+					Message.isToteinAZ = true; 	
+				} else if(Message.isCanHeld){
+					Message.isCanHeld = false;
+					Message.isCaninAZA = true;
+					Message.isCaninAZB = true;
+				} else throw new Error();
 			}
 			@Override
 			public boolean toRun(int interruptions) {
 				//Move backwards, check if in Auto zone, if true, return true, if false, return false
 				drive(0, -1, 0);
-				if (timer.get() >= 3)
-					return true; 
-				else return false;
+				return timer.get() > BACK_DRIVE_TIME;
 			}
 			@Override
 			public boolean shouldRun() {
-				if (!Blah && Message.isToteHeld) {
-					Blah = Message.isToteHeld;
-					timer.reset();
-				}
-				if (Message.isToteHeld)
+				if (Message.isToteHeld || Message.isCanHeld)
 					return true;
 				else return false;
 			}
@@ -178,6 +173,27 @@ public class DriveTrain implements RunningComponent {
 			public boolean shouldRun() {
 				// TODO Auto-generated method stub
 				return Message.isBotAlligned;
+			}
+		};
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				//do nothing; we're waiting for isCanHeld anyway
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				drive(0, .2, 0);
+				return Message.isCanHeld;
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Robot.instance.isAutonomous() && !this.finishedRunning;
 			}
 		};
 	}
