@@ -2,10 +2,16 @@ package org.usfirst.frc.team178.robot;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public abstract class ActionHelper {
 	
 	private static ArrayList<ActionHelper> actions = new ArrayList<>();
 	
+	protected Timer timer = new Timer();
+	{
+		timer.start();
+	}
 	protected boolean finishedRunning = false;
 	public ActionHelper() {
 		new Thread(new Runnable() {
@@ -22,6 +28,7 @@ public abstract class ActionHelper {
 						if(done){
 							whenDone();
 							finishedRunning = true;
+							timer.reset();
 						} else
 							interruptions++;
 						break;
