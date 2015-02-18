@@ -11,4 +11,5 @@ public class Message {
 	public static boolean inAuto=false,isCanHeld=false,isCaninAZB=false,isCaninAZA=false,isBotClearofAZ=false,isBotAlligned=false,isBotReadyToGrab=false,isToteHeld=false,isToteinAZ=false,isCanReleased=false,isBotMovedBack=false;	
 
 	public static boolean isDown;
+	
 }

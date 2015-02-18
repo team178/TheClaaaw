@@ -1,18 +1,16 @@
 package org.usfirst.frc.team178.robot;
 
-import edu.wpi.first.wpilibj.CameraServerer;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class Camera implements RunningComponent {
 	
-	private Joystick joystick;
-	private CameraServerer camserv;
+	private CameraServer camserv;
 
 
-	public Camera(Joystick joystick) {
+	public Camera() {
 		super();
-		this.joystick = joystick;
-    	this.camserv = CameraServerer.getInstance();
+		this.camserv = CameraServer.getInstance();
   		this.camserv.startAutomaticCapture("cam0");
 	}
 
@@ -28,7 +26,7 @@ public class Camera implements RunningComponent {
 	}
 
 	@Override
-	public void teleop() {/*
+	public void teleop(Joystick joystick, Joystick aux) {/*
 		if (joystick.getRawButton(7)) {
 			this.camserv.stopAutomaticCapture();
 	  		this.camserv.startAutomaticCapture("cam0");
