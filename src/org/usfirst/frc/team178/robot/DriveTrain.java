@@ -56,6 +56,7 @@ public class DriveTrain implements RunningComponent {
 			public void whenDone() {
 				// TODO Auto-generated method stub
 				Message.isBotAlligned=true;
+				Message.isBotClearofAZ=false;
 			}
 			
 			@Override
@@ -157,13 +158,14 @@ public class DriveTrain implements RunningComponent {
 			public void whenDone() {
 				// TODO Auto-generated method stub
 				Message.isBotReadyToGrab=true;
+				Message.isBotAlligned = false; 
 			}
 			
 			@Override
 			public boolean toRun(int interruptions) {
 				// TODO Auto-generated method stub
 				drive(0,1,0);
-				return timer.get()>3;
+				return (UltraSonics.getDistanceFromWall()<=1);
 			}
 			
 			@Override
