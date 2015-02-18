@@ -6,17 +6,13 @@ import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Deck implements RunningComponent {
-	private final static double bottomLimit = 1d; //for autonomous
-	
-	private Joystick joystick;
 	private DigitalInput frontLimit;
 	private DigitalInput backLimit;
 	private Talon motor;
 
-	public Deck(Joystick joystick, DigitalInput frontLimit,
+	public Deck(DigitalInput frontLimit,
 			DigitalInput backLimit,  Talon motor) {
 		super();
-		this.joystick = joystick;
 		this.frontLimit = frontLimit;
 		this.backLimit = backLimit;
 		this.motor = motor;
@@ -36,7 +32,7 @@ public class Deck implements RunningComponent {
 	}
 
 	@Override
-	public void teleop() {
+	public void teleop(Joystick joystick, Joystick aux) {
 		int direction;
 		
 		if(joystick.getRawButton(6)) // towards the front

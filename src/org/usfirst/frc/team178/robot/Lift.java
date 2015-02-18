@@ -14,15 +14,13 @@ public class Lift implements RunningComponent{
 	private final static double POS_ONE = 50;
 	private final static double POS_TWO = 300;
 	
-	private Joystick joystick;
 	private Talon motor;
 	private Encoder liftDistanceEncoder;
 	private DigitalInput zeroLimit;
 	
-	public Lift(Joystick joystick, Talon motor, DigitalInput zeroLimit,
+	public Lift(Talon motor, DigitalInput zeroLimit,
 			Encoder liftDistanceEncoder) {
 		super();
-		this.joystick = joystick;
 		this.motor = motor;
 		this.liftDistanceEncoder = liftDistanceEncoder;
 		this.zeroLimit = zeroLimit;
@@ -52,7 +50,7 @@ public class Lift implements RunningComponent{
 	}
 	
 	@Override
-	public void teleop() {
+	public void teleop(Joystick joystick, Joystick aux) {
 		//for testing purposes
 		//SmartDashboard.putNumber("LiftValue: " , liftDistanceEncoder.get());
 		SmartDashboard.putBoolean("zeroLimit", zeroLimit.get());
@@ -103,6 +101,7 @@ public class Lift implements RunningComponent{
 
 	@Override
 	public void test() {
+/*
 		this.motor.set(joystick.getY());
 		SmartDashboard.putNumber("RawSpeed", liftDistanceEncoder.get());
 		SmartDashboard.putNumber("newValue", whereAreWe());
@@ -129,7 +128,9 @@ public class Lift implements RunningComponent{
 				this.motor.set(0);
 			}
 		}
-		
+=======
+>>>>>>> 5708159d5de8f7e505788a6309f5b15eaac21994
+		*/
 	}
 
 }

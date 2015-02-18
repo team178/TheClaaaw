@@ -14,14 +14,12 @@ public class Claw implements RunningComponent {
 	private DigitalInput rightFrontLS;
 	private DigitalInput leftBackLS;
 	private DigitalInput rightBackLS;
-	private Joystick joystick;
-
 	private final int opening = 1;
 	private final int closing = -1;
 		
 	public Claw(Talon leftClaw, Talon rightClaw, DigitalInput toteTouchingLS,
 			DigitalInput leftFrontLS, DigitalInput rightFrontLS,
-			DigitalInput leftBackLS, DigitalInput rightBackLS, Joystick joystick) {
+			DigitalInput leftBackLS, DigitalInput rightBackLS) {
 		super();
 		this.leftClaw = leftClaw;
 		this.rightClaw = rightClaw;
@@ -30,16 +28,19 @@ public class Claw implements RunningComponent {
 		this.rightFrontLS = rightFrontLS;
 		this.leftBackLS = leftBackLS;
 		this.rightBackLS = rightBackLS;
-		this.joystick = joystick;
 	}
 
 	@Override
+<<<<<<< HEAD
 	public void teleop() {
 		SmartDashboard.putBoolean("toteTouchingLS",toteTouchingLS.get());
 		SmartDashboard.putBoolean("leftFrontLS", leftFrontLS.get());
 		SmartDashboard.putBoolean("rightFrontLS",rightFrontLS.get());
 		SmartDashboard.putBoolean("rightBackLS", rightBackLS.get());
 		SmartDashboard.putBoolean("leftBackLS", leftBackLS.get());
+=======
+	public void teleop(Joystick joystick, Joystick aux) {
+>>>>>>> 5708159d5de8f7e505788a6309f5b15eaac21994
 		
 		if(joystick.getRawButton(1)){ //opening
 			moveClaw(1);

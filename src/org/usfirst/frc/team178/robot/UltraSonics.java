@@ -1,6 +1,7 @@
 package org.usfirst.frc.team178.robot;
 
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class UltraSonics implements RunningComponent{
@@ -20,7 +21,7 @@ public class UltraSonics implements RunningComponent{
 	}
 
 	@Override
-	public void teleop() {
+	public void teleop(Joystick driver, Joystick aux) {
 		// TODO Auto-generated method stub
 		SmartDashboard.putNumber("Distance from Wall", getDistanceFromWall());
 	}
