@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class DriveTrain implements RunningComponent {
 	private Talon frontLeft;
@@ -54,19 +55,29 @@ public class DriveTrain implements RunningComponent {
 			@Override
 			public void whenDone() {
 				// TODO Auto-generated method stub
-				
+				Message.isBotAlligned=true;
 			}
 			
 			@Override
 			public boolean toRun(int interruptions) {
 				// TODO Auto-generated method stub
+				double deviation = Robot.networktable.getNumber("DEVIATION_IN_PIXELS");
+				if(deviation>15){
+					drive(1,0,0);
+				}
+				else if(deviation<-15){
+					drive(-1,0,0);
+				}
+				else{
+					return true;
+				}
 				return false;
 			}
 			
 			@Override
 			public boolean shouldRun() {
 				// TODO Auto-generated method stub
-				return false;
+				return Message.isBotClearofAZ;
 			}
 		};
 	}
@@ -118,6 +129,7 @@ public class DriveTrain implements RunningComponent {
 		
 	}
 	
+	/**drive(double xValue, double yValue, double twistValue) */
 	public void drive(double xValue, double yValue, double twistValue) {
 		if (joystick.getRawButton(3)){
 				twistValue += angleCorrection;

@@ -19,7 +19,7 @@ public class Robot extends IterativeRobot {
 
 	
 	//Get the NeworkTable for the Robot
-	NetworkTable table;
+	public static NetworkTable networktable;
 
 	public static Robot instance;
 
@@ -69,7 +69,7 @@ public class Robot extends IterativeRobot {
 
 
 	public void robotInit() {
-			table= NetworkTable.getTable("Vision");
+			networktable= NetworkTable.getTable("Vision");
 	};
 	
 
