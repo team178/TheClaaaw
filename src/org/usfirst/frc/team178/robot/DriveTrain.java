@@ -13,8 +13,6 @@ public class DriveTrain implements RunningComponent {
 	private Talon frontRight;
 	private Talon backRight;
 	
-	private Joystick joystick;
-	
 	private Gyro gyroDevice;
 	
 	private double angleCorrection = 0d;
@@ -24,7 +22,7 @@ public class DriveTrain implements RunningComponent {
 	private PIDSource gyro = new PIDSource() {
 		@Override
 		public double pidGet() {
-			double joyAngle = joystick.getTwist() * 360;
+			double joyAngle = /*joystick.getTwist() * sorry not sorry*/ 360;
 			return gyroDevice.getAngle() - joyAngle;
 		}
 	};
@@ -41,18 +39,17 @@ public class DriveTrain implements RunningComponent {
 	private PIDController pid = new PIDController(0.1, 0.001, 0, gyro, gyroCorr);
 	
 	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
-			Talon backRight, Joystick joystick, Gyro gyroDevice) {
+			Talon backRight, Gyro gyroDevice) {
 		super();
 		this.frontLeft = frontLeft;
 		this.backLeft = backLeft;
 		this.frontRight = frontRight;
 		this.backRight = backRight;
-		this.joystick = joystick;
 		this.gyroDevice = gyroDevice;
 	}
 
 	@Override
-	public void teleop() {
+	public void teleop(Joystick joystick, Joystick aux) {
 		
 		double yValue = joystick.getY();
 		double xValue = joystick.getX();
@@ -99,12 +96,12 @@ public class DriveTrain implements RunningComponent {
 	}
 	
 	public void drive(double xValue, double yValue, double twistValue) {
-		if (joystick.getRawButton(3)){
+		/*if (joystick.getRawButton(3)){
 				twistValue += angleCorrection;
 		}
 		if (joystick.getRawButton(4)){
 			gyroDevice.reset();
-		}
+		}*/
 		frontLeft.set(  - (yValue - xValue - twistValue));
 		frontRight.set((yValue + xValue + twistValue));
 		backLeft.set(   -( yValue + xValue - twistValue));

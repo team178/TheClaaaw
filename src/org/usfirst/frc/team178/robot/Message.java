@@ -8,8 +8,4 @@ public class Message {
 	
 	public static boolean isDown;
 	
-	public static int[] CommandLists;
-	public static int index;
-	
-	
 }
