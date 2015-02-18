@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class DriveTrain implements RunningComponent {
 	private Talon frontLeft;
@@ -54,19 +55,20 @@ public class DriveTrain implements RunningComponent {
 			@Override
 			public void whenDone() {
 				// TODO Auto-generated method stub
-				
+				Message.isBotAlligned=true;
 			}
 			
 			@Override
 			public boolean toRun(int interruptions) {
 				// TODO Auto-generated method stub
-				return false;
+				NetworkTables table = NetworkTable.getTable("Vision");
+				return true;
 			}
 			
 			@Override
 			public boolean shouldRun() {
 				// TODO Auto-generated method stub
-				return false;
+				return Message.isBotAlligned;
 			}
 		};
 	}
