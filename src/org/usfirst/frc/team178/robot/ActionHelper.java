@@ -20,6 +20,7 @@ public abstract class ActionHelper {
 				while(true){
 					int interruptions = 0;
 					if (shouldRun()) {
+						timer.reset();
 						boolean done = false;
 						while(!done && shouldRun()){
 							done = toRun(interruptions);
@@ -28,7 +29,6 @@ public abstract class ActionHelper {
 						if(done){
 							whenDone();
 							finishedRunning = true;
-							timer.reset();
 						} else
 							interruptions++;
 						break;
