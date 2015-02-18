@@ -6,9 +6,9 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Timer;
 
 public class DriveTrain implements RunningComponent {
+	protected static final double BACK_DRIVE_TIME = 3; //seconds
 	private Talon frontLeft;
 	private Talon backLeft;
 	private Talon frontRight;
@@ -67,7 +67,7 @@ public class DriveTrain implements RunningComponent {
 			public boolean toRun(int interruptions) {
 				//Move backwards, check if in Auto zone, if true, return true, if false, return false
 				drive(0, -1, 0);
-				return timer.get() < 3;
+				return timer.get() > BACK_DRIVE_TIME;
 			}
 			
 			@Override
