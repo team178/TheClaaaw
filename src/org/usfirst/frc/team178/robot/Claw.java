@@ -55,6 +55,27 @@ public class Claw implements RunningComponent {
 			}
 			
 		};
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				Message.isToteHeld=true;
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				moveClaw(closing);
+				return rightFrontLS.get() && leftFrontLS.get();
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Message.isBotReadyToGrab;
+			}
+		};
 	}
 
 	@Override

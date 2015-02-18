@@ -116,6 +116,27 @@ public class DriveTrain implements RunningComponent {
 				else return false;
 			}
 		};
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				Message.isBotReadyToGrab=true;
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				drive(0,1,0);
+				return timer.get()>3;
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Message.isBotAlligned;
+			}
+		};
 	}
 
 	@Override
