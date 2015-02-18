@@ -82,7 +82,50 @@ public class DriveTrain implements RunningComponent {
 				return Message.isBotClearofAZ;
 			}
 		};
-		
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				Message.isBotMovedBack = true;
+				Message.isCaninAZB = false;
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				drive(0,-1,0);
+				return timer.get()>.5;
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Message.isCaninAZB;
+			}
+		};
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				Message.isBotMovedBack = false;
+				Message.isCanReleased = false;
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				drive(-1,0,0);
+				return timer.get()>.5;
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Message.isBotMovedBack && Message.isCanReleased;
+			}
+		};
 		new ActionHelper() {
 			private Timer timer = new Timer(); 
 			
