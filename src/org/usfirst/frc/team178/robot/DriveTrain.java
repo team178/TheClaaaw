@@ -55,19 +55,19 @@ public class DriveTrain implements RunningComponent {
 			public void whenDone() {
 				// When done, send message, isToteinA2
 				if (Message.isToteHeld) {
+					Message.isToteHeld = false;
 					Message.isToteinAZ = true; 	
-				} else if(Message.isCanHeld)
+				} else if(Message.isCanHeld){
+					Message.isCanHeld = false;
 					Message.isCaninAZ = true;
-				else throw new Error();
+				} else throw new Error();
 			}
 			
 			@Override
 			public boolean toRun(int interruptions) {
 				//Move backwards, check if in Auto zone, if true, return true, if false, return false
 				drive(0, -1, 0);
-				if (timer.get() >= 3)
-					return true; 
-				else return false;
+				return timer.get() < 3;
 			}
 			
 			@Override
