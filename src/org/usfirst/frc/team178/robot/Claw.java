@@ -3,6 +3,7 @@ package org.usfirst.frc.team178.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Claw implements RunningComponent {
 
@@ -17,8 +18,6 @@ public class Claw implements RunningComponent {
 
 	private final int opening = 1;
 	private final int closing = -1;
-
-	private int direction= 1;
 		
 	public Claw(Talon leftClaw, Talon rightClaw, DigitalInput toteTouchingLS,
 			DigitalInput leftFrontLS, DigitalInput rightFrontLS,
@@ -36,6 +35,11 @@ public class Claw implements RunningComponent {
 
 	@Override
 	public void teleop() {
+		SmartDashboard.putBoolean("toteTouchingLS",toteTouchingLS.get());
+		SmartDashboard.putBoolean("leftFrontLS", leftFrontLS.get());
+		SmartDashboard.putBoolean("rightFrontLS",rightFrontLS.get());
+		SmartDashboard.putBoolean("rightBackLS", rightBackLS.get());
+		SmartDashboard.putBoolean("leftBackLS", leftBackLS.get());
 		
 		if(joystick.getRawButton(1)){ //opening
 			moveClaw(1);
@@ -50,11 +54,11 @@ public class Claw implements RunningComponent {
 		}
 	}
 	
-	public void moveClaw(int Direction){
+	public void moveClaw(int direction){
 		boolean isTouchingTote = !toteTouchingLS.get();
 		
-		rightClaw.set(Direction);
-		leftClaw.set(Direction);
+		rightClaw.set(direction);
+		leftClaw.set(direction);
 
 		if(!leftFrontLS.get() && direction == opening ){
 			leftClaw.set(0);
@@ -64,10 +68,10 @@ public class Claw implements RunningComponent {
 			leftClaw.set(0);
 		}
 		
-		if (rightFrontLS.get()!=true && direction == opening){
+		if (!rightFrontLS.get() && direction == opening){
 			rightClaw.set(0);
 		}
-		if (rightBackLS.get()!=true && direction == closing){
+		if (!rightBackLS.get() && direction == closing){
 			rightClaw.set(0);
 		}
 		if (isTouchingTote && direction == closing){

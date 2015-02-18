@@ -51,8 +51,8 @@ public class Robot extends IterativeRobot {
 					new DigitalInput(1), //backLimit
 					new Talon(5)), //motor
 					
-			new Camera(
-					new Joystick(0)), //joystick
+			/*new Camera(
+					new Joystick(0)), //joystick*/
 			
 			new UltraSonics(
 					new AnalogInput(1)) //ultrasonics

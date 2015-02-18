@@ -21,7 +21,7 @@ public class Deck implements RunningComponent {
 		this.backLimit = backLimit;
 		this.motor = motor;
 		
-		new Thread(new Runnable() {
+		/*new Thread(new Runnable() {
 			
 			@Override
 			public void run() {
@@ -32,17 +32,16 @@ public class Deck implements RunningComponent {
 					}
 				}
 			}
-		});
+		});*/
 	}
 
 	@Override
 	public void teleop() {
-		
 		int direction;
 		
-		if(joystick.getRawButton(5)) // towards the front
+		if(joystick.getRawButton(6)) // towards the front
 			direction= -1;
-		else if(joystick.getRawButton(6)) // towards the back
+		else if(joystick.getRawButton(5)) // towards the back
 			direction = 1;
 		else
 			direction=0;
@@ -57,7 +56,7 @@ public class Deck implements RunningComponent {
 
 	private void setDirection(int direction) {
 		
-		
+		/*
 		if (Message.makeDeckSafe)
 			direction = 1;
 		if (!frontLimit.get() && !Message.isLiftSafe  )  // Deck is in danger limit
@@ -76,7 +75,7 @@ public class Deck implements RunningComponent {
 		}
 		
 		SmartDashboard.putNumber("Direction",direction);// for testing purposes
-		
+		*/
 		motor.set(direction);
 	}
 
