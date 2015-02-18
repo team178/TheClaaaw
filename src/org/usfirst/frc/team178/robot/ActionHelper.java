@@ -1,7 +1,12 @@
 package org.usfirst.frc.team178.robot;
 
+import java.util.ArrayList;
+
 public abstract class ActionHelper {
 	
+	private static ArrayList<ActionHelper> actions = new ArrayList<>();
+	
+	protected boolean finishedRunning = false;
 	public ActionHelper() {
 		new Thread(new Runnable() {
 			@Override
@@ -14,21 +19,28 @@ public abstract class ActionHelper {
 							done = toRun(interruptions);
 							Thread.currentThread().interrupt();
 						}
-						if(done)
+						if(done){
 							whenDone();
-						else
+							finishedRunning = true;
+						} else
 							interruptions++;
 						break;
-					} else {
+					} else 
 						try {
 							Thread.sleep(250);
 						} catch (InterruptedException e) {
 							
 						}
-					}
+					
 				}
 			}
 		}).start();
+	}
+	
+	public static void resetAllActionCompletions() {
+		for (ActionHelper actionHelper : actions) {
+			actionHelper.finishedRunning = false;
+		}
 	}
 	
 	/**Contains boolean expr. Condition for start*/

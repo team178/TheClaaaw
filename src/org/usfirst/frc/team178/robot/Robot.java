@@ -72,6 +72,13 @@ public class Robot extends IterativeRobot {
 			table= NetworkTable.getTable("Vision");
 	};
 	
+	@Override
+	public void autonomousInit() {
+		// TODO Auto-generated method stub
+		super.autonomousInit();
+		ActionHelper.resetAllActionCompletions();
+	}
+	
 
 	/**
 	 * This function is called periodically during autonomous
