@@ -49,21 +49,16 @@ public class DriveTrain implements RunningComponent {
 		this.backRight = backRight;
 		this.joystick = joystick;
 		this.gyroDevice = gyroDevice;
+		
 		new ActionHelper() {
-			private Timer timer = new Timer(); 
-			
-			{
-				timer.start();
-			}
-			
-			
-			private boolean Blah = false; 
 			@Override
 			public void whenDone() {
 				// When done, send message, isToteinA2
-				Message.isToteinAZ = true; 
-				
-				
+				if (Message.isToteHeld) {
+					Message.isToteinAZ = true; 	
+				} else if(Message.isCanHeld)
+					Message.isCaninAZ = true;
+				else throw new Error();
 			}
 			
 			@Override
@@ -77,11 +72,7 @@ public class DriveTrain implements RunningComponent {
 			
 			@Override
 			public boolean shouldRun() {
-				if (!Blah && Message.isToteHeld) {
-					Blah = Message.isToteHeld;
-					timer.reset();
-				}
-				if (Message.isToteHeld)
+				if (Message.isToteHeld || Message.isCanHeld)
 					return true;
 				else return false;
 			}
