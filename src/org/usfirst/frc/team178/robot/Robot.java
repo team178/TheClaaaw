@@ -36,7 +36,7 @@ public class Robot extends IterativeRobot {
 					new DigitalInput(6), //rightFrontLS
 					new DigitalInput(7), //leftBackLS
 					new DigitalInput(8) //rightBackLS
-					), //joystick
+					), 
 
 			new Lift(
 					new Talon(4) ,  //motor
@@ -47,7 +47,7 @@ public class Robot extends IterativeRobot {
 					new DigitalInput(0), //frontLimit
 					new DigitalInput(1), //backLimit
 					new Talon(5)), //motor
-			new Camera(), //joystick
+			new Camera(), 
 			
 			new UltraSonics(
 					new AnalogInput(1)) //ultrasonics

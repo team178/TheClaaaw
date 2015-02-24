@@ -31,16 +31,12 @@ public class Claw implements RunningComponent {
 	}
 
 	@Override
-<<<<<<< HEAD
-	public void teleop() {
+	public void teleop(Joystick joystick, Joystick aux) {
 		SmartDashboard.putBoolean("toteTouchingLS",toteTouchingLS.get());
 		SmartDashboard.putBoolean("leftFrontLS", leftFrontLS.get());
 		SmartDashboard.putBoolean("rightFrontLS",rightFrontLS.get());
 		SmartDashboard.putBoolean("rightBackLS", rightBackLS.get());
 		SmartDashboard.putBoolean("leftBackLS", leftBackLS.get());
-=======
-	public void teleop(Joystick joystick, Joystick aux) {
->>>>>>> 5708159d5de8f7e505788a6309f5b15eaac21994
 		
 		if(joystick.getRawButton(1)){ //opening
 			moveClaw(1);
