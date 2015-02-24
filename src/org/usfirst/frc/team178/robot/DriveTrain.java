@@ -50,6 +50,10 @@ public class DriveTrain implements RunningComponent {
 		this.backRight = backRight;
 		this.gyroDevice = gyroDevice;
 		
+//		Step 4
+//		Aligns the robot after clearing it of the AZ zone
+//			Activated by isBotClearofAZ
+//			Activates isBotAlligned
 		new ActionHelper() {
 
 			@Override
@@ -81,6 +85,11 @@ public class DriveTrain implements RunningComponent {
 				return Message.isBotClearofAZ;
 			}
 		};
+		
+//		Step 3
+//		Drives back for a set amount of time
+//			Activated by isCaninAZB
+//			Activates isBotMovedBack
 		new ActionHelper() {
 			
 			@Override
@@ -103,6 +112,11 @@ public class DriveTrain implements RunningComponent {
 				return Message.isCaninAZB;
 			}
 		};
+		
+//		Step 
+//		Drives left for a set amount of time
+//			Activated by isBotMovedBack AND isCanReleased
+//			Activates nothing??
 		new ActionHelper() {
 			
 			@Override
@@ -125,6 +139,11 @@ public class DriveTrain implements RunningComponent {
 				return Message.isBotMovedBack && Message.isCanReleased;
 			}
 		};
+		
+//		Steps 2 and 6
+//		Drives back for a set amount of time
+//			Activated by isToteHeld OR isCanHeld
+//			Activates isToteinAZ OR isCaninAZA AND isCaninAZB
 		new ActionHelper() {
 			@Override
 			public void whenDone() {
@@ -152,6 +171,11 @@ public class DriveTrain implements RunningComponent {
 				else return false;
 			}
 		};
+		
+//		Step 5
+//		Drives forward until ultrasonics says we're in range
+//			Activated by isBotReadytoGrab
+//			Activates isBotAlligned
 		new ActionHelper() {
 			
 			@Override
@@ -174,6 +198,11 @@ public class DriveTrain implements RunningComponent {
 				return Message.isBotAlligned;
 			}
 		};
+		
+//		Step 1
+//		Drives forward slowly until isCanHeld is true (until we hold the can)
+//			Activated by isAutonomous (start of autonomous) AND if this.finishedRunning isn't true
+//			Activates nothing
 		new ActionHelper() {
 			
 			@Override
