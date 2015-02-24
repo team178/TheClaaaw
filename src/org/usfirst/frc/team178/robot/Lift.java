@@ -3,7 +3,7 @@ package org.usfirst.frc.team178.robot;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Lift implements RunningComponent{
@@ -14,11 +14,11 @@ public class Lift implements RunningComponent{
 	private final static double POS_ONE = 50;
 	private final static double POS_TWO = 300;
 	
-	private Talon motor;
+	private Victor motor;
 	private Encoder liftDistanceEncoder;
 	private DigitalInput zeroLimit;
 	
-	public Lift(Talon motor, DigitalInput zeroLimit,
+	public Lift(Victor motor, DigitalInput zeroLimit,
 			Encoder liftDistanceEncoder) {
 		super();
 		this.motor = motor;
