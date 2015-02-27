@@ -56,6 +56,7 @@ public class Lift implements RunningComponent{
 		//for testing purposes
 		//SmartDashboard.putNumber("LiftValue: " , liftDistanceEncoder.get());
 		SmartDashboard.putBoolean("zeroLimit", zeroLimit.get());
+		SmartDashboard.putBoolean("Top Limit", topLimit.get());
 		
 		//double speed = 1-joystick.getRawAxis(3);//control speed of the lift, VARIABLE
 		double speed = 1.0; //control speed of the lift, CONSTANT
