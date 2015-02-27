@@ -10,7 +10,6 @@ public class Camera implements RunningComponent {
 
 	public Camera() {
 		super();
-		this.camserv = CameraServer.getInstance();
   		this.camserv.startAutomaticCapture("cam0");
 	}
 

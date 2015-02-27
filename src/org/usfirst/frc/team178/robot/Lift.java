@@ -17,12 +17,14 @@ public class Lift implements RunningComponent{
 	private Victor motor;
 	private Encoder liftDistanceEncoder;
 	private DigitalInput zeroLimit;
+	private DigitalInput topLimit;
 	
-	public Lift(Victor motor, DigitalInput zeroLimit,
+	public Lift(Victor motor, DigitalInput zeroLimit, DigitalInput topLimit,
 			Encoder liftDistanceEncoder) {
 		super();
 		this.motor = motor;
 		this.liftDistanceEncoder = liftDistanceEncoder;
+		this.topLimit= topLimit;
 		this.zeroLimit = zeroLimit;
 		
 		
@@ -55,21 +57,27 @@ public class Lift implements RunningComponent{
 		//SmartDashboard.putNumber("LiftValue: " , liftDistanceEncoder.get());
 		SmartDashboard.putBoolean("zeroLimit", zeroLimit.get());
 		
+		//double speed = 1-joystick.getRawAxis(3);//control speed of the lift, VARIABLE
+		double speed = 1.0; //control speed of the lift, CONSTANT
+		double direction;
 		
-		int direction;
-		
-		if (joystick.getRawButton(4)) { //going up
-			direction = 1;
-		} else if (joystick.getRawButton(3)) { //going down
+		if (aux.getRawButton(4)) { //going up
+			if(topLimit.get()){
+			direction = 0;
+			}else{
+				direction=1;
+			}
+		} else if (aux.getRawButton(3)) { //going down
 			if (zeroLimit.get()) {
-				direction =0;
+				direction = 0;
 			}else{
 				direction = -1;
 			}
 		} else 
 			direction = 0;
 		
-		moveMotor(direction);
+		direction*=speed;//for speed control
+		moveMotor(direction); //speed*direction
 		
 		
 	}
@@ -81,7 +89,7 @@ public class Lift implements RunningComponent{
 		
 	}
 
-	private void moveMotor(int direction) {
+	private void moveMotor(double direction) {
 		/*if (Message.makeLiftSafe)                                // fix lift to allow deck movement
 			direction = 1;
 		if((whereAreWe() < SAFE_DIST) && !Message.isDeckSafe){ // not safe deck OR not safe lift
@@ -91,6 +99,10 @@ public class Lift implements RunningComponent{
 			Message.makeDeckSafe = false;                        // no changes required
 		}*/
 		motor.set(direction);
+	}
+	private void moveMotor(int direction)
+	{
+		moveMotor((double) direction); //for compatability
 	}
 
 	@Override
@@ -127,10 +139,7 @@ public class Lift implements RunningComponent{
 			} else{
 				this.motor.set(0);
 			}
-		}
-=======
->>>>>>> 5708159d5de8f7e505788a6309f5b15eaac21994
-		*/
+		}*/
 	}
 
 }

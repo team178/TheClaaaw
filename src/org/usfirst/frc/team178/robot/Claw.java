@@ -38,11 +38,11 @@ public class Claw implements RunningComponent {
 		SmartDashboard.putBoolean("rightBackLS", rightBackLS.get());
 		SmartDashboard.putBoolean("leftBackLS", leftBackLS.get());
 		
-		if(joystick.getRawButton(1)){ //opening
+		if(aux.getRawButton(1)){ //opening
 			moveClaw(1);
 			
 		}
-		else if(joystick.getRawButton(2)){ //closing
+		else if(aux.getRawButton(2)){ //closing
 			moveClaw(-1);
 		}
 		else{

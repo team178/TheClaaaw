@@ -41,13 +41,14 @@ public class Robot extends IterativeRobot {
 			new Lift(
 					new Victor(4) ,  //motor
 					new DigitalInput(3), //bottomLimit
+					new DigitalInput(9), //topLimit
 					new Encoder(14, 15)), //Encoder 
 			
 			new Deck(
 					new DigitalInput(0), //frontLimit
 					new DigitalInput(1), //backLimit
 					new Victor(5)), //motor
-			new Camera(), 
+			//new Camera(), 
 			
 			new UltraSonics(
 					new AnalogInput(1)) //ultrasonics
