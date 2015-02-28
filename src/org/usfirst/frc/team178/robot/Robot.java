@@ -1,5 +1,6 @@
 package org.usfirst.frc.team178.robot;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -7,6 +8,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.vision.USBCamera;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -48,14 +50,14 @@ public class Robot extends IterativeRobot {
 					new DigitalInput(0), //frontLimit
 					new DigitalInput(1), //backLimit
 					new Victor(5)), //motor
-			//new Camera(), 
 			
 			new UltraSonics(
 					new AnalogInput(1)) //ultrasonics
 		};
-
+	private CameraServer cameraServer = CameraServer.getInstance();
 	@Override
 	public void robotInit() {
+		cameraServer.startAutomaticCapture(new USBCamera("cam1"));
 	};
 	
 
