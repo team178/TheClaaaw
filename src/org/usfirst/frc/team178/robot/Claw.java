@@ -2,13 +2,13 @@ package org.usfirst.frc.team178.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Claw implements RunningComponent {
 
-	private Victor leftClaw;
-	private Victor rightClaw;
+	private Talon leftClaw;
+	private Talon rightClaw;
 	private DigitalInput toteTouchingLS; //is item when limit switch is pressed
 	private DigitalInput leftFrontLS;
 	private DigitalInput rightFrontLS;
@@ -17,7 +17,7 @@ public class Claw implements RunningComponent {
 	private final int opening = 1;
 	private final int closing = -1;
 		
-	public Claw(Victor leftClaw, Victor rightClaw, DigitalInput toteTouchingLS,
+	public Claw(Talon leftClaw, Talon rightClaw, DigitalInput toteTouchingLS,
 			DigitalInput leftFrontLS, DigitalInput rightFrontLS,
 			DigitalInput leftBackLS, DigitalInput rightBackLS) {
 		super();

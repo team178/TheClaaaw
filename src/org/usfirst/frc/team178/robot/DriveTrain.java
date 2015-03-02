@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.Talon;
 
 public class DriveTrain implements RunningComponent {
-	private Victor frontLeft;
-	private Victor backLeft;
-	private Victor frontRight;
-	private Victor backRight;
+	private Talon frontLeft;
+	private Talon backLeft;
+	private Talon frontRight;
+	private Talon backRight;
 	private Joystick joystick;
 	protected static final double BACK_DRIVE_TIME = 1; //seconds
 	private Gyro gyroDevice;
@@ -38,8 +38,8 @@ public class DriveTrain implements RunningComponent {
 	@SuppressWarnings("unused")
 	private PIDController pid = new PIDController(0.1, 0.001, 0, gyro, gyroCorr);
 	
-	public DriveTrain(Victor frontLeft, Victor backLeft, Victor frontRight,
-			Victor backRight, Gyro gyroDevice) {
+	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
+			Talon backRight, Gyro gyroDevice) {
 		super();
 		this.frontLeft = frontLeft;
 		this.backLeft = backLeft;

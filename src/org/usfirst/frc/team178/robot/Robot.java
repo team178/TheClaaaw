@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.vision.USBCamera;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
@@ -37,15 +37,15 @@ public class Robot extends IterativeRobot {
 	
 	private RunningComponent[] components = {
 			new DriveTrain(
-					new Victor(0), //frontLeft
-					new Victor(1), //backLeft
-					new Victor(2), //frontRight
-					new Victor(3), //backRight
+					new Talon(0), //frontLeft
+					new Talon(1), //backLeft
+					new Talon(2), //frontRight
+					new Talon(3), //backRight
 					new Gyro(0)), //gyro
 					
 			new Claw (
-					new Victor(6), //leftClaw
-					new Victor(7), //rightClaw
+					new Talon(6), //leftClaw
+					new Talon(7), //rightClaw
 					new DigitalInput(4), //toteTouchingLS
 					new DigitalInput(5), //leftFrontLS
 					new DigitalInput(6), //rightFrontLS
@@ -54,13 +54,13 @@ public class Robot extends IterativeRobot {
 					), 
 
 			new Lift(
-					new Victor(4) ,  //motor
+					new Talon(4) ,  //motor
 					new DigitalInput(3), //bottomLimit/zeroLimit
 					new Encoder(14, 15)), //Encoder 
 			new Deck(
 					new DigitalInput(0), //frontLimit
 					new DigitalInput(1), //backLimit
-					new Victor(5)), //motor
+					new Talon(5)), //motor
 			
 			new UltraSonics(
 					new AnalogInput(1)), //ultrasonics

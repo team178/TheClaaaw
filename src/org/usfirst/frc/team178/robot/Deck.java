@@ -2,16 +2,16 @@ package org.usfirst.frc.team178.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Victor;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Deck implements RunningComponent {
 	private DigitalInput frontLimit;
 	private DigitalInput backLimit;
-	private Victor motor;
+	private Talon motor;
 
 	public Deck(DigitalInput frontLimit,
-			DigitalInput backLimit,  Victor motor) {
+			DigitalInput backLimit,  Talon motor) {
 		super();
 		this.frontLimit = frontLimit;
 		this.backLimit = backLimit;
