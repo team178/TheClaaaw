@@ -281,16 +281,16 @@ public class DriveTrain implements RunningComponent {
 	
 	/**drive(double xValue, double yValue, double twistValue) */
 	public void drive(double xValue, double yValue, double twistValue) {
-		/*if (joystick.getRawButton(3)){
+		if (joystick.getRawButton(3)){
 				twistValue += angleCorrection;
 		}
 		if (joystick.getRawButton(4)){
 			gyroDevice.reset();
-		}*/
-		/*frontLeft.set(  - (yValue - xValue - twistValue));
+		}
+		frontLeft.set(  - (yValue - xValue - twistValue));
 		frontRight.set((yValue + xValue + twistValue));
 		backLeft.set(   -( yValue + xValue - twistValue));
-		backRight.set( (yValue - xValue + twistValue));*/
+		backRight.set( (yValue - xValue + twistValue));
 	}
 
 	
