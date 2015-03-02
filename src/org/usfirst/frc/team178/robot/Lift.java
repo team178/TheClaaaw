@@ -14,14 +14,14 @@ public class Lift implements RunningComponent{
 	private final static double POS_TWO = 300;
 	
 	private Victor motor;
-	private Encoder liftDistanceEncoder;
 	private DigitalInput zeroLimit;
+	private DigitalInput topLimit;
 	
-	public Lift(Victor motor, DigitalInput zeroLimit, Encoder liftDistanceEncoder) {
+	public Lift(Victor motor, DigitalInput zeroLimit, DigitalInput topLimit) {
 		super();
 		this.motor = motor;
-		this.liftDistanceEncoder = liftDistanceEncoder;
 		this.zeroLimit = zeroLimit;
+		this.topLimit = topLimit;
 		
 		//for deck-lift safety code
 		/*new Thread(new Runnable() {
@@ -42,16 +42,16 @@ public class Lift implements RunningComponent{
 		});*/
 	}
 	
-	//for deck-lift safety code
-	
+	//encoder not used on testBot
+	/*
 	private double whereAreWe() {
 		// TODO Auto-generated method stub
 		return liftDistanceEncoder.get() * (1/ENCODER_RATE);
 	}
+	*/
 	
 	@Override
 	public void teleop(Joystick joystick, Joystick aux) {
-		SmartDashboard.putNumber("LiftValue: " , liftDistanceEncoder.get());
 		SmartDashboard.putBoolean("zeroLimit", zeroLimit.get());
 		
 		double speed = 1;//control speed of the lift, VARIABLE
@@ -109,6 +109,8 @@ public class Lift implements RunningComponent{
 
 	@Override
 	public void test(Joystick joystick) {
+		//encoder not used on testBot
+		/*
 		this.motor.set(joystick.getY());
 		SmartDashboard.putNumber("RawSpeed", liftDistanceEncoder.get());
 		SmartDashboard.putNumber("newValue", whereAreWe());
@@ -134,7 +136,7 @@ public class Lift implements RunningComponent{
 			} else{
 				this.motor.set(0);
 			}
-		}
+		}*/
 	}
 
 }

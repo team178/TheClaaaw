@@ -56,7 +56,7 @@ public class Robot extends IterativeRobot {
 			new Lift(
 					new Victor(4) ,  //motor
 					new DigitalInput(3), //bottomLimit/zeroLimit
-					new Encoder(14, 15)), //Encoder 
+					new DigitalInput(4)), //Encoder 
 			new Deck(
 					new DigitalInput(0), //frontLimit
 					new DigitalInput(1), //backLimit
