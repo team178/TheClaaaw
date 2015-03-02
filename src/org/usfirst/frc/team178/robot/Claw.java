@@ -28,6 +28,77 @@ public class Claw implements RunningComponent {
 		this.rightFrontLS = rightFrontLS;
 		this.leftBackLS = leftBackLS;
 		this.rightBackLS = rightBackLS;
+		new ActionHelper() {
+
+			@Override
+			public boolean shouldRun() {
+				if (Message.isToteinAZ)
+					return true;
+				else return false;
+			}
+
+			@Override
+			public boolean toRun(int interruptions) {
+				moveClaw(opening);
+				if (!leftBackLS.get() && !rightBackLS.get())
+					return true;
+				else return false;
+			}
+
+			@Override
+			public void whenDone() {
+				Message.isToteinAZ = false;
+			}
+			
+		};
+
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				Message.isToteHeld=true;
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				moveClaw(closing);
+				//return rightFrontLS.get() && leftFrontLS.get();
+				return toteTouchingLS.get();
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Message.isBotReadyToGrab;
+			}
+		};
+		
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				Message.isCanHeld = true;
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				moveClaw(closing);
+				//return leftFrontLS.get() && rightFrontLS.get();
+				return toteTouchingLS.get();
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				if(Robot.instance == null) return false;
+				return Robot.instance.isAutonomous() && !this.finishedRunning;
+			}
+		};
+
 	}
 
 	@Override

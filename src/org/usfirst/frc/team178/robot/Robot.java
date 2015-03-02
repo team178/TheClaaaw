@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.vision.USBCamera;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -18,10 +19,22 @@ import edu.wpi.first.wpilibj.vision.USBCamera;
  * directory.
  */
 public class Robot extends IterativeRobot {
+
+	
+	//Get the NeworkTable for the Robot
+	public final NetworkTable networktable = NetworkTable.getTable("Vision");;
+
+	public static Robot instance;
+
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
 	 */
+	
+	public Robot() {
+		Robot.instance = this;
+	}
+	
 	private RunningComponent[] components = {
 			new DriveTrain(
 					new Victor(0), //frontLeft
@@ -45,7 +58,6 @@ public class Robot extends IterativeRobot {
 					new DigitalInput(3), //bottomLimit
 					new DigitalInput(9), //topLimit
 					new Encoder(14, 15)), //Encoder 
-			
 			new Deck(
 					new DigitalInput(0), //frontLimit
 					new DigitalInput(1), //backLimit
@@ -58,9 +70,38 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		cameraServer.startAutomaticCapture(new USBCamera("cam1"));
-	};
+			
+	}
 	
-
+	@Override
+	public boolean isAutonomous() {
+		// TODO Auto-generated method stub
+		return super.isAutonomous() && super.isEnabled();
+	}
+	
+	@Override
+	public void autonomousInit() {
+		// TODO Auto-generated method stub
+		super.autonomousInit();
+		ActionHelper.resetAllActionCompletions();
+		networktable.putNumber("TO_RUN_OR_NOT_TO_RUN", 1);
+	}
+	
+	@Override
+	public void teleopInit(){
+		networktable.putNumber("TO_RUN_OR_NOT_TO_RUN", 0);
+		Message.inAuto=false;
+		Message.isCanHeld=false;
+		Message.isCaninAZB=false;
+		Message.isCaninAZA=false;
+		Message.isBotClearofAZ=false;
+		Message.isBotAlligned=false;
+		Message.isBotReadyToGrab=false;
+		Message.isToteHeld=false;
+		Message.isToteinAZ=false;
+		Message.isCanReleased=false;
+		Message.isBotMovedBack=false;
+	}
 	/**
 	 * This function is called periodically during autonomous
 	 */
@@ -81,6 +122,7 @@ public class Robot extends IterativeRobot {
 		for (int i = 0; i < components.length; i++) {
 			components[i].teleop(driver, aux);
 		}
+		
 	}
 
 	/**
