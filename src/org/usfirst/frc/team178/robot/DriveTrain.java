@@ -275,7 +275,7 @@ public class DriveTrain implements RunningComponent {
 	}
 
 	@Override
-	public void test() {
+	public void test(Joystick driver) {
 		
 	}
 	

@@ -10,24 +10,20 @@ public class Lift implements RunningComponent{
 	
 	private static final int SAFE_DIST = 0; //meters
 	private final static double ENCODER_RATE = 1d; //ticks per meter
-	private final static double ELEVATION = 0;
 	private final static double POS_ONE = 50;
 	private final static double POS_TWO = 300;
 	
 	private Victor motor;
 	private Encoder liftDistanceEncoder;
 	private DigitalInput zeroLimit;
-	private DigitalInput topLimit;
 	
-	public Lift(Victor motor, DigitalInput zeroLimit, DigitalInput topLimit,
-			Encoder liftDistanceEncoder) {
+	public Lift(Victor motor, DigitalInput zeroLimit, Encoder liftDistanceEncoder) {
 		super();
 		this.motor = motor;
 		this.liftDistanceEncoder = liftDistanceEncoder;
-		this.topLimit= topLimit;
 		this.zeroLimit = zeroLimit;
 		
-		
+		//for deck-lift safety code
 		/*new Thread(new Runnable() {
 			
 			@Override
@@ -45,29 +41,24 @@ public class Lift implements RunningComponent{
 			}
 		});*/
 	}
-
+	
+	//for deck-lift safety code
+	
 	private double whereAreWe() {
 		// TODO Auto-generated method stub
-		return liftDistanceEncoder.get() * (1/ENCODER_RATE)-ELEVATION ;
+		return liftDistanceEncoder.get() * (1/ENCODER_RATE);
 	}
 	
 	@Override
 	public void teleop(Joystick joystick, Joystick aux) {
-		//for testing purposes
-		//SmartDashboard.putNumber("LiftValue: " , liftDistanceEncoder.get());
+		SmartDashboard.putNumber("LiftValue: " , liftDistanceEncoder.get());
 		SmartDashboard.putBoolean("zeroLimit", zeroLimit.get());
-		SmartDashboard.putBoolean("Top Limit", topLimit.get());
 		
-		//double speed = 1-joystick.getRawAxis(3);//control speed of the lift, VARIABLE
-		double speed = 1.0; //control speed of the lift, CONSTANT
+		double speed = 1;//control speed of the lift, VARIABLE
 		double direction;
 		
 		if (aux.getRawButton(4)) { //going up
-			if(topLimit.get()){
-			direction = 0;
-			}else{
 				direction=1;
-			}
 		} else if (aux.getRawButton(3)) { //going down
 			if (zeroLimit.get()) {
 				direction = 0;
@@ -91,6 +82,8 @@ public class Lift implements RunningComponent{
 	}
 
 	private void moveMotor(double direction) {
+		
+		//for deck-lift safety code
 		/*if (Message.makeLiftSafe)                                // fix lift to allow deck movement
 			direction = 1;
 		if((whereAreWe() < SAFE_DIST) && !Message.isDeckSafe){ // not safe deck OR not safe lift
@@ -101,6 +94,8 @@ public class Lift implements RunningComponent{
 		}*/
 		motor.set(direction);
 	}
+	
+	//in case we get an int direction
 	private void moveMotor(int direction)
 	{
 		moveMotor((double) direction); //for compatability
@@ -113,8 +108,7 @@ public class Lift implements RunningComponent{
 	}
 
 	@Override
-	public void test() {
-/*
+	public void test(Joystick joystick) {
 		this.motor.set(joystick.getY());
 		SmartDashboard.putNumber("RawSpeed", liftDistanceEncoder.get());
 		SmartDashboard.putNumber("newValue", whereAreWe());
@@ -140,7 +134,7 @@ public class Lift implements RunningComponent{
 			} else{
 				this.motor.set(0);
 			}
-		}*/
+		}
 	}
 
 }

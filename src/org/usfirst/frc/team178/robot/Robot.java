@@ -55,8 +55,7 @@ public class Robot extends IterativeRobot {
 
 			new Lift(
 					new Victor(4) ,  //motor
-					new DigitalInput(3), //bottomLimit
-					new DigitalInput(9), //topLimit
+					new DigitalInput(3), //bottomLimit/zeroLimit
 					new Encoder(14, 15)), //Encoder 
 			new Deck(
 					new DigitalInput(0), //frontLimit
@@ -64,12 +63,13 @@ public class Robot extends IterativeRobot {
 					new Victor(5)), //motor
 			
 			new UltraSonics(
-					new AnalogInput(1)) //ultrasonics
+					new AnalogInput(1)), //ultrasonics
+			
+			new Camera("cam1") //cam name on roborio
+			
 		};
-	private CameraServer cameraServer = CameraServer.getInstance();
 	@Override
 	public void robotInit() {
-		cameraServer.startAutomaticCapture(new USBCamera("cam1"));
 			
 	}
 	
@@ -131,7 +131,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void testPeriodic() {
 		for (int i = 0; i < components.length; i++) {
-			components[i].test();
+			components[i].test(driver);
 		}
 	}
 

@@ -13,11 +13,11 @@ public class UltraSonics implements RunningComponent{
 		super();
 		UltraSonics.ultrasonic = ultrasonic;
 		ultrasonic.setAverageBits(4);
-		scaler = ultrasonic.getAverageVoltage();
+		scaler = ultrasonic.getAverageVoltage(); //scaled at the start
 	}
 	
 	public static double getDistanceFromWall(){
-		return ultrasonic.getAverageVoltage() * 1 / scaler;  //need to replace the Stolarz with another value
+		return ultrasonic.getAverageVoltage() * 1 / scaler;  //scaled so 1 is the distance we want to be from a tote
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class UltraSonics implements RunningComponent{
 	}
 
 	@Override
-	public void test() {
+	public void test(Joystick driver) {
 		// TODO Auto-generated method stub
 		
 	}

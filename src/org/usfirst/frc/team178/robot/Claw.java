@@ -161,7 +161,7 @@ public class Claw implements RunningComponent {
 	}
 
 	@Override
-	public void test() {
+	public void test(Joystick driver) {
 		// TODO Auto-generated method stub
 
 	}

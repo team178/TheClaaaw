@@ -82,7 +82,7 @@ public class Deck implements RunningComponent {
 	}
 
 	@Override
-	public void test() {
+	public void test(Joystick driver) {
 		// TODO Auto-generated method stub
 
 	}
