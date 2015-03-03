@@ -14,21 +14,10 @@ public class Camera implements RunningComponent{
 	
 	@Override
 	public void teleop(Joystick driver, Joystick aux) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	@Override
-	public void auto() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void test(Joystick driver) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

@@ -6,30 +6,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class UltraSonics implements RunningComponent{
 	
-	private static AnalogInput ultrasonic;
-	private static double scaler;
+	private AnalogInput ultrasonic;
+	private double scaler;
+	public static double scaledDistanceFromTote; //scaled so 1= correct distance from tote
 	
 	public UltraSonics(AnalogInput ultrasonic) {
 		super();
-		UltraSonics.ultrasonic = ultrasonic;
+		this.ultrasonic = ultrasonic;
 		ultrasonic.setAverageBits(4);
 		scaler = ultrasonic.getAverageVoltage(); //scaled at the start
 	}
+
 	
-	public static double getDistanceFromWall(){
-		return ultrasonic.getAverageVoltage() * 1 / scaler;  //scaled so 1 is the distance we want to be from a tote
+	
+	public void getDistanceFromTote(){
+		scaledDistanceFromTote= this.ultrasonic.getAverageVoltage() * 1 / scaler;  //scaled so 1 is the distance we want to be from a tote
 	}
 
 	@Override
 	public void teleop(Joystick driver, Joystick aux) {
 		// TODO Auto-generated method stub
-		SmartDashboard.putNumber("Distance from Wall", getDistanceFromWall());
-	}
-
-	@Override
-	public void auto() {
-		// TODO Auto-generated method stub
-		
+		this.getDistanceFromTote();
+		SmartDashboard.putNumber("Distance from Wall", scaledDistanceFromTote);
 	}
 
 	@Override

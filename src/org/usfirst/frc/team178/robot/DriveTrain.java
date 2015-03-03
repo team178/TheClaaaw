@@ -186,7 +186,7 @@ public class DriveTrain implements RunningComponent {
 			public boolean toRun(int interruptions) {
 				// TODO Auto-generated method stub
 				drive(0,1,0);
-				return (UltraSonics.getDistanceFromWall()<=1);
+				return (UltraSonics.scaledDistanceFromTote<=1);
 			}
 			
 			@Override
@@ -200,7 +200,7 @@ public class DriveTrain implements RunningComponent {
 //		Drives forward slowly until isCanHeld is true (until we hold the can)
 //			Activated by isAutonomous (start of autonomous) AND if this.finishedRunning isn't true
 //			Activates nothing
-		/*new ActionHelper() {
+		new ActionHelper() {
 			
 			@Override
 			public void whenDone() {
@@ -222,7 +222,7 @@ public class DriveTrain implements RunningComponent {
 				if(Robot.instance == null) return false;
 				return Robot.instance.isAutonomous() && !this.finishedRunning;
 			}
-		};*/
+		};
 	}
 
 	@Override
@@ -245,19 +245,18 @@ public class DriveTrain implements RunningComponent {
 			yValue*=0;
 			twistValue*=0;
 			xValue = -1;
-			/*
-			speed=1;
+		}
+		else if (joystick.getRawButton(12)){
+			yValue*=0;
+			twistValue*=0;
+			xValue = 1;
+		}
+		else if (joystick.getRawButton(1)){
 			twistValue*=0;
 			if(Math.abs(xValue) > Math.abs(yValue))
 				yValue*=0;
 			else // x<=y
-				xValue*=0;*/
-		}
-		else if (joystick.getRawButton(12))
-		{
-			yValue*=0;
-			twistValue*=0;
-			xValue = 1;
+				xValue*=0;
 		}
 		
 
@@ -266,12 +265,6 @@ public class DriveTrain implements RunningComponent {
 		twistValue*=speed;
 		
 		drive(xValue,yValue,twistValue);
-	}
-
-	@Override
-	public void auto() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package org.usfirst.frc.team178.robot;
 
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -8,7 +7,6 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.vision.USBCamera;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 /**
@@ -90,31 +88,20 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopInit(){
 		networktable.putNumber("TO_RUN_OR_NOT_TO_RUN", 0);
-		Message.inAuto=false;
 		Message.isCanHeld=false;
-		Message.isCaninAZB=false;
-		Message.isCaninAZA=false;
-		Message.isBotClearofAZ=false;
-		Message.isBotAlligned=false;
-		Message.isBotReadyToGrab=false;
-		Message.isToteHeld=false;
-		Message.isToteinAZ=false;
-		Message.isCanReleased=false;
-		Message.isBotMovedBack=false;
 	}
 	/**
 	 * This function is called periodically during autonomous
 	 */
+	
+	public static boolean transportCan=false;
+	public static boolean transportTote=false;
+	public static boolean takeCan=false; //using our tapeShooter, from the middle
+	
 	@Override
 	public void autonomousPeriodic() {
-		for (int i = 0; i < components.length; i++) {
-			components[i].auto();
-		}
 	}
 
-	/**
-	 * This function is called periodically during operator control
-	 */
 	private Joystick driver = new Joystick(0);
 	private Joystick aux = new Joystick(1);
 	@Override

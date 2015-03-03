@@ -17,6 +17,8 @@ public class Deck implements RunningComponent {
 		this.backLimit = backLimit;
 		this.motor = motor;
 		
+		
+		//for Deck-Lift Safety
 		/*new Thread(new Runnable() {
 			
 			@Override
@@ -52,6 +54,7 @@ public class Deck implements RunningComponent {
 
 	private void setDirection(int direction) {
 		
+		//for Deck-Lift Safety
 		/*
 		if (Message.makeDeckSafe)
 			direction = 1;
@@ -75,11 +78,6 @@ public class Deck implements RunningComponent {
 		motor.set(direction);
 	}
 
-	@Override
-	public void auto() {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void test(Joystick driver) {

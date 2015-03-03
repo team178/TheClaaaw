@@ -14,6 +14,8 @@ public class Claw implements RunningComponent {
 	private DigitalInput rightFrontLS;
 	private DigitalInput leftBackLS;
 	private DigitalInput rightBackLS;
+	
+	//to help human comprehension
 	private final int opening = 1;
 	private final int closing = -1;
 		
@@ -28,6 +30,8 @@ public class Claw implements RunningComponent {
 		this.rightFrontLS = rightFrontLS;
 		this.leftBackLS = leftBackLS;
 		this.rightBackLS = rightBackLS;
+		
+		
 		new ActionHelper() {
 
 			@Override
@@ -110,11 +114,10 @@ public class Claw implements RunningComponent {
 		SmartDashboard.putBoolean("leftBackLS", leftBackLS.get());
 		
 		if(aux.getRawButton(1)){ //opening
-			moveClaw(1);
-			
+			this.moveClaw(1);
 		}
 		else if(aux.getRawButton(2)){ //closing
-			moveClaw(-1);
+			this.moveClaw(-1);
 		}
 		else{
 			rightClaw.set(0);
@@ -122,7 +125,7 @@ public class Claw implements RunningComponent {
 		}
 	}
 	
-	public void moveClaw(int direction){
+	private void moveClaw(int direction){
 		boolean isTouchingTote = !toteTouchingLS.get();
 		
 		rightClaw.set(direction);
@@ -153,12 +156,6 @@ public class Claw implements RunningComponent {
 	/*
 	 * We only need this because the limit switches are being wired in parallel :)
 	 */
-
-	@Override
-	public void auto() {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public void test(Joystick driver) {

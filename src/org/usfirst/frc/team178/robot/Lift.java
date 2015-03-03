@@ -102,12 +102,6 @@ public class Lift implements RunningComponent{
 	}
 
 	@Override
-	public void auto() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void test(Joystick joystick) {
 		this.motor.set(joystick.getY());
 		SmartDashboard.putNumber("RawSpeed", liftDistanceEncoder.get());
