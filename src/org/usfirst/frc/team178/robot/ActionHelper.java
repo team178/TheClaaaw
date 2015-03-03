@@ -1,7 +1,6 @@
 package org.usfirst.frc.team178.robot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import edu.wpi.first.wpilibj.Timer;
 

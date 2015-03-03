@@ -12,13 +12,16 @@ public class DriveTrain implements RunningComponent {
 	private Talon backLeft;
 	private Talon frontRight;
 	private Talon backRight;
-	private Joystick joystick;
-	protected static final double BACK_DRIVE_TIME = 1; //seconds
-	private Gyro gyroDevice;
 	
+	//TODO find some way to abstract joystick from this freaking embedded class
+	private Joystick joystick;
+	
+	//for Gyro
+	private Gyro gyroDevice;
 	private double angleCorrection = 0d;
 	
-
+	//for Autonomous
+	protected static final double BACK_DRIVE_TIME = 1; //seconds
 	
 	private PIDSource gyro = new PIDSource() {
 		@Override
@@ -46,6 +49,7 @@ public class DriveTrain implements RunningComponent {
 		this.frontRight = frontRight;
 		this.backRight = backRight;
 		this.gyroDevice = gyroDevice;
+
 		
 //		Step 4
 //		Aligns the robot after clearing it of the AZ zone
@@ -196,34 +200,9 @@ public class DriveTrain implements RunningComponent {
 			}
 		};
 		
-//		Step 1
-//		Drives forward slowly until isCanHeld is true (until we hold the can)
-//			Activated by isAutonomous (start of autonomous) AND if this.finishedRunning isn't true
-//			Activates nothing
-		new ActionHelper() {
-			
-			@Override
-			public void whenDone() {
-				// TODO Auto-generated method stub
-				//do nothing; we're waiting for isCanHeld anyway
-			}
-			
-			@Override
-			public boolean toRun(int interruptions) {
-				// TODO Auto-generated method stub
-				drive(0, .1, 0);
-				return Message.isCanHeld;
-			}
-			
-			@Override
-			public boolean shouldRun() {
-				// TODO Auto-generated method stub
-				System.out.println("I'M BEING TESTED YO");
-				if(Robot.instance == null) return false;
-				return Robot.instance.isAutonomous() && !this.finishedRunning;
-			}
-		};
 	}
+		
+
 
 	@Override
 	public void teleop(Joystick joystick, Joystick aux) {

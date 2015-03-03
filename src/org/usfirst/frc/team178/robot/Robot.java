@@ -17,7 +17,8 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
  * directory.
  */
 public class Robot extends IterativeRobot {
-
+	private Joystick driver = new Joystick(0);
+	private Joystick aux = new Joystick(1);
 	
 	//Get the NeworkTable for the Robot
 	public final NetworkTable networktable = NetworkTable.getTable("Vision");;
@@ -29,11 +30,7 @@ public class Robot extends IterativeRobot {
 	 * used for any initialization code.
 	 */
 	
-	public Robot() {
-		Robot.instance = this;
-	}
-	
-	private RunningComponent[] components = {
+	private RunningComponent[] components = { 
 			new DriveTrain(
 					new Talon(0), //frontLeft
 					new Talon(1), //backLeft
@@ -63,53 +60,53 @@ public class Robot extends IterativeRobot {
 			new UltraSonics(
 					new AnalogInput(1)), //ultrasonics
 			
-			new Camera("cam1") //cam name on roborio
+			new Camera("cam1"), //cam name on roborio
+			
+			new TapeShooter(
+					new Talon(8))
 			
 		};
 	@Override
 	public void robotInit() {
-			
+		Robot.instance = this;
 	}
 	
-	@Override
-	public boolean isAutonomous() {
-		// TODO Auto-generated method stub
-		return super.isAutonomous() && super.isEnabled();
-	}
-	
+	public static boolean transportCan=false;
+	public static boolean transportTote=false;
+	public static boolean takeCan=false; //using our tapeShooter, from the middle
+
 	@Override
 	public void autonomousInit() {
 		// TODO Auto-generated method stub
-		super.autonomousInit();
 		ActionHelper.resetAllActionCompletions();
 		networktable.putNumber("TO_RUN_OR_NOT_TO_RUN", 1);
+		
+		
+		//true/false will be controlled by if statement once DipSwitches are wired up
+		if(true){
+		Message.auto1Init=true; 
+		}
+	}
+
+	
+	/**
+	 * This function is called periodically during autonomous
+	 */
+	@Override
+	public void autonomousPeriodic() {
+				
 	}
 	
 	@Override
 	public void teleopInit(){
 		networktable.putNumber("TO_RUN_OR_NOT_TO_RUN", 0);
-		Message.isCanHeld=false;
 	}
-	/**
-	 * This function is called periodically during autonomous
-	 */
 	
-	public static boolean transportCan=false;
-	public static boolean transportTote=false;
-	public static boolean takeCan=false; //using our tapeShooter, from the middle
-	
-	@Override
-	public void autonomousPeriodic() {
-	}
-
-	private Joystick driver = new Joystick(0);
-	private Joystick aux = new Joystick(1);
 	@Override
 	public void teleopPeriodic() {
 		for (int i = 0; i < components.length; i++) {
 			components[i].teleop(driver, aux);
 		}
-		
 	}
 
 	/**

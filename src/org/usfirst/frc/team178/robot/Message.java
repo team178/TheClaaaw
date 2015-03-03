@@ -8,21 +8,34 @@ public class Message {
 	public static boolean isLiftSafe;
 	public static boolean isDeckSafe;
 	*/
+	
 	//booleans for Autonomous Commands
 	
+	public static boolean 
+			isBotReadyToGrab=false, //ultrasonics in range
+			isCanHeld= false, //ToteTouchingLS are triggered
+			isItemLifted= false, //Lift tote off the ground; move lift up
+			isBotEnteringAuto= false,
+			isCanReleased=false,
+			isBotAlligned=false;
+	
+	public static boolean auto1Init=false;
+	/*
+	 * 1. Move Can
+	 * 2. Move Tote
+	 * 3. End in Autozone
+	 */
+	
+	public static boolean auto2Init=false;
 	
 	/**auto flags
 	all are false until the chain is initialized by @Link autonomousPeriodic()*/
-	public static boolean inAuto=false,
-			isCanHeld=false,
+	public static boolean 
 			isCaninAZB=false,
 			isCaninAZA=false,
 			isBotClearofAZ=false,
-			isBotAlligned=false,
-			isBotReadyToGrab=false,
 			isToteHeld=false,
 			isToteinAZ=false,
-			isCanReleased=false,
 			isBotMovedBack=false;	
 
 	public static boolean isDown;
