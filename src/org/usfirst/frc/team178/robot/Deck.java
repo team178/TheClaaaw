@@ -1,24 +1,18 @@
 package org.usfirst.frc.team178.robot;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Deck implements RunningComponent {
-	private final static double bottomLimit = 1d; //for autonomous
-	
-	private Joystick joystick;
 	private DigitalInput frontLimit;
 	private DigitalInput backLimit;
-	private Encoder deckDistanceEncoder;
 	private Talon motor;
 
-	public Deck(Joystick joystick, DigitalInput frontLimit,
+	public Deck(DigitalInput frontLimit,
 			DigitalInput backLimit,  Talon motor) {
 		super();
-		this.joystick = joystick;
 		this.frontLimit = frontLimit;
 		this.backLimit = backLimit;
 		this.motor = motor;
@@ -28,9 +22,6 @@ public class Deck implements RunningComponent {
 			@Override
 			public void run() {
 				while(true){
-					if (frontLimit.get()) {
-						deckDistanceEncoder.reset();
-					}
 					Message.isDeckSafe = frontLimit.get();
 					if (Message.isDeckSafe) {
 						Message.makeDeckSafe = false;
@@ -41,15 +32,13 @@ public class Deck implements RunningComponent {
 	}
 
 	@Override
-	public void teleop() {
-		//for testing purposes
-		SmartDashboard.putNumber("DeckValue: " , deckDistanceEncoder.get());
+	public void teleop(Joystick joystick, Joystick aux) {
 		
 		int direction;
 		
-		if(joystick.getRawButton(3)) // towards the front
+		if(joystick.getRawButton(5)) // towards the front
 			direction= -1;
-		else if(joystick.getRawButton(4)) // towards the back
+		else if(joystick.getRawButton(6)) // towards the back
 			direction = 1;
 		else
 			direction=0;

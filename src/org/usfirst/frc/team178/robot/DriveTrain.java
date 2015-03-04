@@ -6,15 +6,16 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.Timer;
 
+
 public class DriveTrain implements RunningComponent {
+	protected static final double BACK_DRIVE_TIME = 3; //seconds
 	private Talon frontLeft;
 	private Talon backLeft;
 	private Talon frontRight;
 	private Talon backRight;
-	
-	private Joystick joystick;
 	
 	private Gyro gyroDevice;
 	
@@ -25,7 +26,7 @@ public class DriveTrain implements RunningComponent {
 	private PIDSource gyro = new PIDSource() {
 		@Override
 		public double pidGet() {
-			double joyAngle = joystick.getTwist() * 360;
+			double joyAngle = /*joystick.getTwist() * sorry not sorry*/ 360;
 			return gyroDevice.getAngle() - joyAngle;
 		}
 	};
@@ -41,55 +42,192 @@ public class DriveTrain implements RunningComponent {
 	private PIDController pid = new PIDController(0.1, 0.001, 0, gyro, gyroCorr);
 	
 	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
-			Talon backRight, Joystick joystick, Gyro gyroDevice) {
+			Talon backRight, Gyro gyroDevice) {
 		super();
 		this.frontLeft = frontLeft;
 		this.backLeft = backLeft;
 		this.frontRight = frontRight;
 		this.backRight = backRight;
-		this.joystick = joystick;
 		this.gyroDevice = gyroDevice;
+		
+//		Step 4
+//		Aligns the robot after clearing it of the AZ zone
+//			Activated by isBotClearofAZ
+//			Activates isBotAlligned
 		new ActionHelper() {
-			private Timer timer = new Timer(); 
-			
-			{
-				timer.start();
-			}
-			
-			
-			private boolean Blah = false; 
+
 			@Override
 			public void whenDone() {
-				// When done, send message, isToteinA2
-				Message.isToteinAZ = true; 
-				
-				
+				// TODO Auto-generated method stub
+				Message.isBotAlligned=true;
+				Message.isBotClearofAZ=false;
 			}
 			
 			@Override
 			public boolean toRun(int interruptions) {
-				//Move backwards, check if in Auto zone, if true, return true, if false, return false
-				drive(0, -1, 0);
-				if (timer.get() >= 3)
-					return true; 
-				else return false;
+				// TODO Auto-generated method stub
+				double deviation = Robot.networktable.getNumber("DEVIATION_IN_PIXELS");
+				if(deviation>15){
+					drive(1,0,0);
+				}
+				else if(deviation<-15){
+					drive(-1,0,0);
+				}
+				else{
+					return true;
+				}
+				return false;
 			}
 			
 			@Override
 			public boolean shouldRun() {
-				if (!Blah && Message.isToteHeld) {
-					Blah = Message.isToteHeld;
-					timer.reset();
-				}
-				if (Message.isToteHeld)
+				// TODO Auto-generated method stub
+				return Message.isBotClearofAZ;
+			}
+		};
+		
+//		Step 3
+//		Drives back for a set amount of time
+//			Activated by isCaninAZB
+//			Activates isBotMovedBack
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				Message.isBotMovedBack = true;
+				Message.isCaninAZB = false;
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				drive(0,-1,0);
+				return timer.get()>.5;
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Message.isCaninAZB;
+			}
+		};
+		
+//		Step 
+//		Drives left for a set amount of time
+//			Activated by isBotMovedBack AND isCanReleased
+//			Activates nothing??
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				Message.isBotMovedBack = false;
+				Message.isCanReleased = false;
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				drive(-1,0,0);
+				return timer.get()>.5;
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Message.isBotMovedBack && Message.isCanReleased;
+			}
+		};
+		
+//		Steps 2 and 6
+//		Drives back for a set amount of time
+//			Activated by isToteHeld OR isCanHeld
+//			Activates isToteinAZ OR isCaninAZA AND isCaninAZB
+		new ActionHelper() {
+			@Override
+			public void whenDone() {
+				// When done, send message, isToteinA2
+
+				if (Message.isToteHeld) {
+					Message.isToteHeld = false;
+					Message.isToteinAZ = true; 	
+				} else if(Message.isCanHeld){
+					Message.isCanHeld = false;
+					Message.isCaninAZA = true;
+					Message.isCaninAZB = true;
+				} else throw new Error();
+			}
+			@Override
+			public boolean toRun(int interruptions) {
+				//Move backwards, check if in Auto zone, if true, return true, if false, return false
+				drive(0, -1, 0);
+				return timer.get() > BACK_DRIVE_TIME;
+			}
+			@Override
+			public boolean shouldRun() {
+				if (Message.isToteHeld || Message.isCanHeld)
 					return true;
 				else return false;
+			}
+		};
+		
+//		Step 5
+//		Drives forward until ultrasonics says we're in range
+//			Activated by isBotReadytoGrab
+//			Activates isBotAlligned
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				Message.isBotReadyToGrab=true;
+				Message.isBotAlligned = false; 
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				drive(0,1,0);
+				return (UltraSonics.getDistanceFromWall()<=1);
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Message.isBotAlligned;
+			}
+		};
+		
+//		Step 1
+//		Drives forward slowly until isCanHeld is true (until we hold the can)
+//			Activated by isAutonomous (start of autonomous) AND if this.finishedRunning isn't true
+//			Activates nothing
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				//do nothing; we're waiting for isCanHeld anyway
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				drive(0, .2, 0);
+				return Message.isCanHeld;
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Robot.instance.isAutonomous() && !this.done;
 			}
 		};
 	}
 
 	@Override
-	public void teleop() {
+	public void teleop(Joystick joystick, Joystick aux) {
 		
 		double yValue = joystick.getY();
 		double xValue = joystick.getX();
@@ -135,13 +273,14 @@ public class DriveTrain implements RunningComponent {
 		
 	}
 	
+	/**drive(double xValue, double yValue, double twistValue) */
 	public void drive(double xValue, double yValue, double twistValue) {
-		if (joystick.getRawButton(3)){
+		/*if (joystick.getRawButton(3)){
 				twistValue += angleCorrection;
 		}
 		if (joystick.getRawButton(4)){
 			gyroDevice.reset();
-		}
+		}*/
 		frontLeft.set(  - (yValue - xValue - twistValue));
 		frontRight.set((yValue + xValue + twistValue));
 		backLeft.set(   -( yValue + xValue - twistValue));

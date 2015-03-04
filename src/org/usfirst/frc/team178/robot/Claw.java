@@ -13,8 +13,6 @@ public class Claw implements RunningComponent {
 	private DigitalInput rightFrontLS;
 	private DigitalInput leftBackLS;
 	private DigitalInput rightBackLS;
-	private Joystick joystick;
-
 	private final int opening = 1;
 	private final int closing = -1;
 
@@ -22,7 +20,7 @@ public class Claw implements RunningComponent {
 		
 	public Claw(Talon leftClaw, Talon rightClaw, DigitalInput toteTouchingLS,
 			DigitalInput leftFrontLS, DigitalInput rightFrontLS,
-			DigitalInput leftBackLS, DigitalInput rightBackLS, Joystick joystick) {
+			DigitalInput leftBackLS, DigitalInput rightBackLS) {
 		super();
 		this.leftClaw = leftClaw;
 		this.rightClaw = rightClaw;
@@ -31,7 +29,6 @@ public class Claw implements RunningComponent {
 		this.rightFrontLS = rightFrontLS;
 		this.leftBackLS = leftBackLS;
 		this.rightBackLS = rightBackLS;
-		this.joystick = joystick;
 		new ActionHelper() {
 
 			@Override
@@ -51,14 +48,59 @@ public class Claw implements RunningComponent {
 
 			@Override
 			public void whenDone() {
-				
+				Message.isToteinAZ = false;
 			}
 			
 		};
+
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				Message.isToteHeld=true;
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				moveClaw(closing);
+				return rightFrontLS.get() && leftFrontLS.get();
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Message.isBotReadyToGrab;
+			}
+		};
+		
+		new ActionHelper() {
+			
+			@Override
+			public void whenDone() {
+				// TODO Auto-generated method stub
+				Message.isCanHeld = true;
+			}
+			
+			@Override
+			public boolean toRun(int interruptions) {
+				// TODO Auto-generated method stub
+				moveClaw(closing);
+				return leftFrontLS.get() && rightFrontLS.get();
+			}
+			
+			@Override
+			public boolean shouldRun() {
+				// TODO Auto-generated method stub
+				return Robot.instance.isAutonomous() && !this.done;
+			}
+		};
+
 	}
 
 	@Override
-	public void teleop() {
+	public void teleop(Joystick joystick, Joystick aux) {
 		
 		if(joystick.getRawButton(1)){ //opening
 			moveClaw(1);
@@ -79,21 +121,21 @@ public class Claw implements RunningComponent {
 		rightClaw.set(Direction);
 		leftClaw.set(Direction);
 
-		if(!leftFrontLS.get() && direction == opening ){
+		if(!leftFrontLS.get() && Direction == opening ){
 			leftClaw.set(0);
 		}
 		
-		if (!leftBackLS.get() && direction == closing){
+		if (!leftBackLS.get() && Direction == closing){
 			leftClaw.set(0);
 		}
 		
-		if (rightFrontLS.get()!=true && direction == opening){
+		if (rightFrontLS.get()!=true && Direction == opening){
 			rightClaw.set(0);
 		}
-		if (rightBackLS.get()!=true && direction == closing){
+		if (rightBackLS.get()!=true && Direction == closing){
 			rightClaw.set(0);
 		}
-		if (isTouchingTote && direction == closing){
+		if (isTouchingTote && Direction == closing){
 			rightClaw.set(0);
 			leftClaw.set(0);
 		}

@@ -8,7 +8,8 @@ public class Message {
 	
 	/**auto flags
 	all are false until the chain is initialized by @Link autonomousPeriodic()*/
-	public static boolean inAuto=false,isCanHeld=false,isCaninAZ=false,isBotClearofAZ=false,isBotAlligned=false,isBotReadyToGrab=false,isToteHeld=false,isToteinAZ=false;	
+	public static boolean inAuto=false,isCanHeld=false,isCaninAZB=false,isCaninAZA=false,isBotClearofAZ=false,isBotAlligned=false,isBotReadyToGrab=false,isToteHeld=false,isToteinAZ=false,isCanReleased=false,isBotMovedBack=false;	
 
 	public static boolean isDown;
+	
 }

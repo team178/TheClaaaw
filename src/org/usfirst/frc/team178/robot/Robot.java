@@ -3,6 +3,7 @@ package org.usfirst.frc.team178.robot;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
@@ -19,7 +20,7 @@ public class Robot extends IterativeRobot {
 
 	
 	//Get the NeworkTable for the Robot
-	NetworkTable table;
+	public static NetworkTable networktable;
 
 	public static Robot instance;
 
@@ -38,7 +39,6 @@ public class Robot extends IterativeRobot {
 					new Talon(1), //backLeft
 					new Talon(2), //frontRight
 					new Talon(3), //backRight
-					new Joystick(1), //joystick
 					new Gyro(0)), //gyro
 					
 			new Claw (
@@ -48,29 +48,29 @@ public class Robot extends IterativeRobot {
 					new DigitalInput(5), //leftFrontLS
 					new DigitalInput(6), //rightFrontLS
 					new DigitalInput(7), //leftBackLS
-					new DigitalInput(8), //rightBackLS
-					new Joystick(0)), //joystick
+					new DigitalInput(8) //rightBackLS
+					), //joystick
 
 			new Lift(
-					new Joystick(0), //joystick
 					new Talon(4) ,  //motor
 					new DigitalInput(3), //bottomLimit
-					new Encoder(null, null)), //Encoder 
-			
+					new Encoder(14, 15)), //Encoder 
 			new Deck(
-					new Joystick(0), //joystick
 					new DigitalInput(0), //frontLimit
 					new DigitalInput(1), //backLimit
 					new Talon(5)), //motor
 					
-			new Camera(
-					new Joystick(0)) //joystick
+			new Camera(), //joystick
+			
+			new UltraSonics(
+					new AnalogInput(1)) //ultrasonics
 		};
 
-
+	@Override
 	public void robotInit() {
-			table= NetworkTable.getTable("Vision");
-	};
+			networktable= NetworkTable.getTable("Vision");
+			networktable.putInt("TO_RUN_OR_NOT_TO_RUN", 1);
+	}
 	
 	@Override
 	public void autonomousInit() {
@@ -79,10 +79,25 @@ public class Robot extends IterativeRobot {
 		ActionHelper.resetAllCompletionFlags();
 	}
 	
-
+	@Override
+	public void teleopInit(){
+		networktable.putInt("TO_RUN_OR_NOT_TO_RUN", 0);
+		Message.inAuto=false;
+		Message.isCanHeld=false;
+		Message.isCaninAZB=false;
+		Message.isCaninAZA=false;
+		Message.isBotClearofAZ=false;
+		Message.isBotAlligned=false;
+		Message.isBotReadyToGrab=false;
+		Message.isToteHeld=false;
+		Message.isToteinAZ=false;
+		Message.isCanReleased=false;
+		Message.isBotMovedBack=false;
+	}
 	/**
 	 * This function is called periodically during autonomous
 	 */
+	@Override
 	public void autonomousPeriodic() {
 		for (ActionHelper actionHelper : ActionHelper.actions) {
 			actionHelper.run();
@@ -92,9 +107,12 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during operator control
 	 */
+	private Joystick driver = new Joystick(0);
+	private Joystick aux = new Joystick(1);
+	@Override
 	public void teleopPeriodic() {
 		for (int i = 0; i < components.length; i++) {
-			components[i].teleop();
+			components[i].teleop(driver, aux);
 		}
 		
 	}
@@ -102,6 +120,7 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during test mode
 	 */
+	@Override
 	public void testPeriodic() {
 		for (int i = 0; i < components.length; i++) {
 			components[i].test();

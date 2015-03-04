@@ -2,7 +2,13 @@ package org.usfirst.frc.team178.robot;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public abstract class ActionHelper {
+	protected Timer timer = new Timer();
+	{
+		timer.start();
+	}
 	static ArrayList<ActionHelper> actions = new ArrayList<> ();
 	public ActionHelper() {
 		actions.add(this);
@@ -22,7 +28,7 @@ public abstract class ActionHelper {
 	void run() {
 		
 		if (shouldRun()) {
-			
+			timer.reset();
 			while(!done && shouldRun()){
 				done = toRun(interruptions);
 			}
