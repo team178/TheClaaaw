@@ -76,7 +76,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		// TODO Auto-generated method stub
 		super.autonomousInit();
-		ActionHelper.resetAllActionCompletions();
+		ActionHelper.resetAllCompletionFlags();
 	}
 	
 
@@ -84,8 +84,8 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 	public void autonomousPeriodic() {
-		for (int i = 0; i < components.length; i++) {
-			components[i].auto();
+		for (ActionHelper actionHelper : ActionHelper.actions) {
+			actionHelper.run();
 		}
 	}
 

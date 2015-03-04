@@ -3,44 +3,9 @@ package org.usfirst.frc.team178.robot;
 import java.util.ArrayList;
 
 public abstract class ActionHelper {
-	
-	private static ArrayList<ActionHelper> actions = new ArrayList<>();
-	
-	protected boolean finishedRunning = false;
+	static ArrayList<ActionHelper> actions = new ArrayList<> ();
 	public ActionHelper() {
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while(true){
-					int interruptions = 0;
-					if (shouldRun()) {
-						boolean done = false;
-						while(!done && shouldRun()){
-							done = toRun(interruptions);
-							Thread.currentThread().interrupt();
-						}
-						if(done){
-							whenDone();
-							finishedRunning = true;
-						} else
-							interruptions++;
-						break;
-					} else 
-						try {
-							Thread.sleep(250);
-						} catch (InterruptedException e) {
-							
-						}
-					
-				}
-			}
-		}).start();
-	}
-	
-	public static void resetAllActionCompletions() {
-		for (ActionHelper actionHelper : actions) {
-			actionHelper.finishedRunning = false;
-		}
+		actions.add(this);
 	}
 	
 	/**Contains boolean expr. Condition for start*/
@@ -52,6 +17,27 @@ public abstract class ActionHelper {
 	/**final message, this sets off the next lines
 	 * automatically called when true is returned from {@link}shouldRun() */
 	public abstract void whenDone();
-	
+	int interruptions = 0;
+	boolean done = false;
+	void run() {
+		
+		if (shouldRun()) {
+			
+			while(!done && shouldRun()){
+				done = toRun(interruptions);
+			}
+			if(done)
+				whenDone();
+			else
+				interruptions++;
+		} else {
+		
+		}
+	}
+	static protected void resetAllCompletionFlags() {
+		for (ActionHelper actionHelper : actions) {
+			actionHelper.done = false;
+		}
+	}
 	
 }
