@@ -74,14 +74,22 @@ public class Robot extends IterativeRobot {
 	public static boolean transportCan=false;
 	public static boolean transportTote=false;
 	public static boolean takeCan=false; //using our tapeShooter, from the middle
-
+	
+	@Override
+	public void autonomousInit() {
+		// TODO Auto-generated method stub
+		super.autonomousInit();
+		ActionHelper.resetAllCompletionFlags();
+	}
 	
 	/**
 	 * This function is called periodically during autonomous
 	 */
 	@Override
 	public void autonomousPeriodic() {
-				
+		for (ActionHelper actionHelper : ActionHelper.actions) {
+			actionHelper.run();
+		}
 	}
 	
 	@Override

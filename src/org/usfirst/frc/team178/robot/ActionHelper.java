@@ -5,15 +5,13 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj.Timer;
 
 public abstract class ActionHelper {
-	
-	private static ArrayList<ActionHelper> actions = new ArrayList<>();
-	
 	protected Timer timer = new Timer();
 	{
 		timer.start();
 	}
-	protected boolean finishedRunning = false;
+	static ArrayList<ActionHelper> actions = new ArrayList<> ();
 	public ActionHelper() {
+<<<<<<< HEAD
 		Thread t = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -55,6 +53,9 @@ public abstract class ActionHelper {
 		for (ActionHelper actionHelper : actions) {
 			actionHelper.finishedRunning = false;
 		}
+=======
+		actions.add(this);
+>>>>>>> Autonomous
 	}
 	
 	/**Contains boolean expr. Condition for start*/
@@ -66,6 +67,27 @@ public abstract class ActionHelper {
 	/**final message, this sets off the next lines
 	 * automatically called when true is returned from {@link}shouldRun() */
 	public abstract void whenDone();
-	
+	int interruptions = 0;
+	boolean done = false;
+	void run() {
+		
+		if (shouldRun()) {
+			timer.reset();
+			while(!done && shouldRun()){
+				done = toRun(interruptions);
+			}
+			if(done)
+				whenDone();
+			else
+				interruptions++;
+		} else {
+		
+		}
+	}
+	static protected void resetAllCompletionFlags() {
+		for (ActionHelper actionHelper : actions) {
+			actionHelper.done = false;
+		}
+	}
 	
 }
