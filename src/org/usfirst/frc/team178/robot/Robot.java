@@ -52,11 +52,11 @@ public class Robot extends IterativeRobot {
 					new Talon(4) ,  //motor
 					new DigitalInput(3), //bottomLimit/zeroLimit
 					new Encoder(14, 15)), //Encoder 
-			new Deck(
+			/*new Deck(
 					new DigitalInput(1), //frontLimit
 					new DigitalInput(0), //backLimit
 					new Talon(5)), //motor
-			
+			*/
 			new UltraSonics(
 					new AnalogInput(1)), //ultrasonics
 			
