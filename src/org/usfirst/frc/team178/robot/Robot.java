@@ -53,8 +53,8 @@ public class Robot extends IterativeRobot {
 					new DigitalInput(3), //bottomLimit/zeroLimit
 					new Encoder(14, 15)), //Encoder 
 			new Deck(
-					new DigitalInput(0), //frontLimit
-					new DigitalInput(1), //backLimit
+					new DigitalInput(1), //frontLimit
+					new DigitalInput(0), //backLimit
 					new Talon(5)), //motor
 			
 			new UltraSonics(
@@ -74,19 +74,6 @@ public class Robot extends IterativeRobot {
 	public static boolean transportCan=false;
 	public static boolean transportTote=false;
 	public static boolean takeCan=false; //using our tapeShooter, from the middle
-
-	@Override
-	public void autonomousInit() {
-		// TODO Auto-generated method stub
-		ActionHelper.resetAllActionCompletions();
-		networktable.putNumber("TO_RUN_OR_NOT_TO_RUN", 1);
-		
-		
-		//true/false will be controlled by if statement once DipSwitches are wired up
-		if(true){
-		Message.auto1Init=true; 
-		}
-	}
 
 	
 	/**

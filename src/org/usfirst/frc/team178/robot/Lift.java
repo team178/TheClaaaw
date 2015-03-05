@@ -11,7 +11,7 @@ public class Lift implements RunningComponent{
 	private static final int SAFE_DIST = 0; //meters
 	private final static double ENCODER_RATE = 1d; //ticks per meter
 	private final static double POS_ONE = 50;
-	private final static double POS_TWO = 300;
+	private final static double POS_TWO = 10;
 	
 	private Talon motor;
 	private Encoder liftDistanceEncoder;
@@ -51,7 +51,7 @@ public class Lift implements RunningComponent{
 	
 	@Override
 	public void teleop(Joystick joystick, Joystick aux) {
-		SmartDashboard.putNumber("LiftValue: " , liftDistanceEncoder.get());
+		SmartDashboard.putNumber("LiftValue: " , whereAreWe());
 		SmartDashboard.putBoolean("zeroLimit", zeroLimit.get());
 		
 		double speed = 1;//control speed of the lift, VARIABLE
@@ -103,7 +103,9 @@ public class Lift implements RunningComponent{
 
 	@Override
 	public void test(Joystick joystick) {
-		this.motor.set(joystick.getY());
+		if (zeroLimit.get()) {
+			motor.set(0);
+		}else this.motor.set(joystick.getY());
 		SmartDashboard.putNumber("RawSpeed", liftDistanceEncoder.get());
 		SmartDashboard.putNumber("newValue", whereAreWe());
 		if (joystick.getRawButton(1)){

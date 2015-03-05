@@ -38,9 +38,17 @@ public class Deck implements RunningComponent {
 		int direction;
 		
 		if(aux.getRawButton(6)) // towards the front
-			direction= -1;
+			if (!frontLimit.get()){
+				direction = 0;
+			} else{
+				direction= -1;
+			}
 		else if(aux.getRawButton(5)) // towards the back
+			if (!backLimit.get()){
+				direction=0;
+			}else{
 			direction = 1;
+			}
 		else
 			direction=0;
 		

@@ -27,7 +27,7 @@ public class UltraSonics implements RunningComponent{
 	public void teleop(Joystick driver, Joystick aux) {
 		// TODO Auto-generated method stub
 		this.getDistanceFromTote();
-		SmartDashboard.putNumber("Distance from Wall", scaledDistanceFromTote);
+		SmartDashboard.putNumber("UltrasonicDistance", scaledDistanceFromTote);
 	}
 
 	@Override
