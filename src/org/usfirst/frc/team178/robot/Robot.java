@@ -60,7 +60,7 @@ public class Robot extends IterativeRobot {
 			new UltraSonics(
 					new AnalogInput(1)), //ultrasonics
 			
-			new Camera("cam1"), //cam name on roborio
+			new Camera("cam0"), //cam name on roborio
 			
 			new TapeShooter(
 					new Talon(8))
