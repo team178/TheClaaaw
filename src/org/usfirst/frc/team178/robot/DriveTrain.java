@@ -84,12 +84,12 @@ public class DriveTrain implements RunningComponent {
 		yValue*=speed;
 		twistValue*=speed;
 		
-		if (joystick.getRawButton(11)) { //snap-to-axis code
+		if (joystick.getRawButton(9)) { //snap-to-axis code
 			yValue*=0;
 			twistValue*=0;
 			xValue = -1;
 		}
-		else if (joystick.getRawButton(12)){
+		else if (joystick.getRawButton(10)){
 			yValue*=0;
 			twistValue*=0;
 			xValue = 1;
