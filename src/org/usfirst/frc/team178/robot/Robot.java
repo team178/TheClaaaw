@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,6 +35,10 @@ public class Robot extends IterativeRobot {
 			new Talon(3), //backRight
 			new Gyro(0) //gyro
 	);
+	private DipSwitches dipSwitches= new DipSwitches(
+			new DigitalInput(16), //rightSwitch
+			new DigitalInput(17) //leftSwitch
+			);
 	private Claw claw = new Claw (
 			new Talon(6), //leftClaw
 			new Talon(7), //rightClaw
@@ -58,6 +63,7 @@ public class Robot extends IterativeRobot {
 			driveTrain,
 			claw, 
 			lift,
+			dipSwitches,
 			new UltraSonics(
 					new AnalogInput(1)), //ultrasonics
 			
@@ -76,28 +82,39 @@ public class Robot extends IterativeRobot {
 	public static boolean transportTote=false;
 	public static boolean isGripped =true; //will change initial condition once we get multiple autonomous code/Dip switches working
 	public static boolean liftCan = false;
+	public String autoPhase;
 	/**
 	 * This function is called periodically during autonomous
 	 */
 
 	public void autonomousInit() {
-		//close on Tote
+		if (!dipSwitches.pickUpTote()) {
+			return;
+		}
+
 		Timer timer = new Timer();
 		timer.start();
-
-		while (!claw.isTouchingTote() && timer.get() <= 10) {
-			claw.moveClaw(Claw.closing);
-		}
 		timer.reset();
 
-		while (timer.get() <= .5){
+		System.out.println("Auto: closing on tote");
+		while (!claw.isTouchingTote() && timer.get() <= 4) {
+			claw.moveClaw(Claw.closing, false);
+		}
+		claw.moveClaw(0, false);
+
+		System.out.println("Auto: moving lift up");
+		timer.reset();
+		while (timer.get() <= 0.5){
 			lift.moveMotor(1);
 		}
+		lift.moveMotor(0);
+	
+		System.out.println("Auto: driving backwards");
 		timer.reset();
-
 		while (timer.get() <= 5){
-			driveTrain.drive(0,-.3,0);
+			driveTrain.drive(.75, 0, 0);
 		}
+		driveTrain.drive(0,0,0);
 	}
 
 	@Override

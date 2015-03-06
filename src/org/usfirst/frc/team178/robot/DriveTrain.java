@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveTrain implements RunningComponent {
 	private Talon frontLeft;
@@ -22,7 +24,8 @@ public class DriveTrain implements RunningComponent {
 	
 	//for Autonomous
 	protected static final double BACK_DRIVE_TIME = 1; //seconds
-	static final double TWIST_MULITPLER = .8;
+	static final double TWIST_MULITPLER = .6;
+	
 	
 	private PIDSource gyro = new PIDSource() {
 		@Override
@@ -42,6 +45,7 @@ public class DriveTrain implements RunningComponent {
 	@SuppressWarnings("unused")
 	private PIDController pid = new PIDController(0.1, 0.001, 0, gyro, gyroCorr);
 	
+	
 	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
 			Talon backRight, Gyro gyroDevice) {
 		super();
@@ -58,21 +62,17 @@ public class DriveTrain implements RunningComponent {
 	@Override
 	public void teleop(Joystick joystick, Joystick aux) {
 		this.joystick = joystick;
-		
-		double yValue = joystick.getY();
-		double xValue = joystick.getX();
-		double twistValue = joystick.getTwist() * TWIST_MULITPLER;
-		
-		double speed = 1-joystick.getRawAxis(3);
 
-		
+		double percentSpeed = (1 - joystick.getRawAxis(3)) / 2;// convert from scale of -1 to 1 to 0 to 1 and invert
+		double speed = percentSpeed/2 + .3; // convert to scale .3 to .8
+
 		if (joystick.getRawButton(2)) {
-			speed*=0.5;
+			speed *= 0.5;
 		}
 
-		xValue*=speed;
-		yValue*=speed;
-		twistValue*=speed;
+		double yValue = joystick.getY() * speed;
+		double xValue = joystick.getX() * speed;
+		double twistValue= joystick.getTwist() * speed;
 		
 		if (joystick.getRawButton(9)) { //snap-to-axis code
 			yValue*=0;
@@ -85,6 +85,14 @@ public class DriveTrain implements RunningComponent {
 			xValue = .6;
 		}
 		
+		if (joystick.getRawButton(3)){
+			twistValue += angleCorrection;
+		}
+	
+		if (joystick.getRawButton(4)){
+			gyroDevice.reset();
+		}
+		
 		drive(xValue,yValue,twistValue);
 	}
 
@@ -95,12 +103,6 @@ public class DriveTrain implements RunningComponent {
 	
 	/**drive(double xValue, double yValue, double twistValue) */
 	public void drive(double xValue, double yValue, double twistValue) {
-		if (joystick.getRawButton(3)){
-				twistValue += angleCorrection;
-		}
-		if (joystick.getRawButton(4)){
-			gyroDevice.reset();
-		}
 		frontLeft.set(  - (yValue - xValue - twistValue));
 		frontRight.set((yValue + xValue + twistValue));
 		backLeft.set(   -( yValue + xValue - twistValue));

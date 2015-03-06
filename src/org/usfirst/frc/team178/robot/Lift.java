@@ -96,7 +96,9 @@ public class Lift implements RunningComponent{
 
 	@Override
 	public void test(Joystick joystick) {
-		if (zeroLimit.get()) {
+		
+		
+		/*if (zeroLimit.get()) {
 			motor.set(0);
 		}else this.motor.set(joystick.getY());
 		SmartDashboard.putNumber("RawSpeed", liftDistanceEncoder.get());
@@ -123,7 +125,7 @@ public class Lift implements RunningComponent{
 			} else{
 				this.motor.set(0);
 			}
-		}
+		}*/
 	}
 
 }
