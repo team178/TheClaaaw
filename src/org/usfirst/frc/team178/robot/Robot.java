@@ -27,9 +27,27 @@ public class Robot extends IterativeRobot {
 	public static Robot instance;
 	
 	//objects need to be instanizated in order to use them for autonomous
-	private DriveTrain driveTrain;
-	private Claw claw;
-	private Lift lift;
+	private DriveTrain driveTrain= new DriveTrain (
+			new Talon(0), //frontLeft
+			new Talon(1), //backLeft
+			new Talon(2), //frontRight
+			new Talon(3), //backRight
+			new Gyro(0) //gyro
+	);
+	private Claw claw = new Claw (
+			new Talon(6), //leftClaw
+			new Talon(7), //rightClaw
+			new DigitalInput(4), //toteTouchingLS
+			new DigitalInput(5), //leftFrontLS
+			new DigitalInput(6), //rightFrontLS
+			new DigitalInput(7), //leftBackLS
+			new DigitalInput(8) //rightBackLS
+	);
+	private Lift lift = new Lift(
+			new Talon(4) ,  //motor
+			new DigitalInput(3), //bottomLimit/zeroLimit
+			new Encoder(14, 15) //Encoder 
+	);
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -37,32 +55,9 @@ public class Robot extends IterativeRobot {
 	 */
 	
 	private RunningComponent[] components = { 
-			new DriveTrain(
-					new Talon(0), //frontLeft
-					new Talon(1), //backLeft
-					new Talon(2), //frontRight
-					new Talon(3), //backRight
-					new Gyro(0)), //gyro
-					
-			new Claw (
-					new Talon(6), //leftClaw
-					new Talon(7), //rightClaw
-					new DigitalInput(4), //toteTouchingLS
-					new DigitalInput(5), //leftFrontLS
-					new DigitalInput(6), //rightFrontLS
-					new DigitalInput(7), //leftBackLS
-					new DigitalInput(8) //rightBackLS
-					), 
-
-			new Lift(
-					new Talon(4) ,  //motor
-					new DigitalInput(3), //bottomLimit/zeroLimit
-					new Encoder(14, 15)), //Encoder 
-			/*new Deck(
-					new DigitalInput(1), //frontLimit
-					new DigitalInput(0), //backLimit
-					new Talon(5)), //motor
-			*/
+			driveTrain,
+			claw, 
+			lift,
 			new UltraSonics(
 					new AnalogInput(1)), //ultrasonics
 			
@@ -85,28 +80,26 @@ public class Robot extends IterativeRobot {
 	 * This function is called periodically during autonomous
 	 */
 
-	public void autonomousInit(){
-		/*
+	public void autonomousInit() {
 		//close on Tote
-		Timer timer= new Timer();
+		Timer timer = new Timer();
 		timer.start();
-		while(!isGripped){
-			isGripped = claw.isTouchingTote();
+
+		while (!claw.isTouchingTote() && timer.get() <= 10) {
 			claw.moveClaw(Claw.closing);
-			if (timer.get() >= 10){
-				isGripped =true;
-			}
 		}
 		timer.reset();
-		while(timer.get()<=.5){
+
+		while (timer.get() <= .5){
 			lift.moveMotor(1);
 		}
 		timer.reset();
+
 		while (timer.get() <= 5){
 			driveTrain.drive(0,-.3,0);
-		}*/
+		}
 	}
-	
+
 	@Override
 	public void autonomousPeriodic() {
 		
