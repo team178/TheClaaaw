@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 /**
@@ -24,6 +25,11 @@ public class Robot extends IterativeRobot {
 	public final NetworkTable networktable = NetworkTable.getTable("Vision");;
 
 	public static Robot instance;
+	
+	//objects need to be instanizated in order to use them for autonomous
+	private DriveTrain driveTrain;
+	private Claw claw;
+	private Lift lift;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -73,15 +79,37 @@ public class Robot extends IterativeRobot {
 	
 	public static boolean transportCan=false;
 	public static boolean transportTote=false;
-	public static boolean takeCan=false; //using our tapeShooter, from the middle
-
-	
+	public static boolean isGripped =true; //will change initial condition once we get multiple autonomous code/Dip switches working
+	public static boolean liftCan = false;
 	/**
 	 * This function is called periodically during autonomous
 	 */
+
+	public void autonomousInit(){
+		/*
+		//close on Tote
+		Timer timer= new Timer();
+		timer.start();
+		while(!isGripped){
+			isGripped = claw.isTouchingTote();
+			claw.moveClaw(Claw.closing);
+			if (timer.get() >= 10){
+				isGripped =true;
+			}
+		}
+		timer.reset();
+		while(timer.get()<=.5){
+			lift.moveMotor(1);
+		}
+		timer.reset();
+		while (timer.get() <= 5){
+			driveTrain.drive(0,-.3,0);
+		}*/
+	}
+	
 	@Override
 	public void autonomousPeriodic() {
-				
+		
 	}
 	
 	@Override

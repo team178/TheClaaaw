@@ -73,15 +73,8 @@ public class Lift implements RunningComponent{
 		
 		
 	}
-	
-	public void AutoRetrieve(){
-		if(Message.isDown!= true){
-			motor.set(1);
-		}
-		
-	}
 
-	private void moveMotor(double direction) {
+	public void moveMotor(double direction) {
 		
 		//for deck-lift safety code
 		/*if (Message.makeLiftSafe)                                // fix lift to allow deck movement
