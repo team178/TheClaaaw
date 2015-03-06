@@ -11,51 +11,7 @@ public abstract class ActionHelper {
 	}
 	static ArrayList<ActionHelper> actions = new ArrayList<> ();
 	public ActionHelper() {
-<<<<<<< HEAD
-		Thread t = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while(true){
-					int interruptions = 0;
-					if (shouldRun()) {
-						timer.reset();
-						boolean done = false;
-						while(!done && shouldRun()){
-							done = toRun(interruptions);
-							System.out.println(Thread.currentThread().getName()+" is running");
-							try {
-								Thread.sleep(166);
-							} catch (InterruptedException e) {
-								
-							}
-						}
-						if(done){
-							whenDone();
-							finishedRunning = true;
-						} else
-							interruptions++;
-						break;
-					} else 
-						try {
-							Thread.sleep(333);
-						} catch (InterruptedException e) {
-							
-						}
-					
-				}
-			}
-		});
-		t.setName(Thread.currentThread().getStackTrace()[2].toString());
-		t.start();
-	}
-	
-	public static void resetAllActionCompletions() {
-		for (ActionHelper actionHelper : actions) {
-			actionHelper.finishedRunning = false;
-		}
-=======
 		actions.add(this);
->>>>>>> Autonomous
 	}
 	
 	/**Contains boolean expr. Condition for start*/
