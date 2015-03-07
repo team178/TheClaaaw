@@ -18,20 +18,23 @@ public class DriveTrain implements RunningComponent {
 	//for Gyro
 	private Gyro gyroDevice;
 	private double angleCorrection = 0d;
-	protected double PIDangleToCorrectTo;
-	
+	protected double PIDangleToCorrectTo; // setpoint may be a better name --Brandon
+
 	//for Autonomous
 	protected static final double BACK_DRIVE_TIME = 1; //seconds
 	static final double TWIST_MULITPLER = .6;
-	
+
 	public void resetGyro() {
 		gyroDevice.reset();
+	}
+	public double getGyroAngle(){
+		return gyroDevice.getAngle();
 	}
 	
 	private PIDSource gyro = new PIDSource() {
 		@Override
 		public double pidGet() {
-			return (gyroDevice.getAngle() - PIDangleToCorrectTo)  ;
+			return (gyroDevice.getAngle() - PIDangleToCorrectTo) / 360  ;
 		}
 	};
 	
@@ -42,12 +45,7 @@ public class DriveTrain implements RunningComponent {
 		}
 	};
 	
-	private PIDController pid = new PIDController(0.01, 0.001, 0, gyro, gyroCorr);
-	{
-		SmartDashboard.putNumber("P", pid.getP());
-		SmartDashboard.putNumber("I", pid.getI());
-		SmartDashboard.putNumber("D", pid.getD());
-	}
+	private PIDController pid = new PIDController(3.1, 0, 0, gyro, gyroCorr);
 	
 	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
 			Talon backRight, Gyro gyroDevice) {
@@ -78,39 +76,33 @@ public class DriveTrain implements RunningComponent {
 		double xValue = joystick.getX() * speed;
 		double twistValue= joystick.getTwist() * speed;
 		
-		if (joystick.getRawButton(9)) { //snap-to-axis code
+		//snap-to-axis code
+		if (joystick.getRawButton(9)) { 
 			yValue*=0;
 			twistValue*=0;
 			xValue = -.6;
-		}
-		else if (joystick.getRawButton(10)){
+		} else if (joystick.getRawButton(10)) {
 			yValue*=0;
 			twistValue*=0;
 			xValue = .6;
 		}
+
 		
-		if (joystick.getRawButton(3)){
-			twistValue += angleCorrection;
-		}
-	
-		if (joystick.getRawButton(4)){
+
+		if (joystick.getRawButton(4)) {
 			gyroDevice.reset();
+			PIDangleToCorrectTo = gyroDevice.getAngle();
 		}
 		
-		drive(xValue,yValue,twistValue);
+		if (joystick.getRawButton(3)) {
+			PIDdrive(xValue, yValue, PIDangleToCorrectTo);
+		} else 
+			drive(xValue, yValue, twistValue);
+		
 	}
 
 	@Override
 	public void test(Joystick driver) {
-		if (driver.getRawButton(1)){
-			PIDdrive(0,0,90);
-		}
-		if (driver.getRawButton(2)){
-			gyroDevice.reset();
-		}
-		if (driver.getRawButton(3)){
-			pid.setPID(SmartDashboard.getNumber("P"), SmartDashboard.getNumber("I"), SmartDashboard.getNumber("D"));
-		}
 	}
 	
 	/**drive(double xValue, double yValue, double twistValue) */
