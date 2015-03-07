@@ -80,7 +80,7 @@ public class Claw implements RunningComponent {
 			rightClaw.set(0);
 		}
 		if (isTouchingTote && direction == closing && //if it's closing and is touching a tote
-				override){ //and there's no override
+				!override){ //and there's no override
 			rightClaw.set(0);
 			leftClaw.set(0);
 		}

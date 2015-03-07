@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -88,33 +87,57 @@ public class Robot extends IterativeRobot {
 	 */
 
 	public void autonomousInit() {
-		if (!dipSwitches.pickUpTote()) {
-			return;
-		}
-
 		Timer timer = new Timer();
 		timer.start();
 		timer.reset();
-
-		System.out.println("Auto: closing on tote");
-		while (!claw.isTouchingTote() && timer.get() <= 4) {
-			claw.moveClaw(Claw.closing, false);
-		}
-		claw.moveClaw(0, false);
-
-		System.out.println("Auto: moving lift up");
-		timer.reset();
-		while (timer.get() <= 0.5){
-			lift.moveMotor(1);
-		}
-		lift.moveMotor(0);
+		
+		driveTrain.resetGyro();
+		
+		if (dipSwitches.pickUpTote()) {
+			System.out.println("Auto: closing on tote");
+			while (!claw.isTouchingTote() && timer.get() <= 4) {
+				claw.moveClaw(Claw.closing, false);
+			}
+			claw.moveClaw(0, false);
 	
-		System.out.println("Auto: driving backwards");
-		timer.reset();
-		while (timer.get() <= 5){
-			driveTrain.drive(.75, 0, 0);
+			System.out.println("Auto: moving lift up");
+			timer.reset();
+			while (timer.get() <= 0.5){
+				lift.moveMotor(1);
+			}
+			lift.moveMotor(0);
+		
+			System.out.println("Auto: driving backwards");
+			timer.reset();
+			while (timer.get() <= 5){
+				driveTrain.drive(.75, 0, 0);
+			}
+			driveTrain.drive(0,0,0);
 		}
-		driveTrain.drive(0,0,0);
+		
+		if (dipSwitches.turnAndPickUpTote()){
+			System.out.println("Auto: closing on tote");
+			while (!claw.isTouchingTote() && timer.get() <= 4) {
+				claw.moveClaw(Claw.closing, false);
+			}
+			claw.moveClaw(0, false);
+	
+			System.out.println("Auto: moving lift up");
+			timer.reset();
+			while (timer.get() <= 0.5){
+				lift.moveMotor(1);
+			}
+			lift.moveMotor(0);
+		
+			System.out.println("Auto: driving backwards");
+			timer.reset();
+			while (timer.get() <= 5){
+				driveTrain.PIDdrive(.6, 0, 90);
+			}
+			
+			driveTrain.drive(0,0,0);
+		}
+		
 	}
 
 	@Override

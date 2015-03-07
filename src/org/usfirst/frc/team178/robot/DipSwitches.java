@@ -17,6 +17,9 @@ public class DipSwitches implements RunningComponent {
 	public boolean pickUpTote() {
 		return this.RightSwitch.get() && this.LeftSwitch.get();
 	}
+	public boolean turnAndPickUpTote(){
+		return this.RightSwitch.get() && !this.LeftSwitch.get();
+	}
 	@Override
 	public void teleop(Joystick driver, Joystick aux) {
 		// TODO Auto-generated method stub

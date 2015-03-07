@@ -15,23 +15,23 @@ public class DriveTrain implements RunningComponent {
 	private Talon frontRight;
 	private Talon backRight;
 	
-	//TODO find some way to abstract joystick from this freaking embedded class
-	private Joystick joystick;
-	
 	//for Gyro
 	private Gyro gyroDevice;
 	private double angleCorrection = 0d;
+	protected double PIDangleToCorrectTo;
 	
 	//for Autonomous
 	protected static final double BACK_DRIVE_TIME = 1; //seconds
 	static final double TWIST_MULITPLER = .6;
 	
+	public void resetGyro() {
+		gyroDevice.reset();
+	}
 	
 	private PIDSource gyro = new PIDSource() {
 		@Override
 		public double pidGet() {
-			double joyAngle = joystick.getTwist()* 360;
-			return gyroDevice.getAngle() - joyAngle;
+			return (gyroDevice.getAngle() - PIDangleToCorrectTo)  ;
 		}
 	};
 	
@@ -42,9 +42,12 @@ public class DriveTrain implements RunningComponent {
 		}
 	};
 	
-	@SuppressWarnings("unused")
-	private PIDController pid = new PIDController(0.1, 0.001, 0, gyro, gyroCorr);
-	
+	private PIDController pid = new PIDController(0.01, 0.001, 0, gyro, gyroCorr);
+	{
+		SmartDashboard.putNumber("P", pid.getP());
+		SmartDashboard.putNumber("I", pid.getI());
+		SmartDashboard.putNumber("D", pid.getD());
+	}
 	
 	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
 			Talon backRight, Gyro gyroDevice) {
@@ -54,14 +57,14 @@ public class DriveTrain implements RunningComponent {
 		this.frontRight = frontRight;
 		this.backRight = backRight;
 		this.gyroDevice = gyroDevice;
-
+		
+		pid.enable();
 	}
 		
 
 
 	@Override
 	public void teleop(Joystick joystick, Joystick aux) {
-		this.joystick = joystick;
 
 		double percentSpeed = (1 - joystick.getRawAxis(3)) / 2;// convert from scale of -1 to 1 to 0 to 1 and invert
 		double speed = percentSpeed/2 + .3; // convert to scale .3 to .8
@@ -70,6 +73,7 @@ public class DriveTrain implements RunningComponent {
 			speed *= 0.5;
 		}
 
+		SmartDashboard.putNumber("Gyro Angle", gyroDevice.getAngle());
 		double yValue = joystick.getY() * speed;
 		double xValue = joystick.getX() * speed;
 		double twistValue= joystick.getTwist() * speed;
@@ -98,7 +102,15 @@ public class DriveTrain implements RunningComponent {
 
 	@Override
 	public void test(Joystick driver) {
-		
+		if (driver.getRawButton(1)){
+			PIDdrive(0,0,90);
+		}
+		if (driver.getRawButton(2)){
+			gyroDevice.reset();
+		}
+		if (driver.getRawButton(3)){
+			pid.setPID(SmartDashboard.getNumber("P"), SmartDashboard.getNumber("I"), SmartDashboard.getNumber("D"));
+		}
 	}
 	
 	/**drive(double xValue, double yValue, double twistValue) */
@@ -108,6 +120,13 @@ public class DriveTrain implements RunningComponent {
 		backLeft.set(   -( yValue + xValue - twistValue));
 		backRight.set( (yValue - xValue + twistValue));
 	}
-
+	public void PIDdrive(double xValue, double yValue, double angle) {
+		PIDangleToCorrectTo = angle;
+		double twistValue = angleCorrection;
+		frontLeft.set(  - (yValue - xValue - twistValue));
+		frontRight.set((yValue + xValue + twistValue));
+		backLeft.set(   -( yValue + xValue - twistValue));
+		backRight.set( (yValue - xValue + twistValue));
+	}
 	
 }
