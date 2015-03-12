@@ -91,6 +91,7 @@ public class Robot extends IterativeRobot {
 		Timer timer = new Timer();
 		timer.start();
 		timer.reset();
+		/*
 		
 		driveTrain.resetGyro();
 		System.out.println("Gyro resetted");
@@ -181,11 +182,24 @@ public class Robot extends IterativeRobot {
 			}
 			driveTrain.drive(0,0,0);
 		}
-		
+*/		
 	}
 
 	@Override
 	public void autonomousPeriodic() {
+		if(timer.get() <= 4){
+			//Close the claw
+			claw.moveClaw(claw.closing, false);
+		} else if(timer.get() <= 6){
+			//Raise lift
+			if (timer.get() == 5) claw.moveClaw(0, false);
+		} else if(timer.get() <= 8){
+			//rotate with PID
+		} else if(timer.get() <= 10){
+			//go backwards speed: 0.8, duration: 1 second
+		} else if(timer.get() <= 12){
+			//set speed to 0.4, duration: 3 seconds
+		}
 		
 	}
 	
