@@ -18,6 +18,7 @@ public class Claw implements RunningComponent {
 	//to help human comprehension
 	public static final int opening = 1;
 	public static final int closing = -1;
+	public static final int DIRECTION_STOP = 0;
 		
 	public Claw(Talon leftClaw, Talon rightClaw, DigitalInput toteTouchingLS,
 			DigitalInput leftFrontLS, DigitalInput rightFrontLS,

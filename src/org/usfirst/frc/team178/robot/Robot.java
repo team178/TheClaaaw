@@ -82,7 +82,6 @@ public class Robot extends IterativeRobot {
 	public static boolean transportTote=false;
 	public static boolean isGripped =true; //will change initial condition once we get multiple autonomous code/Dip switches working
 	public static boolean liftCan = false;
-	public String autoPhase;
 	/**
 	 * This function is called periodically during autonomous
 	 */
@@ -92,117 +91,49 @@ public class Robot extends IterativeRobot {
 		
 		timer.start();
 		timer.reset();
-		/*
-		
-		driveTrain.resetGyro();
-		System.out.println("Gyro resetted");
-		
-		if (dipSwitches.pickUp()) {
-			System.out.println("Auto: closing on tote");
-			while (!claw.isTouchingTote() && timer.get() <= 4) {
-				claw.moveClaw(Claw.closing, false);
-			}
-			claw.moveClaw(0, false);
+		driveTrain.resetGyro(); //get gyro ready
+		if(dipSwitches.turnBackwardsAndPickUp())
+			autoPhase = 0;
+	}
 	
-			System.out.println("Auto: moving lift up");
-			timer.reset();
-			while (timer.get() <= 1.5){
-				lift.moveMotor(1);
-			}
-			lift.moveMotor(0);
-		
-			System.out.println("Auto: driving backwards");
-			timer.reset();
-			while (timer.get() <= 5){
-				driveTrain.drive(.75, 0, 0);
-			}
-			driveTrain.drive(0,0,0);
-		}
-		
-		if (dipSwitches.turnAndPickUp()){
-			System.out.println("Auto: closing on tote");
-			while (!claw.isTouchingTote() && timer.get() <= 4) {
-				claw.moveClaw(Claw.closing, false);
-			}
-			claw.moveClaw(0, false);
+	private int autoPhase = 0;
 	
-			System.out.println("Auto: moving lift up");
-			timer.reset();
-			while (timer.get() <= 1.5){
-				lift.moveMotor(1);
-			}
-			lift.moveMotor(0);
-		
-			System.out.println("Auto: driving backwards");
-			timer.reset();
-			while (timer.get() <= 1.5){
-				driveTrain.PIDdrive(0, 0, 90);
-			}
-			
-			timer.reset();
-			while (timer.get() <= 2.0){ //for a total of 5
-				driveTrain.PIDdrive(0, -.8, 90);
-			}
-			driveTrain.drive(0,0,0);
+	@Override
+	public void autonomousPeriodic() {
+		switch(autoPhase){
+		case 0: //close the claw
+			claw.moveClaw(claw.closing, false);
+			descendIfReady(4);
+			break;
+		case 1:			
+			claw.moveClaw(Claw.DIRECTION_STOP, false); //stop the claw
+			lift.moveMotor(Lift.DIRECTION_UP); //make lift go up
+			descendIfReady(1.5);
+			break;
+		case 2:
+			lift.moveMotor(Lift.DIRECTION_STOP); //stop lift
+			driveTrain.PIDdrive(0, 0, -90); //turn with PID
+			descendIfReady(2);
+			break;
+		case 3:
+			driveTrain.PIDdrive(0, 0.8, -90); //go backwards
+			descendIfReady(1);
+			break;
+		case 4:
+			driveTrain.PIDdrive(0, 0.4, -90); //go back, but slow like
+			descendIfReady(1);
+			break;
+		default:
+			break; //do nothing				
 		}
-		if (dipSwitches.turnBackwardsAndPickUp()){
-			System.out.println("Auto: closing on tote");
-			while (!claw.isTouchingTote() && timer.get() <= 4) {
-				claw.moveClaw(Claw.closing, false);
-				System.out.println(driveTrain.getGyroAngle());
-			}
-			claw.moveClaw(0, false);
-	
-			System.out.println("Auto: moving lift up");
-			timer.reset();
-			while (timer.get() <= 1.5){
-				lift.moveMotor(1);
-				System.out.println(driveTrain.getGyroAngle());
-			}
-			lift.moveMotor(0);
-		
-			System.out.println("Auto: turning");
-			timer.reset();
-			while (timer.get() <= 2.0){
-				driveTrain.PIDdrive(0, 0, -90);
-			}
-			
-			timer.reset();
-			while (timer.get() <= 1.0){ 
-				driveTrain.PIDdrive(0, .8, -90);
-			}
-			
-			timer.reset();
-			while (timer.get() <= 3.0){ 
-				driveTrain.PIDdrive(0, .4, -90);
-			}
-			
-			timer.reset();
-			while (timer.get()<= 1.0){
-				driveTrain.PIDdrive(0, -.4, -90);
-			}
-			driveTrain.drive(0,0,0);
-		}
-*/		
 		
 	}
 
-	@Override
-	public void autonomousPeriodic() {
-		if(timer.get() <= 4){
-			//Close the claw
-			claw.moveClaw(claw.closing, false);
-		} else if(timer.get() <= 6){
-			//Raise lift
-			if (timer.get() == 5) claw.moveClaw(0, false);
-		} else if(timer.get() <= 8){
-			//rotate with PID
-		} else if(timer.get() <= 10){
-			//go backwards speed: 0.8, duration: 1 second
-		} else if(timer.get() <= 12){
-			//set speed to 0.4, duration: 3 seconds
+	private void descendIfReady(double d) {
+		if(timer.get() > d){
+			autoPhase++;
+			timer.reset();
 		}
-		
 	}
 	
 	@Override
