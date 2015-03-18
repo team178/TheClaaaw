@@ -86,9 +86,10 @@ public class Robot extends IterativeRobot {
 	/**
 	 * This function is called periodically during autonomous
 	 */
-
+	
+	public static final Timer timer = new Timer();
 	public void autonomousInit() {
-		Timer timer = new Timer();
+		
 		timer.start();
 		timer.reset();
 		/*
@@ -183,6 +184,7 @@ public class Robot extends IterativeRobot {
 			driveTrain.drive(0,0,0);
 		}
 */		
+		
 	}
 
 	@Override
