@@ -16,8 +16,9 @@ public class Claw implements RunningComponent {
 	private DigitalInput rightBackLS;
 	
 	//to help human comprehension
-	public static final int opening = 1;
-	public static final int closing = -1;
+	public static final int DIRECTION_OPEN = 1;
+	public static final int DIRECTION_CLOSE = -1;
+	public static final int DIRECTION_STOP = 0;
 		
 	public Claw(Talon leftClaw, Talon rightClaw, DigitalInput toteTouchingLS,
 			DigitalInput leftFrontLS, DigitalInput rightFrontLS,
@@ -65,21 +66,21 @@ public class Claw implements RunningComponent {
 		rightClaw.set(direction);
 		leftClaw.set(direction);
 		
-		if(!leftFrontLS.get() && direction == opening ){
+		if(!leftFrontLS.get() && direction == DIRECTION_OPEN ){
 			leftClaw.set(0);
 		}
 
-		if (!leftBackLS.get() && direction == closing){
+		if (!leftBackLS.get() && direction == DIRECTION_CLOSE){
 			leftClaw.set(0);
 		}
 		
-		if (!rightFrontLS.get() && direction == opening){
+		if (!rightFrontLS.get() && direction == DIRECTION_OPEN){
 			rightClaw.set(0);
 		}
-		if (!rightBackLS.get() && direction == closing){
+		if (!rightBackLS.get() && direction == DIRECTION_CLOSE){
 			rightClaw.set(0);
 		}
-		if (isTouchingTote && direction == closing && //if it's closing and is touching a tote
+		if (isTouchingTote && direction == DIRECTION_CLOSE && //if it's closing and is touching a tote
 				!override){ //and there's no override
 			rightClaw.set(0);
 			leftClaw.set(0);
