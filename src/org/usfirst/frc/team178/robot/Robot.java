@@ -92,11 +92,20 @@ public class Robot extends IterativeRobot {
 		timer.start();
 		timer.reset();
 		driveTrain.resetGyro(); //get gyro ready
-		if(dipSwitches.turnBackwardsAndPickUp())
+		if(dipSwitches.turnBackwardsAndPickUpCan() || dipSwitches.turnBackwardsAndPickUpTote()){
 			autoPhase = 0;
+		}
+		
+		if (dipSwitches.turnBackwardsAndPickUpTote()) {
+			angle = -90;
+		} else {
+			angle = 90;
+		}
+		
 	}
 	
 	private int autoPhase = 0;
+	private int angle;
 	
 	@Override
 	public void autonomousPeriodic() {
@@ -112,15 +121,15 @@ public class Robot extends IterativeRobot {
 			break;
 		case 2:
 			lift.moveMotor(Lift.DIRECTION_STOP); //stop lift
-			driveTrain.PIDdrive(0, 0, -90); //turn with PID
+			driveTrain.PIDdrive(0, 0, angle); //turn with PID
 			descendIfReady(2);
 			break;
 		case 3:
-			driveTrain.PIDdrive(0, 0.8, -90); //go backwards
+			driveTrain.PIDdrive(0, 0.8, angle); //go backwards
 			descendIfReady(1);
 			break;
 		case 4:
-			driveTrain.PIDdrive(0, 0.4, -90); //go back, but slow like
+			driveTrain.PIDdrive(0, 0.4, angle); //go back, but slow like
 			descendIfReady(1);
 			break;
 		default:

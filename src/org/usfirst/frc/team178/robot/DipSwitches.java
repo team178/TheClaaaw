@@ -21,9 +21,7 @@ public class DipSwitches implements RunningComponent {
 	public boolean turnAndPickUp(){
 		return this.RightSwitch.get() && !this.LeftSwitch.get();
 	}
-	public boolean turnBackwardsAndPickUp(){
-		return !this.RightSwitch.get() && this.LeftSwitch.get();
-	}
+	
 	@Override
 	public void teleop(Joystick driver, Joystick aux) {
 		// TODO Auto-generated method stub
@@ -35,6 +33,14 @@ public class DipSwitches implements RunningComponent {
 	public void test(Joystick driver) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public boolean turnBackwardsAndPickUpCan() {
+		return this.RightSwitch.get() && !this.LeftSwitch.get();
+	}
+	
+	public boolean turnBackwardsAndPickUpTote(){
+		return !this.RightSwitch.get() && this.LeftSwitch.get();
 	}
 	
 }
