@@ -110,6 +110,30 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		switch(autoPhase){
+		case -10: //close the claw
+			claw.moveClaw(Claw.DIRECTION_CLOSE, false);
+			descendIfReady(4); //check this number
+			break;
+		case -9: //make the lift go up
+			claw.moveClaw(Claw.DIRECTION_STOP, false); //stop the claw
+			lift.moveMotor(Lift.DIRECTION_UP); //make lift go up
+			descendIfReady(1.5); //check this number
+			break;
+		case -8: //move forward
+			lift.moveMotor(Lift.DIRECTION_STOP); //stop lift
+			driveTrain.PIDdrive(0, -0.8, angle); //move forward
+			descendIfReady(4); //check this number
+			break;
+		case -7: //lift down
+			driveTrain.PIDdrive(0, 0, angle);
+			lift.moveMotor(Lift.DIRECTION_DOWN); //make lift go down
+			descendIfReady(1.5); //check this number
+			break;
+		case -6: //open claw a little
+			lift.moveMotor(Lift.DIRECTION_STOP); //stop the lift
+			claw.moveClaw(Claw.DIRECTION_OPEN, false); //open the claw
+			descendIfReady(5); //check this number
+			break;
 		case 0: //close the claw
 			claw.moveClaw(Claw.DIRECTION_CLOSE, false);
 			descendIfReady(4);

@@ -14,6 +14,7 @@ public class Lift implements RunningComponent{
 	private final static double POS_TWO = 10;
 	public static final double DIRECTION_UP = 1;
 	public static final double DIRECTION_STOP = 0;
+	public static final double DIRECTION_DOWN = -1;
 	
 	private Talon motor;
 	private Encoder liftDistanceEncoder;
