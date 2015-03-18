@@ -102,7 +102,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousPeriodic() {
 		switch(autoPhase){
 		case 0: //close the claw
-			claw.moveClaw(claw.closing, false);
+			claw.moveClaw(Claw.DIRECTION_CLOSE, false);
 			descendIfReady(4);
 			break;
 		case 1:			
