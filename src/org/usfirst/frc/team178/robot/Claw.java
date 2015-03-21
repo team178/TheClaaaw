@@ -47,7 +47,6 @@ public class Claw implements RunningComponent {
 		SmartDashboard.putBoolean("leftBackLS", leftBackLS.get());
 
 		boolean override= aux.getRawAxis(3)>=.9 && aux.getRawAxis(2)>=.9;
-		
 		if(aux.getRawButton(1)){ //opening
 			this.moveClaw(1, override);
 		}
@@ -62,28 +61,29 @@ public class Claw implements RunningComponent {
 	
 	public void moveClaw(int direction, boolean override){
 		boolean isTouchingTote = !toteTouchingLS.get();
+		double clawSpeed = 1.0; //claw speed modifier
 		
-		rightClaw.set(direction);
-		leftClaw.set(direction);
+		rightClaw.set(direction * clawSpeed);
+		leftClaw.set(direction * clawSpeed);
 		
 		if(!leftFrontLS.get() && direction == DIRECTION_OPEN ){
-			leftClaw.set(0);
+			leftClaw.set(DIRECTION_STOP);
 		}
 
 		if (!leftBackLS.get() && direction == DIRECTION_CLOSE){
-			leftClaw.set(0);
+			leftClaw.set(DIRECTION_STOP);
 		}
 		
 		if (!rightFrontLS.get() && direction == DIRECTION_OPEN){
-			rightClaw.set(0);
+			rightClaw.set(DIRECTION_STOP);
 		}
 		if (!rightBackLS.get() && direction == DIRECTION_CLOSE){
-			rightClaw.set(0);
+			rightClaw.set(DIRECTION_STOP);
 		}
 		if (isTouchingTote && direction == DIRECTION_CLOSE && //if it's closing and is touching a tote
 				!override){ //and there's no override
-			rightClaw.set(0);
-			leftClaw.set(0);
+			rightClaw.set(DIRECTION_STOP);
+			leftClaw.set(DIRECTION_STOP);
 		}
 	}
 		
