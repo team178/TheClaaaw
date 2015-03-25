@@ -45,17 +45,28 @@ public class Claw implements RunningComponent {
 		SmartDashboard.putBoolean("rightFrontLS",rightFrontLS.get());
 		SmartDashboard.putBoolean("rightBackLS", rightBackLS.get());
 		SmartDashboard.putBoolean("leftBackLS", leftBackLS.get());
-
-		boolean override= aux.getRawAxis(3)>=.9 && aux.getRawAxis(2)>=.9;
-		if(aux.getRawButton(1)){ //opening
-			this.moveClaw(DIRECTION_OPEN, override);
-		}
-		else if(aux.getRawButton(2)){ //closing
-			this.moveClaw(DIRECTION_CLOSE, override);
-		}
-		else{
-			this.moveClaw(DIRECTION_STOP);
-		}
+		
+		// http://en.wikipedia.org/wiki/%3F:#Java // just in case you have no idea what's going on with the ?s
+		this.moveClaw(
+				aux.getRawButton(1) ? DIRECTION_OPEN : //open the claw if A pressed, otherwise
+					aux.getRawButton(2) ? DIRECTION_CLOSE : //close the claw if B pressed, otherwise 
+						DIRECTION_STOP //STOP THE CLAWWW
+				,
+				aux.getRawAxis(3)>=.9 && aux.getRawAxis(2)>=.9 //override safeties if triggers are pressed
+		);
+		/* //Equivalent code:
+		 * boolean override = aux.getRawAxis(3)>=.9 && aux.getRawAxis(2)>=.9;
+		 * int direction;
+		 * if(aux.getRawButton(1)){ 
+		 *     direction = DIRECTION_OPEN;
+		 * } else if(aux.getRawButton(2)){ 
+		 *     direction = DIRECTION_CLOSE;
+		 * } else {
+		 *     direction = DIRECTION_STOP;
+		 * }
+		 * this.moveClaw(direction, override);
+		 * // it's a ternary teaching moment
+		 */
 	}
 	
 	public void moveClaw(int direction) {
