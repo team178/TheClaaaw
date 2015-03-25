@@ -67,27 +67,29 @@ public class Claw implements RunningComponent {
 		boolean isTouchingTote = !toteTouchingLS.get();
 		double clawSpeed = SmartDashboard.getNumber("clawSpeed", 1d); //claw speed modifier
 		
-		rightClaw.set(direction * clawSpeed);
-		leftClaw.set(direction * clawSpeed);
 		
-		if(!leftFrontLS.get() && direction == DIRECTION_OPEN ){
-			leftClaw.set(DIRECTION_STOP);
-		}
-
-		if (!leftBackLS.get() && direction == DIRECTION_CLOSE){
-			leftClaw.set(DIRECTION_STOP);
-		}
-		
-		if (!rightFrontLS.get() && direction == DIRECTION_OPEN){
-			rightClaw.set(DIRECTION_STOP);
-		}
-		if (!rightBackLS.get() && direction == DIRECTION_CLOSE){
-			rightClaw.set(DIRECTION_STOP);
-		}
 		if (isTouchingTote && direction == DIRECTION_CLOSE && //if it's closing and is touching a tote
 				!override){ //and there's no override
-			rightClaw.set(DIRECTION_STOP);
-			leftClaw.set(DIRECTION_STOP);
+			rightClaw.set(DIRECTION_STOP); // stop the
+			leftClaw.set(DIRECTION_STOP);  // motors please
+		} else {
+		
+			if(
+					(!leftFrontLS.get() && direction == DIRECTION_OPEN) || //if we're trying to open too far on the left side
+					(!leftBackLS.get() && direction == DIRECTION_CLOSE)	)  //or close too far, for that matter
+			{
+				leftClaw.set(DIRECTION_STOP); //put a stop to it
+			} else 
+				leftClaw.set(direction * clawSpeed); //otherwise we're prolly good to go
+			
+			if(
+					(!rightFrontLS.get() && direction == DIRECTION_OPEN) || //if we're trying to open too far on the right side
+					(!rightBackLS.get() && direction == DIRECTION_CLOSE) )  //or close too far, for that matter
+			{
+				rightClaw.set(DIRECTION_STOP); //put a stop to it
+			} else 
+				rightClaw.set(direction * clawSpeed); //otherwise we're prolly good to go
+			
 		}
 	}
 		
