@@ -65,7 +65,7 @@ public class Claw implements RunningComponent {
 	
 	public void moveClaw(int direction, boolean override){
 		boolean isTouchingTote = !toteTouchingLS.get();
-		double clawSpeed = SmartDashboard.getNumber("clawSpeed", 1d); //claw speed modifier
+		double clawSpeed = SmartDashboard.getNumber("clawSpeed", 0.5d); //claw speed modifier
 		
 		
 		if (isTouchingTote && direction == DIRECTION_CLOSE && //if it's closing and is touching a tote
