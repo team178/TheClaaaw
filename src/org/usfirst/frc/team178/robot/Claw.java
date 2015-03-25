@@ -48,14 +48,13 @@ public class Claw implements RunningComponent {
 
 		boolean override= aux.getRawAxis(3)>=.9 && aux.getRawAxis(2)>=.9;
 		if(aux.getRawButton(1)){ //opening
-			this.moveClaw(1, override);
+			this.moveClaw(DIRECTION_OPEN, override);
 		}
 		else if(aux.getRawButton(2)){ //closing
-			this.moveClaw(-1, override);
+			this.moveClaw(DIRECTION_CLOSE, override);
 		}
 		else{
-			rightClaw.set(0);
-			leftClaw.set(0);
+			this.moveClaw(DIRECTION_STOP);
 		}
 	}
 	
