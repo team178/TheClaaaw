@@ -49,8 +49,9 @@ public class Robot extends IterativeRobot {
 	);
 	private Lift lift = new Lift(
 			new Talon(4) ,  //motor
-			new DigitalInput(3), //bottomLimit/zeroLimit
-			new Encoder(14, 15) //Encoder 
+			new Encoder(14, 15), //Encoder 
+			new DigitalInput(2), //topLimit
+			new DigitalInput(3) //bottomLimit/zeroLimit
 	);
 
 	/**

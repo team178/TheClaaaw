@@ -18,32 +18,17 @@ public class Lift implements RunningComponent{
 	private Talon motor;
 	private Encoder liftDistanceEncoder;
 	private DigitalInput zeroLimit;
+	private DigitalInput topLimit;
 	
-	public Lift(Talon motor, DigitalInput zeroLimit, Encoder liftDistanceEncoder) {
+	public Lift(Talon motor, Encoder liftDistanceEncoder,
+			DigitalInput topLimit, DigitalInput zeroLimit) {
 		super();
 		this.motor = motor;
 		this.liftDistanceEncoder = liftDistanceEncoder;
 		this.zeroLimit = zeroLimit;
-		
-		//for deck-lift safety code
-		/*new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				while(true){
-
-					if (zeroLimit.get()) {
-						liftDistanceEncoder.reset();
-					}
-					Message.isLiftSafe = whereAreWe() >= SAFE_DIST;
-					if (Message.isLiftSafe) {
-						Message.makeLiftSafe = false;
-					}
-				}
-			}
-		});*/
+		this.topLimit = topLimit;
 	}
-	
+
 	//for deck-lift safety code
 	
 	private double whereAreWe() {
@@ -60,7 +45,11 @@ public class Lift implements RunningComponent{
 		double direction;
 		
 		if (aux.getRawButton(4)) { //going up
-				direction=1;
+			if (topLimit.get()) {
+				direction = 0;
+			} else {
+				direction = 1;
+			}
 		} else if (aux.getRawButton(3)) { //going down
 			if (zeroLimit.get()) {
 				direction = 0;
