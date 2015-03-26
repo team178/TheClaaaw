@@ -66,23 +66,7 @@ public class Lift implements RunningComponent{
 	}
 
 	public void moveMotor(double direction) {
-		
-		//for deck-lift safety code
-		/*if (Message.makeLiftSafe)                                // fix lift to allow deck movement
-			direction = 1;
-		if((whereAreWe() < SAFE_DIST) && !Message.isDeckSafe){ // not safe deck OR not safe lift
-			direction = 0;                                       
-			Message.makeDeckSafe = true;                         // fix deck to allow Lift Access
-		}else{
-			Message.makeDeckSafe = false;                        // no changes required
-		}*/
 		motor.set(direction);
-	}
-	
-	//in case we get an int direction
-	private void moveMotor(int direction)
-	{
-		moveMotor((double) direction); //for compatability
 	}
 
 	@Override
