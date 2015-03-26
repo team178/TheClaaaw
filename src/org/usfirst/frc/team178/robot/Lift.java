@@ -14,6 +14,7 @@ public class Lift implements RunningComponent{
 	private final static double POS_TWO = 10;
 	public static final int DIRECTION_UP = 1;
 	public static final int DIRECTION_STOP = 0;
+	public static final int DIRECTION_DOWN = -1;
 	
 	private Talon motor;
 	private Encoder liftDistanceEncoder;
@@ -43,26 +44,26 @@ public class Lift implements RunningComponent{
 		
 		int direction;
 		
-		if (aux.getRawButton(4)) { //going up
-			direction = 1;
-		} else if (aux.getRawButton(3)) { //going down
-			direction = -1;
+		if (aux.getRawButton(4)) { //going up (Y)
+			direction = DIRECTION_UP;
+		} else if (aux.getRawButton(3)) { //going down (X)
+			direction = DIRECTION_DOWN;
 		} else 
-			direction = 0;
+			direction = DIRECTION_STOP;
 		
-		moveMotor(direction); //speed*direction
+		moveMotor(direction);
 	}
 
 	public void moveMotor(int direction) {
 
 		double speed = SmartDashboard.getNumber("liftSpeed", 1); //control speed of the lift, VARIABLE
 		
-		if (topLimit.get() && direction == 1) {
-			direction = 0;
+		if (topLimit.get() && direction == DIRECTION_UP) {
+			direction = DIRECTION_STOP;
 		} 
 		
-		if (zeroLimit.get() && direction == -1) {
-			direction = 0;
+		if (zeroLimit.get() && direction == DIRECTION_DOWN) {
+			direction = DIRECTION_STOP;
 		}
 		
 		motor.set(direction * speed);
