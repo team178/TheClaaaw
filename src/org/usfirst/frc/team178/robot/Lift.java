@@ -41,6 +41,7 @@ public class Lift implements RunningComponent{
 	public void teleop(Joystick joystick, Joystick aux) {
 		SmartDashboard.putNumber("LiftValue: " , whereAreWe());
 		SmartDashboard.putBoolean("zeroLimit", zeroLimit.get());
+		SmartDashboard.putBoolean("topLimit", topLimit.get());
 		
 		int direction;
 		
