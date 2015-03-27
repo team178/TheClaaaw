@@ -16,15 +16,16 @@ public class Lift implements RunningComponent{
 	public static final int DIRECTION_STOP = 0;
 	public static final int DIRECTION_DOWN = -1;
 	
-	private Talon motor;
+	private Talon motor, motor2;
 	private Encoder liftDistanceEncoder;
 	private DigitalInput zeroLimit;
 	private DigitalInput topLimit;
 	
-	public Lift(Talon motor, Encoder liftDistanceEncoder,
+	public Lift(Talon motor, Talon motor2, Encoder liftDistanceEncoder,
 			DigitalInput topLimit, DigitalInput zeroLimit) {
 		super();
 		this.motor = motor;
+		this.motor2 = motor2;
 		this.liftDistanceEncoder = liftDistanceEncoder;
 		this.zeroLimit = zeroLimit;
 		this.topLimit = topLimit;
@@ -68,6 +69,7 @@ public class Lift implements RunningComponent{
 		}
 		
 		motor.set(direction * speed);
+		motor2.set(direction * speed);
 	}
 
 	@Override
@@ -105,8 +107,3 @@ public class Lift implements RunningComponent{
 	}
 
 }
-
-
-
-
-

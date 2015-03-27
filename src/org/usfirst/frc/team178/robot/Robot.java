@@ -27,14 +27,14 @@ public class Robot extends IterativeRobot {
 	public static Robot instance;
 	
 	//objects need to be instanizated in order to use them for autonomous
-	private DriveTrain driveTrain= new DriveTrain (
+	private DriveTrain driveTrain = new DriveTrain (
 			new Talon(0), //frontLeft
 			new Talon(1), //backLeft
 			new Talon(2), //frontRight
 			new Talon(3), //backRight
 			new Gyro(0) //gyro
 	);
-	private DipSwitches dipSwitches= new DipSwitches(
+	private DipSwitches dipSwitches = new DipSwitches(
 			new DigitalInput(16), //rightSwitch
 			new DigitalInput(17) //leftSwitch
 			);
@@ -48,7 +48,8 @@ public class Robot extends IterativeRobot {
 			new DigitalInput(8) //rightBackLS
 	);
 	private Lift lift = new Lift(
-			new Talon(4) ,  //motor
+			new Talon(4),  //motor
+			new Talon(5),  //motor2
 			new Encoder(14, 15), //Encoder 
 			new DigitalInput(2), //topLimit
 			new DigitalInput(3) //bottomLimit/zeroLimit
@@ -67,7 +68,7 @@ public class Robot extends IterativeRobot {
 			new UltraSonics(
 					new AnalogInput(1)), //ultrasonics
 			
-			//new Camera("cam0"), //cam name on roborio
+			new Camera("cam0"), //cam name on roborio
 			
 			new TapeShooter(
 					new Talon(8))
@@ -110,45 +111,40 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void autonomousPeriodic() {
-		switch(autoPhase){
-		case 0: //close the claw
-			claw.moveClaw(Claw.DIRECTION_CLOSE);
-			descendIfReady(4);
-			break;
-		case 1:			
-			claw.moveClaw(Claw.DIRECTION_STOP); //stop the claw
-			lift.moveMotor(Lift.DIRECTION_UP); //make lift go up
-			descendIfReady(1.5);
-			break;
-		case 2:
-			lift.moveMotor(Lift.DIRECTION_STOP); //stop lift
-			driveTrain.PIDdrive(0, 0, angle); //turn with PID
-			descendIfReady(2);
-			break;
-		case 3:
-			driveTrain.PIDdrive(0, 0.8, angle); //go backwards
-			descendIfReady(1);
-			break;
-		case 4:
-			driveTrain.PIDdrive(0, 0.4, angle); //go back, but slow like
-			descendIfReady(1);
-			break;
-		default:
-			break; //do nothing				
+		switch(autoPhase) {
+			case 0: //close the claw
+				claw.moveClaw(Claw.DIRECTION_CLOSE);
+				descendIfReady(4);
+				break;
+			case 1:
+				claw.moveClaw(Claw.DIRECTION_STOP); //stop the claw
+				lift.moveMotor(Lift.DIRECTION_UP); //make lift go up
+				descendIfReady(1.5);
+				break;
+			case 2:
+				lift.moveMotor(Lift.DIRECTION_STOP); //stop lift
+				driveTrain.PIDdrive(0, 0, angle); //turn with PID
+				descendIfReady(2);
+				break;
+			case 3:
+				driveTrain.PIDdrive(0, 0, angle); //go backwards
+				descendIfReady(1);
+				break;
+			case 4:
+				driveTrain.PIDdrive(0, 0, angle); //go back, but slow like
+				descendIfReady(1);
+				break;
+			default:
+				break; //do nothing				
 		}
 		
 	}
 
 	private void descendIfReady(double d) {
-		if(timer.get() > d){
+		if (timer.get() > d){
 			autoPhase++;
 			timer.reset();
 		}
-	}
-	
-	@Override
-	public void teleopInit(){
-		networktable.putNumber("TO_RUN_OR_NOT_TO_RUN", 0);
 	}
 	
 	@Override
