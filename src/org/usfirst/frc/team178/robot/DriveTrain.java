@@ -76,7 +76,7 @@ public class DriveTrain implements RunningComponent {
 		double xValue = joystick.getX() * speed;
 		double twistValue= joystick.getTwist() * speed;
 		
-		//snap-to-axis code
+		//push-to-strafe (fixed speed) code
 		if (joystick.getRawButton(9)) { 
 			yValue*=0;
 			twistValue*=0;
@@ -86,7 +86,15 @@ public class DriveTrain implements RunningComponent {
 			twistValue*=0;
 			xValue = .6;
 		}
-
+		
+		//snap-to-axis code
+		else if(joystick.getRawButton(11)) {
+			twistValue*=0;
+			if(Math.abs(xValue)>=Math.abs(yValue))
+				yValue*=0;
+			else // |yValue| > |xValue|
+				xValue*=0;
+		}
 		
 
 		if (joystick.getRawButton(4)) {

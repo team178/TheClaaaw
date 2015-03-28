@@ -58,7 +58,7 @@ public class Lift implements RunningComponent{
 
 	public void moveMotor(int direction) {
 
-		double speed = SmartDashboard.getNumber("liftSpeed", 1); //control speed of the lift, VARIABLE
+		double speed = SmartDashboard.getNumber("liftSpeed", 1d); //control speed of the lift, VARIABLE
 		
 		if (topLimit.get() && direction == DIRECTION_UP) {
 			direction = DIRECTION_STOP;
