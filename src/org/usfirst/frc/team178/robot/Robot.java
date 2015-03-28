@@ -100,9 +100,9 @@ public class Robot extends IterativeRobot {
 			autoPhase = -9999;
 		
 		if (dipSwitches.turnBackwardsAndPickUpTote()) {
-			angle = 90;
-		} else {
 			angle = -90;
+		} else {
+			angle = 90;
 		}
 		
 	}
