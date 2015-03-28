@@ -45,6 +45,7 @@ public class DriveTrain implements RunningComponent {
 	};
 	
 	private PIDController pid = new PIDController(3.1, 0, 0, gyro, gyroCorr);
+	private boolean oneEightyFirstRun;
 	
 	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
 			Talon backRight, Gyro gyroDevice) {
@@ -93,10 +94,20 @@ public class DriveTrain implements RunningComponent {
 			PIDangleToCorrectTo = gyroDevice.getAngle();
 		}
 		
-		if (joystick.getRawButton(3)) {
-			PIDdrive(xValue, yValue, PIDangleToCorrectTo);
-		} else 
-			drive(xValue, yValue, twistValue);
+		if (joystick.getRawButton(6)) {
+			if(oneEightyFirstRun){
+				gyroDevice.reset();
+				PIDangleToCorrectTo = 180 - gyroDevice.getAngle();
+				oneEightyFirstRun = false;
+			} else PIDdrive(xValue, yValue, PIDangleToCorrectTo);
+		} else {
+			oneEightyFirstRun = true;
+			
+			if (joystick.getRawButton(3)) {
+				PIDdrive(xValue, yValue, PIDangleToCorrectTo);
+			} else 
+				drive(xValue, yValue, twistValue);
+		}
 		
 	}
 
