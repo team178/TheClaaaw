@@ -22,6 +22,8 @@ public class DipSwitches implements RunningComponent {
 		return this.RightSwitch.get() && !this.LeftSwitch.get();
 	}
 	
+	
+	
 	@Override
 	public void teleop(Joystick driver, Joystick aux) {
 		// TODO Auto-generated method stub
@@ -43,4 +45,7 @@ public class DipSwitches implements RunningComponent {
 		return !this.RightSwitch.get() && this.LeftSwitch.get();
 	}
 	
+	public boolean none() {
+		return !this.RightSwitch.get() && !this.LeftSwitch.get();
+	}
 }

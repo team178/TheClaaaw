@@ -69,7 +69,7 @@ public class Robot extends IterativeRobot {
 					new AnalogInput(1)), //ultrasonics
 			
 			new Camera("cam0"), //cam name on roborio
-			
+
 			new TapeShooter(
 					new Talon(8))
 			
@@ -96,12 +96,13 @@ public class Robot extends IterativeRobot {
 		driveTrain.resetGyro(); //get gyro ready
 		if(dipSwitches.turnBackwardsAndPickUpCan() || dipSwitches.turnBackwardsAndPickUpTote()){
 			autoPhase = 0;
-		}
+		} else if(dipSwitches.none())
+			autoPhase = -9999;
 		
 		if (dipSwitches.turnBackwardsAndPickUpTote()) {
-			angle = -90;
-		} else {
 			angle = 90;
+		} else {
+			angle = -90;
 		}
 		
 	}
@@ -114,7 +115,7 @@ public class Robot extends IterativeRobot {
 		switch(autoPhase) {
 			case 0: //close the claw
 				claw.moveClaw(Claw.DIRECTION_CLOSE);
-				descendIfReady(4);
+				descendIfReady(1);
 				break;
 			case 1:
 				claw.moveClaw(Claw.DIRECTION_STOP); //stop the claw
@@ -127,12 +128,15 @@ public class Robot extends IterativeRobot {
 				descendIfReady(2);
 				break;
 			case 3:
-				driveTrain.PIDdrive(0, 0, angle); //go backwards
-				descendIfReady(1);
+				driveTrain.PIDdrive(0, .8, angle); //go backwards
+				descendIfReady(1.5);
 				break;
 			case 4:
-				driveTrain.PIDdrive(0, 0, angle); //go back, but slow like
-				descendIfReady(1);
+				driveTrain.PIDdrive(0, .4, angle); //go back, but slow like
+				descendIfReady(.5);
+				break;
+			case 5:
+				driveTrain.PIDdrive(0, 0, angle);
 				break;
 			default:
 				break; //do nothing				
