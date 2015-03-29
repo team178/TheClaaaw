@@ -94,52 +94,90 @@ public class Robot extends IterativeRobot {
 		timer.start();
 		timer.reset();
 		driveTrain.resetGyro(); //get gyro ready
+		
+		angle = 90;
+		turnStrafeSpeed = -.55;
 		if(dipSwitches.turnBackwardsAndPickUpCan() || dipSwitches.turnBackwardsAndPickUpTote()){
 			autoPhase = 0;
 		} else if(dipSwitches.none())
-			autoPhase = -9999;
+			autoPhase = Integer.MIN_VALUE; //hi Brandon Cheng
+		else if (dipSwitches.getBoth()) 
+			autoPhase = -5;
 		
-		if (dipSwitches.turnBackwardsAndPickUpTote()) {
-			angle = -90;
-		} else {
-			angle = 90;
+		if (dipSwitches.turnBackwardsAndPickUpTote()){
+			angle *= -1; //swap the stuff
+			turnStrafeSpeed *= -1;
 		}
-		
+		totalTime = 0;
 	}
 	
 	private int autoPhase = 0;
 	private int angle;
 	
+	private double totalTime = 0;
+	private double turnStrafeSpeed;
 	@Override
 	public void autonomousPeriodic() {
+		//this is supposed to have dumb indentation.
 		switch(autoPhase) {
-			case 0: //close the claw
-				claw.moveClaw(Claw.DIRECTION_CLOSE);
-				descendIfReady(1);
-				break;
-			case 1:
-				claw.moveClaw(Claw.DIRECTION_STOP); //stop the claw
-				lift.moveMotor(Lift.DIRECTION_UP); //make lift go up
-				descendIfReady(1.5);
-				break;
-			case 2:
-				lift.moveMotor(Lift.DIRECTION_STOP); //stop lift
-				driveTrain.PIDdrive(0, 0, angle); //turn with PID
-				descendIfReady(2);
-				break;
-			case 3:
-				driveTrain.PIDdrive(0, .8, angle); //go backwards
-				descendIfReady(1.5);
-				break;
-			case 4:
-				driveTrain.PIDdrive(0, .4, angle); //go back, but slow like
-				descendIfReady(.5);
-				break;
-			case 5:
-				driveTrain.PIDdrive(0, 0, angle);
-				break;
-			default:
-				break; //do nothing				
+		case -5: //.3
+			claw.moveClaw(Claw.DIRECTION_CLOSE);
+			descendIfReady(.3);
+			if(claw.isTouchingTote())
+				descendIfReady(0);
+			break;
+		case -4: //3.8
+			claw.moveClaw(Claw.DIRECTION_STOP); //stop the claw
+			lift.moveMotor(Lift.DIRECTION_UP); //make lift go up
+			descendIfReady( 7.4 /* inches */ * (Lift.INCHES_PER_SECOND) );
+			break;
+		case -3: //4.2
+			lift.moveMotor(Lift.DIRECTION_STOP); //stop lift
+			driveTrain.drive(0, -.65, 0); //go forward the length of .75 totes (hopefully)
+			descendIfReady(.4);
+			break;
+		case -2:
+			//driveTrain.drive(0, .4, 0);
+			//descendIfReady(.2);
+			descendIfReady(0);
+			break;
+		case -1: //9.2
+			driveTrain.drive(0, 0, 0); //stop drive
+			lift.moveMotor(Lift.DIRECTION_DOWN); //put the lift down
+			claw.moveClaw(Claw.DIRECTION_OPEN); //open the claw too
+			descendIfReady(8); //go down for 5
+			if(lift.zeroLimit.get()) 
+				descendIfReady(0); //or if we're at the bottom, we're done
+			break;
+		case 0: //.3 || 9.5
+			claw.moveClaw(Claw.DIRECTION_CLOSE); //close the claw
+			descendIfReady(.5);
+			if(claw.isTouchingTote())
+				descendIfReady(0);
+			break;
+		case 1: //1.3 || 10.5
+			claw.moveClaw(Claw.DIRECTION_STOP); //stop the claw
+			lift.moveMotor(Lift.DIRECTION_UP); //make lift go up
+			descendIfReady(1.5);
+			break;
+		case 2: //3.3 || 12.5
+			lift.moveMotor(Lift.DIRECTION_STOP); //stop lift
+			driveTrain.PIDdrive(turnStrafeSpeed, 0, angle, .8); //turn with PID
+			descendIfReady(2);
+			break;
+		case 3: //4.8 || 14
+			driveTrain.PIDdrive(0, .8, angle); //go backwards
+			descendIfReady(1.5);
+			break;
+		case 4: //5.3 || 14.5
+			driveTrain.PIDdrive(0, .4, angle); //go back, but slow like
+			descendIfReady(.5);
+			break;
+		case 5: // =========
+			driveTrain.PIDdrive(0, 0, angle);
+			break;
+		default:
+			break; //do nothing				
 		}
 		
 	}
@@ -147,6 +185,7 @@ public class Robot extends IterativeRobot {
 	private void descendIfReady(double d) {
 		if (timer.get() > d){
 			autoPhase++;
+			System.out.println(String.format("%f0.3 | %f0.3", (totalTime += timer.get()), timer.get()));
 			timer.reset();
 		}
 	}

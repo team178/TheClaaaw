@@ -45,7 +45,6 @@ public class DriveTrain implements RunningComponent {
 	};
 	
 	private PIDController pid = new PIDController(3.1, 0, 0, gyro, gyroCorr);
-	private boolean oneEightyFirstRun;
 	
 	public DriveTrain(Talon frontLeft, Talon backLeft, Talon frontRight,
 			Talon backRight, Gyro gyroDevice) {
@@ -64,8 +63,8 @@ public class DriveTrain implements RunningComponent {
 	@Override
 	public void teleop(Joystick joystick, Joystick aux) {
 
-		double percentSpeed = (1 - joystick.getRawAxis(3)) / 2;// convert from scale of -1 to 1 to 0 to 1 and invert
-		double speed = percentSpeed/2 + .3; // convert to scale .3 to .8
+		double percentSpeed = (1 - joystick.getRawAxis(3)) / 2; // convert from scale of -1 to 1 to 0 to 1 and invert
+		double speed = percentSpeed * .5 /* width of range */ + .3 /* offset */; // convert to scale .3 to .8
 
 		if (joystick.getRawButton(2)) {
 			speed *= 0.5;
@@ -102,15 +101,9 @@ public class DriveTrain implements RunningComponent {
 			PIDangleToCorrectTo = gyroDevice.getAngle();
 		}
 		
-		if (joystick.getRawButton(6)) {
-			if(oneEightyFirstRun){
-				gyroDevice.reset();
-				PIDangleToCorrectTo = 180 - gyroDevice.getAngle();
-				oneEightyFirstRun = false;
-			} else PIDdrive(xValue, yValue, PIDangleToCorrectTo);
-		} else {
-			oneEightyFirstRun = true;
-			
+		if(joystick.getRawButton(5)){
+			drive(0, -Math.min((UltraSonics.scaledDistanceFromTote)-1,.5), 0);
+		} else if(!oneEighty.tick(joystick, xValue, yValue)) {
 			if (joystick.getRawButton(3)) {
 				PIDdrive(xValue, yValue, PIDangleToCorrectTo);
 			} else 
@@ -118,7 +111,29 @@ public class DriveTrain implements RunningComponent {
 		}
 		
 	}
+	
+	private OnceRunner oneEighty = new OnceRunner(){
+		@Override
+		public boolean canRun(Object[] objects) {
+			// TODO Auto-generated method stub
+			return ((Joystick)objects[0]).getRawButton(6);
+		}
 
+		@Override
+		public void once(Object[] objects) {
+			gyroDevice.reset();
+			PIDangleToCorrectTo = 180 - gyroDevice.getAngle();
+		}
+
+		@Override
+		public void then(Object[] objects) {
+			PIDdrive((double)objects[1], (double)objects[2], PIDangleToCorrectTo);
+		}
+
+		@Override
+		public void end(Object[] objects) {}
+	};
+	
 	@Override
 	public void test(Joystick driver) {
 	}
@@ -130,13 +145,16 @@ public class DriveTrain implements RunningComponent {
 		backLeft.set(   -( yValue + xValue - twistValue));
 		backRight.set( (yValue - xValue + twistValue));
 	}
-	public void PIDdrive(double xValue, double yValue, double angle) {
+	public void PIDdrive(double xValue, double yValue, double angle, double speed) {
 		PIDangleToCorrectTo = angle;
 		double twistValue = angleCorrection;
-		frontLeft.set(  - (yValue - xValue - twistValue));
-		frontRight.set((yValue + xValue + twistValue));
-		backLeft.set(   -( yValue + xValue - twistValue));
-		backRight.set( (yValue - xValue + twistValue));
+		frontLeft.set(  - (yValue - xValue - twistValue) * speed);
+		frontRight.set((yValue + xValue + twistValue) * speed);
+		backLeft.set(   -( yValue + xValue - twistValue) * speed);
+		backRight.set( (yValue - xValue + twistValue) * speed);
+	}
+	public void PIDdrive(double xValue, double yValue, double angle) {
+		PIDdrive(xValue, yValue, angle, 1);
 	}
 	
 }

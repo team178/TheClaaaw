@@ -15,11 +15,12 @@ public class Lift implements RunningComponent{
 	public static final int DIRECTION_UP = 1;
 	public static final int DIRECTION_STOP = 0;
 	public static final int DIRECTION_DOWN = -1;
+	public static final double INCHES_PER_SECOND = .5;
 	
 	private Talon motor, motor2;
 	private Encoder liftDistanceEncoder;
-	private DigitalInput zeroLimit;
-	private DigitalInput topLimit;
+	DigitalInput zeroLimit;
+	DigitalInput topLimit;
 	
 	public Lift(Talon motor, Talon motor2, Encoder liftDistanceEncoder,
 			DigitalInput topLimit, DigitalInput zeroLimit) {

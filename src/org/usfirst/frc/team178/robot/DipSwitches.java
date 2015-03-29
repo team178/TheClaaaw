@@ -48,4 +48,9 @@ public class DipSwitches implements RunningComponent {
 	public boolean none() {
 		return !this.RightSwitch.get() && !this.LeftSwitch.get();
 	}
+
+	public boolean getBoth() {
+		// TODO Auto-generated method stub
+		return this.RightSwitch.get() && this.LeftSwitch.get();
+	}
 }

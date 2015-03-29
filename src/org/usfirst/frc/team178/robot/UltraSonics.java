@@ -7,14 +7,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class UltraSonics implements RunningComponent{
 	
 	private AnalogInput ultrasonic;
-	private double scaler;
+	private double scaler = 0.280;
 	public static double scaledDistanceFromTote; //scaled so 1= correct distance from tote
 	
 	public UltraSonics(AnalogInput ultrasonic) {
 		super();
 		this.ultrasonic = ultrasonic;
 		ultrasonic.setAverageBits(4);
-		scaler = ultrasonic.getAverageVoltage(); //scaled at the start
+		//scaler = ultrasonic.getAverageVoltage(); //scaled at the start
 	}
 
 	
@@ -28,6 +28,7 @@ public class UltraSonics implements RunningComponent{
 		// TODO Auto-generated method stub
 		this.getDistanceFromTote();
 		SmartDashboard.putNumber("UltrasonicDistance", scaledDistanceFromTote);
+		SmartDashboard.putNumber("UltrasonicRawDistance", this.ultrasonic.getAverageVoltage());
 	}
 
 	@Override
