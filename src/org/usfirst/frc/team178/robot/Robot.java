@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -184,8 +185,9 @@ public class Robot extends IterativeRobot {
 
 	private void descendIfReady(double d) {
 		if (timer.get() > d){
+			System.out.println(String.format("Phase %d: %.3f | %.3f", autoPhase, (totalTime += timer.get()), timer.get()));
+			SmartDashboard.putNumber("autoPhase", autoPhase);
 			autoPhase++;
-			System.out.println(String.format("%f0.3 | %f0.3", (totalTime += timer.get()), timer.get()));
 			timer.reset();
 		}
 	}
