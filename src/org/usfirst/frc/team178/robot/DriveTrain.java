@@ -66,51 +66,50 @@ public class DriveTrain implements RunningComponent {
 		double percentSpeed = (1 - joystick.getRawAxis(3)) / 2; // convert from scale of -1 to 1 to 0 to 1 and invert
 		double speed = percentSpeed * .5 /* width of range */ + .3 /* offset */; // convert to scale .3 to .8
 
-		if (joystick.getRawButton(2)) {
-			speed *= 0.5;
+		if (1==1) { //used to be if(joystick.getRawButton(2)){speed *=0.5}
+			speed *= 0.4;
+			// speed = speed * .4;
 		}
 
-		SmartDashboard.putNumber("Gyro Angle", gyroDevice.getAngle());
-		double yValue = joystick.getY() * speed;
-		double xValue = joystick.getX() * speed;
-		double twistValue= joystick.getTwist() * speed;
+		SmartDashboard.putNumber("GyrawButton(2)o Angle", gyroDevice.getAngle());
+		//kiddy code override
+		if(aux.getRawButton(1)){
+			double yValue = aux.getY() * speed;
+			double xValue = aux.getX() * speed;
+			double twistValue= aux.getTwist() * speed;
+		}
+		else{
+			double yValue = joystick.getY() * speed;
+			double xValue = joystick.getX() * speed;
+			double twistValue= joystick.getTwist() * speed;
+		}
 		
 		//push-to-strafe (fixed speed) code
-		if (joystick.getRawButton(9)) { 
-			yValue*=0;
-			twistValue*=0;
-			xValue = -.6;
-		} else if (joystick.getRawButton(10)) {
-			yValue*=0;
-			twistValue*=0;
-			xValue = .6;
-		}
-		
-		//snap-to-axis code
-		else if(joystick.getRawButton(11)) {
-			twistValue*=0;
-			if(Math.abs(xValue)>=Math.abs(yValue))
+		if(aux.getRawButton(1)){
+			if (aux.getRawButton(9)) { 
 				yValue*=0;
-			else // |yValue| > |xValue|
-				xValue*=0;
+				twistValue*=0;
+				xValue = -.3;
+			} else if (aux.getRawButton(10)) {
+				yValue*=0;
+				twistValue*=0;
+				xValue = .3;
+			}
+				
+			else{
+				if (joystick.getRawButton(9)) { 
+				yValue*=0;
+				twistValue*=0;
+				xValue = -.3;
+			} else if (joystick.getRawButton(10)) {
+				yValue*=0;
+				twistValue*=0;
+				xValue = .3;
+			}
 		}
-		
-
-		if (joystick.getRawButton(4)) {
-			gyroDevice.reset();
-			PIDangleToCorrectTo = gyroDevice.getAngle();
-		}
-		
-		if(joystick.getRawButton(5)){
-			drive(0, -Math.min((UltraSonics.scaledDistanceFromTote)-1,.5), 0);
-		} else if(!oneEighty.tick(joystick, xValue, yValue)) {
-			if (joystick.getRawButton(3)) {
-				PIDdrive(xValue, yValue, PIDangleToCorrectTo);
-			} else 
-				drive(xValue, yValue, twistValue);
-		}
-		
+			
 	}
+}
 	
 	private OnceRunner oneEighty = new OnceRunner(){
 		@Override
@@ -156,5 +155,4 @@ public class DriveTrain implements RunningComponent {
 	public void PIDdrive(double xValue, double yValue, double angle) {
 		PIDdrive(xValue, yValue, angle, 1);
 	}
-	
 }
